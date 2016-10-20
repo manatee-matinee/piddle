@@ -4,52 +4,55 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(config.db.name, config.db.username, config.db.password, {
   host: 'localhost',
   dialect: 'sqlite',
-  logging: (process.env.NODE_ENV === 'test') ? false : console.log,
+  logging: (process.env.NODE_ENV === 'test') ? false : console.log, // eslint-disable-line
   storage: config.db.path,
 });
 
 const Bill = sequelize.define('bill', {
   description: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
   tax: {
-    type: Sequelize.REAL,
+    type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
   },
   tip: {
-    type: Sequelize.REAL,
+    type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
   },
 });
 
 const Item = sequelize.define('item', {
   description: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
   price: {
-    type: Sequelize.REAL,
+    type: Sequelize.DECIMAL(10, 2),  // eslint-disable-line
     allowNull: false,
+  },
+  paid: {
+    type: Sequelize.BOOLEAN,
   },
 });
 
 const User = sequelize.define('user', {
   venmoId: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
     allowNull: false,
   },
   firstName: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
   lastName: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
   displayName: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
   email: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
     allowNull: false,
   },
   profilePictureUrl: {
-    type: Sequelize.TEXT,
+    type: Sequelize.STRING,
   },
 });
 
