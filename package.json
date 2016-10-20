@@ -1,0 +1,42 @@
+{
+  "name": "piddle",
+  "version": "0.0.0",
+  "description": "Bill splitting through OCR and Venmo.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manatee-matinee/piddle.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manatee-matinee/piddle/issues"
+  },
+  "homepage": "https://github.com/manatee-matinee/piddle#readme",
+  "devDependencies": {
+    "eslint": "^3.8.1",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-import": "^1.16.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.4.1"
+  },
+  "eslintConfig": {
+    "extends": "airbnb",
+    "env": {
+      "mocha": true
+    },
+    "plugins": [
+      "react",
+      "jsx-a11y",
+      "import"
+    ]
+  },
+  "dependencies": {
+    "sequelize": "^3.24.4",
+    "sqlite3": "^3.1.6"
+  }
+}
