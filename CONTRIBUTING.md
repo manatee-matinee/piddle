@@ -145,7 +145,6 @@ Thanks for contributing!
 1. Run the tests before submitting a pull request.
 1. Tests are very, very important. Submit tests if your pull request contains
    new, testable behavior.
-1. Your pull request is comprised of a single (squashed [1](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Squashing-Commits) [2](http://gitready.com/advanced/2009/02/10/squashing-commits-with-rebase.html)) commit.
 
 ## Checklist:
 
