@@ -11,7 +11,7 @@ const app = express();
 const path = require('path');
 
 app.use(morgan('dev'));
-app.use('body-parser');
+app.use(require('body-parser').json());
 
 app.use('/api', api);
 app.use('/auth', auth);
