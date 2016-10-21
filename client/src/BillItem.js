@@ -5,12 +5,9 @@ class BillItem extends Component {
   render() {
     return (
       <div className="BillItem">
-        <span className="description">
-          {this.props.description + ' '}
-        </span>
-        <span className="price">
-          {this.props.price}
-        </span>
+        <input type="text" className="description" value={this.props.description}/>
+        <input type="number" className="price" value={this.props.price}/>
+        <button onClick={(event)=>this.props.deleteMe(event, this.props.index)}>Delete</button>
       </div>
     );
   }
