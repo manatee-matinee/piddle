@@ -80,9 +80,9 @@ or
   - message (string): description of the error
 
 - data (object):
-  - id (string): 4-char id of the bill
+  - shortId (string): shortId of the bill
 
-### GET /api/bill/:id
+### GET /api/bill/:shortId
 
 >Retrieves a bill.
 
@@ -93,7 +93,7 @@ Requires authentication: Yes
 
 #### Parameters
 
-- id (string): 4-char id of the bill
+- shortId (string): shortId of bill
 
 #### Response
 
@@ -103,7 +103,7 @@ or
   - message (string): description of the error
 
 - data (object):
-  - id (string)
+  - shortId (string)
   - description(string)
   - tax (number)
   - tip (number)
