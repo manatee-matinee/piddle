@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './BillItemList.css';
-import BillItem from './BillItem';
+import BillItem from './../BillItem';
 
 class BillItemList extends Component {
   constructor(props) {
@@ -8,25 +8,26 @@ class BillItemList extends Component {
     this.state = {
       items: [
         {
-        description: 'Sandwich',
-        price: 16},
+          description: 'Sandwich',
+          price: 16,
+        },
         {
           description: 'Falafel',
-          price: 7.99
-        }
-      ]
-    }
+          price: 7.99,
+        },
+      ],
+    };
+
     this.billItemChange = this.billItemChange.bind(this);
     this.newBillItem = this.newBillItem.bind(this);
-    this.deteteBillItem = this.deteteBillItem.bind(this);
-
+    this.deleteBillItem = this.deleteBillItem.bind(this);
   }
 
-  deteteBillItem(event, id) {
+  deleteBillItem(event, id) {
     event.preventDefault();
     const previousItems = this.state.items;
     previousItems.splice(id, 1);
-    this.setState({items: previousItems});
+    this.setState({ items: previousItems });
   }
 
   newBillItem(event) {
@@ -56,8 +57,14 @@ class BillItemList extends Component {
   render() {
     return (
       <div className="BillItemList">
-        {this.state.items.map((item, i)=>(
-          <BillItem key={i} index={i} {...item} deleteMe={this.deteteBillItem} billItemChange={this.billItemChange}/>
+        {this.state.items.map((item, i) => (
+          <BillItem
+            key={i}
+            index={i}
+            {...item}
+            deleteBillItem={this.deleteBillItem}
+            billItemChange={this.billItemChange}
+          />
           ))}
         <button onClick={this.newBillItem}>New Bill Item</button>
       </div>
