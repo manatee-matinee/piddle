@@ -16,19 +16,21 @@ class BillItemList extends Component {
         }
       ]
     }
-
+    this.billItemChange = this.billItemChange.bind(this);
     this.newBillItem = this.newBillItem.bind(this);
+    this.deteteBillItem = this.deteteBillItem.bind(this);
+
   }
 
-  deteteBillItem(id) {
-    const newState = this.state;
-    newState.items.slice(id, 1);
-    this.setState(newState);
+  deteteBillItem(event, id) {
+    event.preventDefault();
+    const previousItems = this.state.items;
+    previousItems.splice(id, 1);
+    this.setState({items: previousItems});
   }
 
   newBillItem(event) {
     event.preventDefault();
-    console.log('ayyyyylamo');
     const newItem = {
       description: '',
       price: 0,
@@ -37,11 +39,25 @@ class BillItemList extends Component {
     this.setState({ items: [...this.state.items, newItem] });
   }
 
+  billItemChange(index, description, price) {
+    const editedItem = this.state.items[index];
+    if (description) {
+      editedItem.description = description;
+    } else {
+      editedItem.price = price;
+    }
+    const previousItems = this.state.items;
+    previousItems[index] = editedItem;
+
+
+    this.setState({ items: previousItems });
+  }
+
   render() {
     return (
       <div className="BillItemList">
-        {this.state.items.map((item)=>(
-          <BillItem {...item} deleteMe={this.deleteMe}/>
+        {this.state.items.map((item, i)=>(
+          <BillItem key={i} index={i} {...item} deleteMe={this.deteteBillItem} billItemChange={this.billItemChange}/>
           ))}
         <button onClick={this.newBillItem}>New Bill Item</button>
       </div>
