@@ -1,5 +1,9 @@
 const config = require('../config.js');
 const Sequelize = require('sequelize');
+const Hashids = require('hashids');
+const hashIds = new Hashids('manatee salt', 5);
+
+console.log('db path:', config.db.path);
 
 const sequelize = new Sequelize(config.db.name, config.db.username, config.db.password, {
   host: 'localhost',
@@ -9,6 +13,9 @@ const sequelize = new Sequelize(config.db.name, config.db.username, config.db.pa
 });
 
 const Bill = sequelize.define('bill', {
+  shortId: {
+    type: Sequelize.STRING,
+  },
   description: {
     type: Sequelize.STRING,
   },
@@ -17,6 +24,13 @@ const Bill = sequelize.define('bill', {
   },
   tip: {
     type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
+  },
+},
+{
+  hooks: {
+    afterCreate: (bill, options) => {
+      return bill.update({shortId: hashIds.encode(bill.dataValues.id)}); 
+    },
   },
 });
 
@@ -56,26 +70,38 @@ const User = sequelize.define('user', {
   },
 });
 
-Bill.hasMany(Item);
-Bill.hasMany(User, {
+const BillDebtors = sequelize.define('bill_debtors', {
+});
+
+User.belongsToMany(Bill, {
+  through: BillDebtors,
   as: 'Debtors',
   foreignKey: 'debtorId',
 });
+
+Bill.belongsToMany(User, {through: BillDebtors});
+
 Bill.belongsTo(User, {
   as: 'Payer',
   foreignKey: 'payerId',
 });
 
+// Items
+Bill.hasMany(Item);
+
 Item.belongsTo(Bill);
+
 Item.belongsTo(User, {
   as: 'Payer',
   foreignKey: 'payerId',
 });
 
-User.hasMany(Bill);
 
 // Create the tables specified above
-sequelize.sync();
+User.sync();
+Bill.sync();
+Item.sync();
+BillDebtors.sync();
 
 module.exports = {
   models: {
