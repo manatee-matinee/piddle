@@ -7,11 +7,10 @@ const createItemsForBill = (billId, items) => {
 
   const itemsPromises = [];
 
-  items.forEach(item => {
-    itemsPromises.push(Item.create(Object.assign(item, {billId})));
+  items.forEach((item) => {
+    itemsPromises.push(Item.create(Object.assign(item, { billId })));
   });
   return Promise.all(itemsPromises);
-
 };
 
 module.exports = {

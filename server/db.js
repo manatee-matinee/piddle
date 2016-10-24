@@ -1,6 +1,7 @@
 const config = require('../config.js');
 const Sequelize = require('sequelize');
 const Hashids = require('hashids');
+
 const hashIds = new Hashids('manatee salt', 5);
 
 console.log('db path:', config.db.path);
@@ -26,13 +27,12 @@ const Bill = sequelize.define('bill', {
     type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
   },
 },
-{
-  hooks: {
-    afterCreate: (bill, options) => {
-      return bill.update({shortId: hashIds.encode(bill.dataValues.id)}); 
+  {
+    hooks: {
+      afterCreate: bill => bill.update({ shortId: hashIds.encode(bill.dataValues.id) }),
     },
   },
-});
+);
 
 const Item = sequelize.define('item', {
   description: {
@@ -79,7 +79,7 @@ User.belongsToMany(Bill, {
   foreignKey: 'debtorId',
 });
 
-Bill.belongsToMany(User, {through: BillDebtors});
+Bill.belongsToMany(User, { through: BillDebtors });
 
 Bill.belongsTo(User, {
   as: 'Payer',
