@@ -1,10 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import Bill from './index';
+import BillItemList from './../BillItemList';
+import BillItem from './../BillItem';
 import TaxField from './../TaxField';
 import TipField from './../TipField';
+
+const shallowBill = shallow(
+  <Bill />
+);
+
+const mountedBill = mount(
+  <Bill />
+);
 
 it('renders without crashing', () => {
   // eslint-disable-next-line no-undef
@@ -13,11 +23,25 @@ it('renders without crashing', () => {
 });
 
 it('has a field for inputting the bill\'s tax', () => {
-  const wrapper = shallow(<Bill />);
-  expect(wrapper.find(TaxField)).to.have.length(1);
+  expect(shallowBill.find(TaxField)).to.have.length(1);
 });
 
 it('has a field for inputting the bill\'s tip', () => {
-  const wrapper = shallow(<Bill />);
-  expect(wrapper.find(TipField)).to.have.length(1);
+  expect(shallowBill.find(TipField)).to.have.length(1);
 });
+
+it('has a list of bill items', () => {
+  expect(shallowBill.find(BillItemList)).to.have.length(1);
+});
+
+it('has a list of three bill items', () => {
+  mountedBill.setState({
+    billItems: [
+      { description: 'a', price: 1 },
+      { description: 'b', price: 2 },
+      { description: 'c', price: 3 },
+    ],
+  });
+  expect(mountedBill.find(BillItem)).to.have.length(3);
+});
+

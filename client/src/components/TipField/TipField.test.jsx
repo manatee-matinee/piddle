@@ -5,6 +5,12 @@ import { shallow } from 'enzyme';
 import TipField from './index';
 
 const changeTipValue = () => {};
+const shallowTipField = shallow(
+  <TipField
+    tipValue={12.34}
+    changeTipValue={changeTipValue}
+  />
+);
 
 it('renders without crashing', () => {
   // eslint-disable-next-line no-undef
@@ -19,21 +25,9 @@ it('renders without crashing', () => {
 });
 
 it('has a field for inputting the tip', () => {
-  const wrapper = shallow(
-    <TipField
-      tipValue={12.34}
-      changeTipValue={changeTipValue}
-    />
-  );
-  expect(wrapper.find('input[name="tip"]')).to.have.length(1);
+  expect(shallowTipField.find('input[name="tip"]')).to.have.length(1);
 });
 
 it('populates the appropriate tip value', () => {
-  const wrapper = shallow(
-    <TipField
-      tipValue={12.34}
-      changeTipValue={changeTipValue}
-    />
-  );
-  expect(wrapper.find('input[name="tip"]').props().value).to.equal(12.34);
+  expect(shallowTipField.find('input[name="tip"]').props().value).to.equal(12.34);
 });

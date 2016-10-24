@@ -5,6 +5,12 @@ import { shallow } from 'enzyme';
 import TaxField from './index';
 
 const changeTaxValue = () => {};
+const shallowTaxField = shallow(
+  <TaxField
+    taxValue={12.34}
+    changeTaxValue={changeTaxValue}
+  />
+);
 
 it('renders without crashing', () => {
   // eslint-disable-next-line no-undef
@@ -19,21 +25,9 @@ it('renders without crashing', () => {
 });
 
 it('has a field for inputting the tax', () => {
-  const wrapper = shallow(
-    <TaxField
-      taxValue={12.34}
-      changeTaxValue={changeTaxValue}
-    />
-  );
-  expect(wrapper.find('input[name="tax"]')).to.have.length(1);
+  expect(shallowTaxField.find('input[name="tax"]')).to.have.length(1);
 });
 
 it('populates the appropriate tax value', () => {
-  const wrapper = shallow(
-    <TaxField
-      taxValue={12.34}
-      changeTaxValue={changeTaxValue}
-    />
-  );
-  expect(wrapper.find('input[name="tax"]').props().value).to.equal(12.34);
+  expect(shallowTaxField.find('input[name="tax"]').props().value).to.equal(12.34);
 });

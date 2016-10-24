@@ -12,6 +12,7 @@ class BillItem extends Component {
   descriptionChange(event) {
     this.props.changeBillItem(this.props.index, event.target.value, null);
   }
+
   priceChange(event) {
     this.props.changeBillItem(this.props.index, null, event.target.value);
   }
@@ -20,17 +21,19 @@ class BillItem extends Component {
     return (
       <div className="BillItem">
         <input
-          type="text"
-          placeholder="Description"
           className="description"
+          name="description"
           onChange={this.descriptionChange}
+          placeholder="Description"
+          type="text"
           value={this.props.description}
         />
         <input
-          type="number"
-          placeholder="Price"
           className="price"
+          name="price"
           onChange={this.priceChange}
+          placeholder="Price"
+          type="number"
           value={this.props.price}
         />
         <button
