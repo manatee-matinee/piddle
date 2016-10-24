@@ -1,20 +1,29 @@
 import React from 'react';
 import './TaxField.css';
 
-const TaxField = ({ taxValue }) => (
-  <div>
-    <label htmlFor="tax">Tax</label>
-    <input
-      type="number"
-      className="price"
-      name="tax"
-      placeholder="Tax"
-      value={taxValue}
-    />
-  </div>
-);
+class TaxField extends React.Component {
+  valueChange(event) {
+    this.props.changeTaxValue(event.target.value);
+  }
+
+  render() {
+    return (
+      <div>
+        <label htmlFor="tax">Tax</label>
+        <input
+          type="number"
+          name="tax"
+          placeholder="Tax"
+          value={this.props.taxValue}
+          onChange={this.valueChange}
+        />
+      </div>
+    );
+  }
+}
 
 TaxField.propTypes = {
+  changeTaxValue: React.PropTypes.func.isRequired,
   taxValue: React.PropTypes.number.isRequired,
 };
 

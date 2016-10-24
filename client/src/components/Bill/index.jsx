@@ -19,13 +19,15 @@ class Bill extends React.Component {
           price: 7.99,
         },
       ],
-      tax: 0,
-      tip: 0,
+      tax: 12.40,
+      tip: 44.12,
     };
 
     this.changeBillItem = this.changeBillItem.bind(this);
     this.newBillItem = this.newBillItem.bind(this);
     this.deleteBillItem = this.deleteBillItem.bind(this);
+    this.changeTaxValue = this.changeInputValue.bind(this, 'tax');
+    this.changeTipValue = this.changeInputValue.bind(this, 'tip');
   }
 
   deleteBillItem(event, id) {
@@ -43,6 +45,10 @@ class Bill extends React.Component {
     };
 
     this.setState({ billItems: [...this.state.billItems, newItem] });
+  }
+
+  changeInputValue(key, newValue) {
+    this.setState({ [key]: newValue });
   }
 
   changeBillItem(index, description, price) {
@@ -72,8 +78,14 @@ class Bill extends React.Component {
             changeBillItem={this.changeBillItem}
             newBillItem={this.newBillItem}
           />
-          <TaxField taxValue={this.state.tax} />
-          <TipField tipValue={this.state.tip} />
+          <TaxField
+            changeTaxValue={this.changeTaxValue}
+            taxValue={this.state.tax}
+          />
+          <TipField
+            changeTipValue={this.changeTipValue}
+            tipValue={this.state.tip}
+          />
         </form>
       </div>
     );
