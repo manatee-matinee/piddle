@@ -17,8 +17,6 @@ class BillItem extends Component {
   constructor(props) {
     super(props);
 
-    this.descriptionChange = this.descriptionChange.bind(this);
-    this.priceChange = this.priceChange.bind(this);
     this.fieldChange = this.fieldChange.bind(this);
   }
 
