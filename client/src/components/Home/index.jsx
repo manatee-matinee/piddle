@@ -3,7 +3,11 @@ import { Link } from 'react-router';
 import './Home.css';
 
 const Home = () => (
-  <Link to="/bill">Create Bill</Link>
+  <div>
+    <Link to="/bill">Create Bill</Link>
+    <br />
+    <Link to="/login">Login</Link>
+  </div>
 );
 
 export default Home;

@@ -5,12 +5,14 @@ import './index.css';
 import App from './components/App';
 import Bill from './components/Bill';
 import Home from './components/Home';
+import Login from './components/Login';
 
 ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Home} />
       <Route path="bill" component={Bill} />
+      <Route path="login" component={Login} />
     </Route>
   </Router>
   ),
