@@ -5,17 +5,17 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
+      emailAddress: '',
       password: '',
     };
-    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handleEmailAdddressChange = this.handleEmailAddressChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.submitLoginForm = this.submitLoginForm.bind(this);
     this.submitSignupForm = this.submitSignupForm.bind(this);
   }
 
-  handleEmailChange(event) {
-    this.setState({ email: event.target.value });
+  handleEmailAddressChange(event) {
+    this.setState({ emailAddress: event.target.value });
   }
 
   handlePasswordChange(event) {
@@ -24,16 +24,16 @@ class Login extends Component {
 
   submitLoginForm(event) {
     event.preventDefault();
-    var email = this.state.email;
+    var emailAddress = this.state.emailAddress;
     var password = this.state.password;
-    Request.postLogin(email, password, res => console.log(res));
+    Request.postLogin(emailAddress, password, res => console.log(res));
   }
 
   submitSignupForm(event) {
     event.preventDefault();
-    var email = this.state.email;
+    var emailAddress = this.state.emailAddress;
     var password = this.state.password;
-    Request.postSignup(email, password, res => console.log(res));
+    Request.postSignup(emailAddress, password, res => console.log(res));
   }
 
   render() {
@@ -43,14 +43,14 @@ class Login extends Component {
         Welcome to the login page
       </p>
       <form id="loginForm">
-        <label for="email">email</label>
+        <label htmlFor="emailAddress">email</label>
         <input
           type="text"
-          className="email"
-          name="email"
+          className="emailAddress"
+          name="emailAddress"
           onChange={event => this.handleEmailChange(event)}
           />
-        <label for="password">password</label>
+        <label htmlFor="password">password</label>
         <input
           type="password"
           className="password"
