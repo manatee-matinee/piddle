@@ -23,7 +23,7 @@ app.use(passport.session());
 app.use('/api', api);
 app.use('/auth', auth);
 
-app.use('/', express.static(path.join(__dirname, '/public')));
+app.use('/', express.static(path.join(__dirname, '../client/public')));
 
 const port = process.env.PORT || 3000;
 app.listen(port);
