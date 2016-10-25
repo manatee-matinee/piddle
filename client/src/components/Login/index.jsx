@@ -1,3 +1,4 @@
+<<<<<<< 4301587211c154a3a3761875b81eca8b440e224d
 import React, { Component } from 'react';
 import Request from '../../utils/requestHandler';
 
@@ -72,5 +73,34 @@ class Login extends Component {
     );
   }
 }
+=======
+import React from 'react';
+
+const Login = () => (
+  <div className="Login Page">
+    <p className="Login-intro">
+      Welcome to the login page
+    </p>
+    <form id="loginForm">
+      <label for="email">email</label>
+      <input
+        type="text"
+        className="email"
+        name="email"
+        />
+      <label for="password">password</label>
+      <input
+        type="text"
+        className="password"
+        name="password"
+      />
+      <input
+      type="submit"
+      value="Submit"
+      />
+    </form>
+  </div>
+);
+>>>>>>> Create Login page and css file
 
 export default Login;
