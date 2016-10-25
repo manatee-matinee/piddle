@@ -4,7 +4,7 @@
   "description": "Bill splitting through OCR and Venmo.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha server/spec"
   },
   "repository": {
     "type": "git",
@@ -39,11 +39,14 @@
     ]
   },
   "dependencies": {
+    "bcrypt-as-promised": "^1.1.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "express-session": "^1.14.1",
     "hashids": "^1.1.1",
     "morgan": "^1.7.0",
-    "passport-venmo": "0.0.1",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "sequelize": "^3.24.4",
     "sqlite3": "^3.1.6"
   }

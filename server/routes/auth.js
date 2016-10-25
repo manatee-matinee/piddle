@@ -1,9 +1,13 @@
 const express = require('express');
 
-const router = express.Router(); // eslint-disable-line
+const authHandler = require('../handlers/apiHandler');
 
+const router = express.Router(); // eslint-disable-line new-cap
 
-router.get('/', /* funct to handle bill*/);
-router.post('/', /* funct to create bill */);
+router.post('/login', authHandler.loginHandler);
+
+router.post('/signup', authHandler.signupHandler);
+
+router.get('/logout', authHandler.logoutHandler);
 
 module.exports = router;
