@@ -2,7 +2,19 @@ import React from 'react';
 import './TipField.css';
 
 class TipField extends React.Component {
-  valueChange(event) {
+  constructor(props) {
+    super(props);
+
+    this.changeTipPercent = this.changeTipPercent.bind(this);
+    this.changeTipValue = this.changeTipValue.bind(this);
+  }
+
+  changeTipPercent(event) {
+    event.preventDefault();
+    this.props.changeTipPercent(event.target.getAttribute('data-percent'));
+  }
+
+  changeTipValue(event) {
     this.props.changeTipValue(event.target.value);
   }
 
@@ -15,14 +27,41 @@ class TipField extends React.Component {
           name="tip"
           placeholder="Tip"
           value={this.props.tipValue}
-          onChange={this.valueChange}
+          onChange={this.changeTipValue}
         />
+        <div className="tipSuggestions">
+          <button
+            onClick={this.changeTipPercent}
+            data-percent="0"
+          >
+            No Tip
+          </button>
+          <button
+            onClick={this.changeTipPercent}
+            data-percent="10"
+          >
+            10%
+          </button>
+          <button
+            onClick={this.changeTipPercent}
+            data-percent="15"
+          >
+            15%
+          </button>
+          <button
+            onClick={this.changeTipPercent}
+            data-percent="20"
+          >
+            20%
+          </button>
+        </div>
       </div>
     );
   }
 }
 
 TipField.propTypes = {
+  changeTipPercent: React.PropTypes.func.isRequired,
   changeTipValue: React.PropTypes.func.isRequired,
   tipValue: React.PropTypes.number.isRequired,
 };

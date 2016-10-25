@@ -14,7 +14,7 @@ class BillItem extends Component {
   }
 
   priceChange(event) {
-    this.props.changeBillItem(this.props.index, null, event.target.value);
+    this.props.changeBillItem(this.props.index, null, Number.parseFloat(event.target.value));
   }
 
   render() {

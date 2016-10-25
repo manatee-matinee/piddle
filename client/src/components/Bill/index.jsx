@@ -20,14 +20,24 @@ class Bill extends React.Component {
         },
       ],
       tax: 12.40,
-      tip: 44.12,
+      tip: {
+        value: 13.22,
+        percent: null,
+        usePercent: false,
+      },
     };
 
     this.changeBillItem = this.changeBillItem.bind(this);
     this.newBillItem = this.newBillItem.bind(this);
     this.deleteBillItem = this.deleteBillItem.bind(this);
     this.changeTaxValue = this.changeInputValue.bind(this, 'tax');
-    this.changeTipValue = this.changeInputValue.bind(this, 'tip');
+    this.changeTipValue = this.changeTipValue.bind(this);
+    this.changeTipPercent = this.changeTipPercent.bind(this);
+    this.createBill = this.createBill.bind(this);
+  }
+
+  createBill(event) {
+    event.preventDefault();
   }
 
   deleteBillItem(event, id) {
@@ -51,7 +61,39 @@ class Bill extends React.Component {
     this.setState({ [key]: newValue });
   }
 
+  changeTipValue(newValue) {
+    const tipState = this.state.tip;
+    tipState.value = newValue;
+    tipState.usePercent = false;
+    this.setState({ tip: tipState });
+  }
+
+  changeTipPercent(percent) {
+    let tipState = this.state.tip;
+    tipState.percent = percent;
+    tipState.usePercent = true;
+    this.setState({ tip: tipState });
+
+    tipState = this.state.tip;
+    tipState.value = this.calculateTipValue();
+    this.setState({ tip: tipState });
+  }
+
+  calculateTipValue() {
+    // Only update the state if the user has instructed us to calculate the
+    // tip based on a given percent.
+    let tip = this.state.tip.value;
+    if (this.state.tip.usePercent) {
+      const total = this.state.billItems.reduce((sum, billItem) => (
+        sum + billItem.price
+      ), 0);
+      tip = total * (this.state.tip.percent / 100);
+    }
+    return tip;
+  }
+
   changeBillItem(index, description, price) {
+    // Update the bill state
     const editedItem = this.state.billItems[index];
     if (description) {
       editedItem.description = description;
@@ -60,9 +102,12 @@ class Bill extends React.Component {
     }
     const previousItems = this.state.billItems;
     previousItems[index] = editedItem;
-
-
     this.setState({ billItems: previousItems });
+
+    // Update the tip state
+    const tipState = this.state.tip;
+    tipState.value = this.calculateTipValue();
+    this.setState({ tip: tipState });
   }
 
   render() {
@@ -84,7 +129,13 @@ class Bill extends React.Component {
           />
           <TipField
             changeTipValue={this.changeTipValue}
-            tipValue={this.state.tip}
+            changeTipPercent={this.changeTipPercent}
+            tipValue={this.state.tip.value}
+          />
+          <input
+            type="submit"
+            value="Create Bill"
+            onClick={this.createBill}
           />
         </form>
       </div>
