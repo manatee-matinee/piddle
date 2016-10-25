@@ -31,7 +31,7 @@ const Bill = sequelize.define('bill', {
     hooks: {
       afterCreate: bill => bill.update({ shortId: hashIds.encode(bill.dataValues.id) }),
     },
-  },
+  }
 );
 
 const Item = sequelize.define('item', {
