@@ -1,6 +1,6 @@
 const express = require('express');
 
-const authHandler = require('../handlers/apiHandler');
+const authHandler = require('../handlers/authHandler');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
