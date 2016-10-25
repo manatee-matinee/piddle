@@ -42,34 +42,41 @@ export default {
 =======
 module.exports = {
 
-  postLogin: (email, password, callback) => {
-    return fetch('/login', {
+  postLogin: (emailAddress, password, callback) => {
+    return fetch('/api/login', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email,
+        emailAddress,
         password,
       }),
     })
-    .then(res => callback(res) );
+    .then(res => callback(res));
   },
 
-  postSignup: (email, password, callback) => {
-    return fetch('/signup', {
+  postSignup: (emailAddress, password, callback) => {
+    return fetch('/api/signup', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email,
+        emailAddress,
         password,
       }),
     })
-    .then(res => callback(res) );
+    .then(res => callback(res));
+  },
+
+  getLogout: (callback) => {
+    return fetch('/api/logout', {
+      method: 'GET',
+    })
+    .then(res => callback(res));
   },
 
 >>>>>>> Create utils directory for helper functions
