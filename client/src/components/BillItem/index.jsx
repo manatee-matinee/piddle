@@ -22,7 +22,7 @@ class BillItem extends Component {
       <div className="BillItem">
         <input
           className="description"
-          name="description"
+          name={`description-${this.props.index}`}
           onChange={this.descriptionChange}
           placeholder="Description"
           type="text"
@@ -30,7 +30,7 @@ class BillItem extends Component {
         />
         <input
           className="price"
-          name="price"
+          name={`price-${this.props.index}`}
           onChange={this.priceChange}
           placeholder="Price"
           type="number"

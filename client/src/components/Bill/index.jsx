@@ -38,6 +38,42 @@ class Bill extends React.Component {
 
   createBill(event) {
     event.preventDefault();
+    const bill = {
+      description: 'To Do',
+      items: [],
+      payer: 0,
+      tax: 0,
+      tip: 0,
+    };
+
+    // Build JSON representation of the form
+    for (const el of this.createBillForm) {
+      const elName = el.getAttribute('name');
+      const isFloatField = /^(price|tax|tip)/.test(elName);
+      const value = (isFloatField) ?
+        Number.parseFloat(el.value) :
+        el.value;
+
+      if (el.tagName === 'INPUT' && el.getAttribute('type') !== 'submit') {
+        const isBillItemField = /^(description|price)/.test(elName);
+        if (isBillItemField) {
+          const matches = elName.match(/([a-z]+)-(\d+)/);
+          const key = matches[1];
+          const index = Number.parseInt(matches[2], 10);
+          if (bill.items[index] === undefined) {
+            bill.items[index] = { [key]: value };
+          } else {
+            bill.items[index][key] = value;
+          }
+        } else if (/^(tax)/.test(elName)) {
+          bill.tax = value;
+        } else if (/^(tip)/.test(elName)) {
+          bill.tip = value;
+        }
+      }
+    }
+
+    console.log(bill);
   }
 
   deleteBillItem(event, id) {
@@ -116,7 +152,10 @@ class Bill extends React.Component {
         <p className="Bill-intro">
           Here is your bill
         </p>
-        <form id="billForm">
+        <form
+          id="createBillForm"
+          ref={(c) => { this.createBillForm = c; }}
+        >
           <BillItemList
             billItems={this.state.billItems}
             deleteBillItem={this.deleteBillItem}
