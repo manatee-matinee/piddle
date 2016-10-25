@@ -11,9 +11,13 @@ ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Home} />
+<<<<<<< b853ab5bbd406b9df48653ce5c27f7b5da5b98d1
       <Route path="bill" component={Bill}>
         <Route path=":id" component={Bill} />
       </Route>
+=======
+      <Route path="bill" component={Bill} />
+>>>>>>> Create route and home-link to login page
       <Route path="login" component={Login} />
     </Route>
   </Router>
