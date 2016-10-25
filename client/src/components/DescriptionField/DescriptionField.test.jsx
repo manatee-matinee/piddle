@@ -7,7 +7,7 @@ import DescriptionField from './index';
 const changeDescriptionValue = () => {};
 const shallowDescriptionField = shallow(
   <DescriptionField
-    descriptionValue={12.34}
+    descriptionValue={'A Description'}
     changeDescriptionValue={changeDescriptionValue}
   />
 );
@@ -17,9 +17,8 @@ it('renders without crashing', () => {
   const div = document.createElement('div');
   ReactDOM.render(
     <DescriptionField
-      descriptionValue={12.34}
+      descriptionValue={'A Description'}
       changeDescriptionValue={changeDescriptionValue}
-      changeDescriptionPercent={changeDescriptionPercent}
     />,
     div
   );
@@ -30,5 +29,5 @@ it('has a field for inputting the description', () => {
 });
 
 it('populates the appropriate description value', () => {
-  expect(shallowDescriptionField.find('input[name="description"]').props().value).to.equal(12.34);
+  expect(shallowDescriptionField.find('input[name="description"]').props().value).to.equal('A Description');
 });
