@@ -3,15 +3,15 @@ const billController = require('../dbControllers/billController');
 const saveBill = (request, response) => {
   const bill = request.body;
   billController.createBill(bill)
-    .then(bill => {
+    .then((billRecord) => {
       response.status(201);
       response.json({
         data: {
-          shortId: bill.shortId,
+          shortId: billRecord.shortId,
         },
       });
     })
-    .catch(error => {
+    .catch((error) => {
       response.status(400);
       response.json({
         error: {
@@ -19,9 +19,7 @@ const saveBill = (request, response) => {
         },
       });
     });
-
 };
-
 
 module.exports = {
   saveBill,

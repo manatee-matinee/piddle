@@ -4,30 +4,36 @@ import './BillItem.css';
 class BillItem extends Component {
   constructor(props) {
     super(props);
+
     this.descriptionChange = this.descriptionChange.bind(this);
     this.priceChange = this.priceChange.bind(this);
   }
 
   descriptionChange(event) {
-    this.props.billItemChange(this.props.index, event.target.value, null);
+    this.props.changeBillItem(this.props.index, event.target.value, null);
   }
+
   priceChange(event) {
-    this.props.billItemChange(this.props.index, null, event.target.value);
+    this.props.changeBillItem(this.props.index, null, event.target.value);
   }
 
   render() {
     return (
       <div className="BillItem">
         <input
-          type="text"
           className="description"
+          name="description"
           onChange={this.descriptionChange}
+          placeholder="Description"
+          type="text"
           value={this.props.description}
         />
         <input
-          type="number"
           className="price"
+          name="price"
           onChange={this.priceChange}
+          placeholder="Price"
+          type="number"
           value={this.props.price}
         />
         <button
@@ -41,7 +47,7 @@ class BillItem extends Component {
 }
 
 BillItem.propTypes = {
-  billItemChange: React.PropTypes.func.isRequired,
+  changeBillItem: React.PropTypes.func.isRequired,
   deleteBillItem: React.PropTypes.func.isRequired,
   description: React.PropTypes.string.isRequired,
   index: React.PropTypes.number.isRequired,

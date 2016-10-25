@@ -11,8 +11,7 @@ if (/test/.test(config.db.path) === false) {
 }
 
 
-
-describe ('Creating a bill', () => {
+describe('Creating a bill', () => {
   let bill;
 
   beforeEach(() => {
@@ -29,14 +28,14 @@ describe ('Creating a bill', () => {
     };
   });
 
-  it('should respond with a 201 code', done => {
+  it('should respond with a 201 code', (done) => {
     request(app)
       .post('/api/bill')
       .send(bill)
       .expect(201, done);
   });
 
-  it('should respond with the bill shortId', done => {
+  it('should respond with the bill shortId', (done) => {
     request(app)
       .post('/api/bill')
       .send(bill)
@@ -48,7 +47,7 @@ describe ('Creating a bill', () => {
       });
   });
 
-  it('should respond with an error for malformed bills', done => {
+  it('should respond with an error for malformed bills', (done) => {
     delete bill.payer;
     request(app)
       .post('/api/bill')
@@ -60,5 +59,4 @@ describe ('Creating a bill', () => {
         done();
       });
   });
-
 });
