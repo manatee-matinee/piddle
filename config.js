@@ -7,7 +7,7 @@ module.exports = {
     name: 'database',
     username: 'username',
     password: 'password',
-    path: `./db/${process.env.NODE_ENV}-database.sqlite`,
+    path: `./server/db/${process.env.NODE_ENV}-database.sqlite`,
   },
   bcryptHashRounds: 10,
   sessionSecret: 'manatee_session_secret',

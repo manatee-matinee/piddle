@@ -4,7 +4,8 @@
   "description": "Bill splitting through OCR and Venmo.",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha server/spec"
+    "test": "NODE_ENV=test mocha server/spec",
+    "start": "NODE_ENV=dev nodemon server/server.js"
   },
   "repository": {
     "type": "git",
