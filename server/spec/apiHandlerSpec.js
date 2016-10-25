@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 
+<<<<<<< 8e6934b877d3e96ebd4d4d8b680b87e5bc1d8f68
 const app = require('../server');
 
 const request = require('supertest');
@@ -60,5 +61,14 @@ describe ('Creating a bill', () => {
         done();
       });
   });
+=======
+const bill = {
+  description: 'Tu Lan lunch',
+  tax: 2.46,
+};
+
+
+describe ('savebill', () => {
+>>>>>>> (feat) Rough out server structure
 
 });
