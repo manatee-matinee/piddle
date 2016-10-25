@@ -1,6 +1,7 @@
 import React from 'react';
 import './Bill.css';
 import BillItemList from './../BillItemList';
+import DescriptionField from './../DescriptionField';
 import TaxField from './../TaxField';
 import TipField from './../TipField';
 
@@ -19,6 +20,7 @@ class Bill extends React.Component {
           price: 7.99,
         },
       ],
+      description: 'A description',
       tax: 12.40,
       tip: {
         value: 13.22,
@@ -31,6 +33,7 @@ class Bill extends React.Component {
     this.newBillItem = this.newBillItem.bind(this);
     this.deleteBillItem = this.deleteBillItem.bind(this);
     this.changeTaxValue = this.changeInputValue.bind(this, 'tax');
+    this.changeDescriptionValue = this.changeInputValue.bind(this, 'description');
     this.changeTipValue = this.changeTipValue.bind(this);
     this.changeTipPercent = this.changeTipPercent.bind(this);
     this.createBill = this.createBill.bind(this);
@@ -49,26 +52,29 @@ class Bill extends React.Component {
     // Build JSON representation of the form
     for (const el of this.createBillForm) {
       const elName = el.getAttribute('name');
-      const isFloatField = /^(price|tax|tip)/.test(elName);
+      const isFloatField = /^(billItem-\d+-price|tax|tip)/.test(elName);
       const value = (isFloatField) ?
         Number.parseFloat(el.value) :
         el.value;
 
       if (el.tagName === 'INPUT' && el.getAttribute('type') !== 'submit') {
-        const isBillItemField = /^(description|price)/.test(elName);
+        const isBillItemField = /^billItem/.test(elName);
         if (isBillItemField) {
-          const matches = elName.match(/([a-z]+)-(\d+)/);
-          const key = matches[1];
-          const index = Number.parseInt(matches[2], 10);
+          const matches = elName.match(/billItem-(\d+)-([a-z]+)/);
+          const index = Number.parseInt(matches[1], 10);
+          const key = matches[2];
+
           if (bill.items[index] === undefined) {
             bill.items[index] = { [key]: value };
           } else {
             bill.items[index][key] = value;
           }
-        } else if (/^(tax)/.test(elName)) {
+        } else if (/^tax$/.test(elName)) {
           bill.tax = value;
-        } else if (/^(tip)/.test(elName)) {
+        } else if (/^tip$/.test(elName)) {
           bill.tip = value;
+        } else if (/^description$/.test(elName)) {
+          bill.description = value;
         }
       }
     }
@@ -156,6 +162,10 @@ class Bill extends React.Component {
           id="createBillForm"
           ref={(c) => { this.createBillForm = c; }}
         >
+          <DescriptionField
+            changeDescriptionValue={this.changeDescriptionValue}
+            descriptionValue={this.state.description}
+          />
           <BillItemList
             billItems={this.state.billItems}
             deleteBillItem={this.deleteBillItem}

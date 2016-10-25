@@ -2,8 +2,14 @@ import React from 'react';
 import './TaxField.css';
 
 class TaxField extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.valueChange = this.valueChange.bind(this);
+  }
+
   valueChange(event) {
-    this.props.changeTaxValue(event.target.value);
+    this.props.changeTaxValue(Number.parseFloat(event.target.value));
   }
 
   render() {
