@@ -1,4 +1,3 @@
-<<<<<<< 8e6934b877d3e96ebd4d4d8b680b87e5bc1d8f68
 const billController = require('../dbControllers/billController');
 
 const saveBill = (request, response) => {
@@ -21,13 +20,6 @@ const saveBill = (request, response) => {
       });
     });
 };
-=======
-const saveBill = (request, response) => {
-
->>>>>>> (feat) Rough out server structure
-
-};
-
 
 module.exports = {
   saveBill,

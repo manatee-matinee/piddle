@@ -1,6 +1,5 @@
 const expect = require('chai').expect;
 
-<<<<<<< 8e6934b877d3e96ebd4d4d8b680b87e5bc1d8f68
 const app = require('../server');
 
 const request = require('supertest');
@@ -12,8 +11,7 @@ if (/test/.test(config.db.path) === false) {
 }
 
 
-
-describe ('Creating a bill', () => {
+describe('Creating a bill', () => {
   let bill;
 
   beforeEach(() => {
@@ -30,14 +28,14 @@ describe ('Creating a bill', () => {
     };
   });
 
-  it('should respond with a 201 code', done => {
+  it('should respond with a 201 code', (done) => {
     request(app)
       .post('/api/bill')
       .send(bill)
       .expect(201, done);
   });
 
-  it('should respond with the bill shortId', done => {
+  it('should respond with the bill shortId', (done) => {
     request(app)
       .post('/api/bill')
       .send(bill)
@@ -49,7 +47,7 @@ describe ('Creating a bill', () => {
       });
   });
 
-  it('should respond with an error for malformed bills', done => {
+  it('should respond with an error for malformed bills', (done) => {
     delete bill.payer;
     request(app)
       .post('/api/bill')
@@ -61,14 +59,4 @@ describe ('Creating a bill', () => {
         done();
       });
   });
-=======
-const bill = {
-  description: 'Tu Lan lunch',
-  tax: 2.46,
-};
-
-
-describe ('savebill', () => {
->>>>>>> (feat) Rough out server structure
-
 });
