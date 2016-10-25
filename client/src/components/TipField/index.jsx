@@ -1,7 +1,17 @@
 import React from 'react';
 import './TipField.css';
 
+/**
+ * @class TipField
+ */
 class TipField extends React.Component {
+  /**
+   * @constructs
+   * @param {object} props
+   * @param {function} props.changeTipValue
+   * @param {function} props.changeTipPercent
+   * @param {number} props.tipValue
+   */
   constructor(props) {
     super(props);
 
@@ -9,15 +19,33 @@ class TipField extends React.Component {
     this.changeTipValue = this.changeTipValue.bind(this);
   }
 
+  /**
+   * Update Bill state with new tip percent.
+   * @method
+   * @name changeTipPercent
+   * @param {object} event
+   */
   changeTipPercent(event) {
     event.preventDefault();
     this.props.changeTipPercent(event.target.getAttribute('data-percent'));
   }
 
+  /**
+   * Update Bill state with new tip value.
+   * @method
+   * @name changeTipValue
+   * @param {object} event
+   */
   changeTipValue(event) {
     this.props.changeTipValue(event.target.value);
   }
 
+  /**
+   * Render the component
+   * @method
+   * @name render
+   * @returns {object}
+   */
   render() {
     return (
       <div>
