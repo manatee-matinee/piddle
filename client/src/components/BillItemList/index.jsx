@@ -2,6 +2,14 @@ import React from 'react';
 import './BillItemList.css';
 import BillItem from './../BillItem';
 
+/**
+ * @class BillItemList
+ * @param {object} props
+ * @param {object[]} props.billItems[]
+ * @param {function} deleteBillItem
+ * @param {function} changeBillItem
+ * @param {function} newBillItem
+ */
 const BillItemList = ({
   billItems,
   changeBillItem,
