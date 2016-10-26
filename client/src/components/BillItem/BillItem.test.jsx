@@ -34,19 +34,19 @@ it('renders without crashing', () => {
 });
 
 it('has a field for inputting the description', () => {
-  expect(shallowBillItem.find('input[name="description"]')).to.have.length(1);
+  expect(shallowBillItem.find('input.description')).to.have.length(1);
 });
 
 it('has a field for inputting the price', () => {
-  expect(shallowBillItem.find('input[name="price"]')).to.have.length(1);
+  expect(shallowBillItem.find('input.price')).to.have.length(1);
 });
 
 it('populates the appropriate description', () => {
-  expect(shallowBillItem.find('input[name="description"]').props().value)
+  expect(shallowBillItem.find('input.description').props().value)
     .to.equal(shallowBillItemProps.description);
 });
 
 it('populates the appropriate price', () => {
-  expect(shallowBillItem.find('input[name="price"]').props().value)
+  expect(shallowBillItem.find('input.price').props().value)
     .to.equal(shallowBillItemProps.price);
 });

@@ -4,11 +4,13 @@ import { expect } from 'chai';
 import { shallow } from 'enzyme';
 import TipField from './index';
 
+const changeTipPercent = () => {};
 const changeTipValue = () => {};
 const shallowTipField = shallow(
   <TipField
     tipValue={12.34}
     changeTipValue={changeTipValue}
+    changeTipPercent={changeTipPercent}
   />
 );
 
@@ -19,6 +21,7 @@ it('renders without crashing', () => {
     <TipField
       tipValue={12.34}
       changeTipValue={changeTipValue}
+      changeTipPercent={changeTipPercent}
     />,
     div
   );
