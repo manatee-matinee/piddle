@@ -17,6 +17,8 @@ class Bill extends React.Component {
   constructor(props) {
     super(props);
 
+    this.serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
+
     this.stateSetter = this.stateSetter.bind(this);
 
     // Bill
@@ -71,13 +73,9 @@ class Bill extends React.Component {
   componentDidMount() {
     const billId = this.props.params.id;
     if (typeof billId !== 'undefined') {
-      console.log(`load the ${billId} bill`);
-
       /**
        * @todo Extract these variables and functions into a module (DRY).
        */
-      const serverUrl = 'http://localhost:3000';
-
       // ref: https://github.com/github/fetch
       const checkStatus = (response) => {
         if (response.status >= 200 && response.status < 300) {
@@ -89,10 +87,13 @@ class Bill extends React.Component {
         throw error;
       };
 
-      fetch(`${serverUrl}/api/bill/${billId}`)
+      fetch(`${this.serverUrl}/api/bill/${billId}`)
         .then(checkStatus)
         .then(response => response.json())
         .then(({ data }) => {
+          /**
+           * @todo Set the current bill state to the data we receive from this GET request.
+           */
           console.log(data);
         })
         .catch((error) => {
@@ -120,7 +121,6 @@ class Bill extends React.Component {
     /**
      * @todo Extract these variables and functions into a module (DRY).
      */
-    const serverUrl = 'http://localhost:3000';
     const jsonHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ class Bill extends React.Component {
       throw error;
     };
 
-    fetch(`${serverUrl}/api/bill`, {
+    fetch(`${this.serverUrl}/api/bill`, {
       method: 'POST',
       headers: jsonHeaders,
       body: JSON.stringify(bill),
@@ -145,7 +145,7 @@ class Bill extends React.Component {
       .then(checkStatus)
       .then(response => response.json())
       .then(({ data }) => {
-        this.props.router.push('/to/some/other/place');
+        this.props.router.push(`/bill/${data.shortId}`);
       })
       .catch((error) => {
         console.error(error);
@@ -321,10 +321,13 @@ class Bill extends React.Component {
 }
 
 Bill.propTypes = {
-  router: React.PropTypes.shape({}),
+  router: React.PropTypes.shape({
+    push: React.PropTypes.func.isRequired,
+  }),
   params: React.PropTypes.shape({
     id: React.PropTypes.string,
   }),
 };
+
 
 export default withRouter(Bill);
