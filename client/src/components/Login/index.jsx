@@ -48,7 +48,7 @@ class Login extends Component {
           type="text"
           className="emailAddress"
           name="emailAddress"
-          onChange={event => this.handleEmailChange(event)}
+          onChange={event => this.handleEmailAddressChange(event)}
           />
         <label htmlFor="password">password</label>
         <input
