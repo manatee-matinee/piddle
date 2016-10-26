@@ -47,6 +47,6 @@ it('populates the appropriate description', () => {
 });
 
 it('populates the appropriate price', () => {
-  expect(shallowBillItem.find('input.price').props().value)
+  expect(shallowBillItem.find('input.price').props(). alue)
     .to.equal(shallowBillItemProps.price);
 });
