@@ -5,7 +5,12 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_ENV=test mocha server/spec",
-    "start": "NODE_ENV=dev nodemon server/server.js"
+    "start": "NODE_ENV=dev nodemon server/server.js",
+    "doc": "apidoc -i server/routes -o docs/api"
+  },
+  "apidoc": {
+    "title": "The API for the Piddle bill splitting application",
+    "url": ""
   },
   "repository": {
     "type": "git",
