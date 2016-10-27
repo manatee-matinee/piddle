@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import './Bill.css';
 import BillItemList from './../BillItemList';
 import DescriptionField from './../DescriptionField';
@@ -16,25 +17,7 @@ class Bill extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      billItems: [
-        {
-          description: 'Sandwich',
-          price: 16,
-        },
-        {
-          description: 'Falafel',
-          price: 7.99,
-        },
-      ],
-      description: 'A description',
-      tax: 12.40,
-      tip: {
-        value: 13.22,
-        percent: null,
-        usePercent: false,
-      },
-    };
+    this.serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
 
     this.stateSetter = this.stateSetter.bind(this);
 
@@ -58,6 +41,68 @@ class Bill extends React.Component {
   }
 
   /**
+   * React lifecycle method called before initial component render().
+   * @method
+   * @name componentWillMount
+   */
+  componentWillMount() {
+    // Set the default state here. We'll load the actual Bill data later
+    // in componentDidMount if the user has requested a specific bill to
+    // avoid waiting for the API GET request to complete before rendering
+    // the Bill.
+
+    this.state = {
+      billItems: [
+        { description: '', price: 0 },
+      ],
+      description: '',
+      tax: 0,
+      tip: {
+        value: 0,
+        percent: null,
+        usePercent: false,
+      },
+    };
+  }
+
+  /**
+   * React lifecycle method called after initial component render().
+   * @method
+   * @name componentDidMount
+   */
+  componentDidMount() {
+    const billId = this.props.params.id;
+    if (typeof billId !== 'undefined') {
+      /**
+       * @todo Extract these variables and functions into a module (DRY).
+       */
+      // ref: https://github.com/github/fetch
+      const checkStatus = (response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return response;
+        }
+
+        const error = new Error(response.statusText);
+        error.response = response;
+        throw error;
+      };
+
+      fetch(`${this.serverUrl}/api/bill/${billId}`)
+        .then(checkStatus)
+        .then(response => response.json())
+        .then(({ data }) => {
+          /**
+           * @todo Set the current bill state to the data we receive from this GET request.
+           */
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }
+
+  /**
    * Create a JSON representation of the current state of the bill
    * @method
    * @name createBill
@@ -68,15 +113,43 @@ class Bill extends React.Component {
     const bill = {
       description: this.state.description,
       items: this.state.billItems,
-      payer: 0,
+      payer: 1,
       tax: this.state.tax,
       tip: this.state.tip.value,
     };
 
     /**
-     * @todo interact with our API and POST this bill
+     * @todo Extract these variables and functions into a module (DRY).
      */
-    console.log(bill);
+    const jsonHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    };
+
+    // ref: https://github.com/github/fetch
+    const checkStatus = (response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response;
+      }
+
+      const error = new Error(response.statusText);
+      error.response = response;
+      throw error;
+    };
+
+    fetch(`${this.serverUrl}/api/bill`, {
+      method: 'POST',
+      headers: jsonHeaders,
+      body: JSON.stringify(bill),
+    })
+      .then(checkStatus)
+      .then(response => response.json())
+      .then(({ data }) => {
+        this.props.router.push(`/bill/${data.shortId}`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   /**
@@ -91,6 +164,8 @@ class Bill extends React.Component {
     const previousItems = this.state.billItems;
     previousItems.splice(id, 1);
     this.setState({ billItems: previousItems });
+
+    this.updateTip();
   }
 
   /**
@@ -141,12 +216,21 @@ class Bill extends React.Component {
    * @param {number} percent
    */
   changeTipPercent(percent) {
-    let tipState = this.state.tip;
+    const tipState = this.state.tip;
     tipState.percent = percent;
     tipState.usePercent = true;
     this.setState({ tip: tipState });
 
-    tipState = this.state.tip;
+    this.updateTip();
+  }
+
+  /**
+   * Update tip in bill state based  on current tip percent.
+   * @method
+   * @name updateTip
+   */
+  updateTip() {
+    const tipState = this.state.tip;
     tipState.value = this.calculateTip();
     this.setState({ tip: tipState });
   }
@@ -187,10 +271,7 @@ class Bill extends React.Component {
     previousItems[index] = billItem;
     this.setState({ billItems: previousItems });
 
-    // Update the tip state
-    const tipState = this.state.tip;
-    tipState.value = this.calculateTip();
-    this.setState({ tip: tipState });
+    this.updateTip();
   }
 
   /**
@@ -239,4 +320,14 @@ class Bill extends React.Component {
   }
 }
 
-export default Bill;
+Bill.propTypes = {
+  router: React.PropTypes.shape({
+    push: React.PropTypes.func.isRequired,
+  }),
+  params: React.PropTypes.shape({
+    id: React.PropTypes.string,
+  }),
+};
+
+
+export default withRouter(Bill);
