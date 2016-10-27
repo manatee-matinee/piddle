@@ -20,7 +20,7 @@ const ensureAuthenticated = (request, response, next) => {
 };
 
 const loginHandler = passport.authenticate('local', (request, response) => {
-  response.status(201).json({ message: 'User session created.' });
+  response.status(201).json({ data: { message: 'User session created.' } });
 });
 
 

@@ -1,6 +1,7 @@
 const config = require('../config.js');
 const Sequelize = require('sequelize');
 const Hashids = require('hashids');
+const bcrypt = require('bcrypt-as-promised');
 
 const hashIds = new Hashids('manatee salt', 5);
 
@@ -48,27 +49,42 @@ const Item = sequelize.define('item', {
 });
 
 const User = sequelize.define('user', {
-  venmoId: {
+  emailAddress: {
     type: Sequelize.STRING,
     allowNull: false,
+    isEmail: true,
   },
-  firstName: {
+  password: {
     type: Sequelize.STRING,
   },
-  lastName: {
+  name: {
     type: Sequelize.STRING,
   },
-  displayName: {
+  squareId: {
+    type: Sequelize.STRING,
+    is: /$\$\S+/, // begins with dollar sign
+  },
+  paypalId: {
     type: Sequelize.STRING,
   },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  profilePictureUrl: {
-    type: Sequelize.STRING,
-  },
-});
+},
+  {
+    instanceMethods: {
+      setPassword: function setPassword(password) {
+        return bcrypt.hash(password, config.bcryptHashRounds)
+          .then(hash => this.update({ password: hash }));
+      },
+      comparePassword: function comparePassword(attempt) {
+        return new Promise((resolve, reject) => {
+          bcrypt.compare(attempt, this.password)
+            .then(() => resolve(true))
+            .catch(bcrypt.MISMATCH_ERROR, () => resolve(false))
+            .catch(err => reject(err));
+        });
+      },
+    },
+  }
+);
 
 const BillDebtors = sequelize.define('bill_debtors', {
 });
