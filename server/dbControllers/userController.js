@@ -37,6 +37,7 @@ const verifyUser = (emailAddress, password) =>
     .then(userInstance =>
       userInstance.comparePassword(password)
     );
+
 /**
  * Create a user.
  * @param {Object} user - The user information.
@@ -65,9 +66,19 @@ new Promise((resolve, reject) => {
     }));
 });
 
+/**
+ * Delete a user.
+ * @param {string} emailAddress - The email address of the user.
+ * @returns {Promise} Resolves to undefined.
+ */
+const deleteUser = emailAddress =>
+  findUserByEmailAddress(emailAddress)
+    .then(userInstance => userInstance.destroy());
+
 module.exports = {
   findUserByEmailAddress,
   updateUser,
   verifyUser,
   createUser,
+  deleteUser,
 };
