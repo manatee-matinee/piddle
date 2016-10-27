@@ -6,6 +6,7 @@ import App from './components/App';
 import Bill from './components/Bill';
 import Home from './components/Home';
 import Login from './components/Login';
+import Signup from './components/Signup';
 
 ReactDOM.render((
   <Router history={browserHistory}>
@@ -19,6 +20,7 @@ ReactDOM.render((
       <Route path="bill" component={Bill} />
 >>>>>>> Create route and home-link to login page
       <Route path="login" component={Login} />
+      <Route path="signup" component={Signup} />
     </Route>
   </Router>
   ),
