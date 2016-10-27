@@ -51,3 +51,6 @@ yarn.lock
 
 # Databases
 *.sqlite
+
+# Documentation (run 'npm run doc' to build)
+docs/
