@@ -1,7 +1,15 @@
+const url = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
+
 export default {
-  postLogin: (emailAddress, password, callback) => (
+  /**
+   * Login POST request to /auth/login
+   * @param {string} emailAddress
+   * @param {string} password
+   * @param {requestCallback} cb - The callback that handles the response.
+   */
+  postLogin: (emailAddress, password, callback) => {
     // eslint-disable-next-line no-undef
-    fetch('/api/login', {
+    fetch(`${url}/auth/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -12,30 +20,37 @@ export default {
         password,
       }),
     })
-    .then(res => callback(res))
-  ),
+    .then(res => callback(res));
+  },
 
-  postSignup: (emailAddress, password, callback) => (
+  /**
+   * Signup POST request to /auth/signup
+   * @param {string} emailAddress
+   * @param {string} password
+   * @param {requestCallback} cb - The callback that handles the response.
+   */
+  postSignup: (data, callback) => {
     // eslint-disable-next-line no-undef
-    fetch('/api/signup', {
+    fetch(`${url}/auth/signup`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        emailAddress,
-        password,
-      }),
+      body: JSON.stringify(data),
     })
-    .then(res => callback(res))
-  ),
+    .then(res => callback(res));
+  },
 
-  getLogout: callback => (
+  /**
+   * Signout GET request to /auth/signout
+   * @param {requestCallback} cb - The callback that handles the response.
+   */
+  getLogout: (callback) => {
     // eslint-disable-next-line no-undef
-    fetch('/api/logout', {
+    fetch(`${url}/auth/logout`, {
       method: 'GET',
     })
-    .then(res => callback(res))
-  ),
+    .then(res => callback(res));
+  },
 };

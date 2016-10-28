@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 import Request from '../../utils/requestHandler';
 
 class Login extends Component {
@@ -11,7 +12,6 @@ class Login extends Component {
     this.handleEmailAdddressChange = this.handleEmailAddressChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.submitLoginForm = this.submitLoginForm.bind(this);
-    this.submitSignupForm = this.submitSignupForm.bind(this);
   }
 
   handleEmailAddressChange(event) {
@@ -27,13 +27,6 @@ class Login extends Component {
     const emailAddress = this.state.emailAddress;
     const password = this.state.password;
     Request.postLogin(emailAddress, password, res => console.log(res));
-  }
-
-  submitSignupForm(event) {
-    event.preventDefault();
-    const emailAddress = this.state.emailAddress;
-    const password = this.state.password;
-    Request.postSignup(emailAddress, password, res => console.log(res));
   }
 
   render() {
@@ -59,18 +52,15 @@ class Login extends Component {
           />
           <input
             type="submit"
+            className="submit"
             value="Login"
             onClick={event => this.submitLoginForm(event)}
           />
-          <input
-            type="submit"
-            value="Signup"
-            onClick={event => this.submitSignupForm(event)}
-          />
         </form>
+        <span>Need an account? </span>
+        <Link to="/signup">Sign up</Link>
       </div>
     );
   }
 }
-
 export default Login;
