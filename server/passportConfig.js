@@ -1,29 +1,26 @@
-const LocalStrategy = require('passport-local').Strategy;
+// const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
 const passport = require('passport');
+const config = require('../config');
 const userController = require('./dbControllers/userController');
 
 
-passport.use(new LocalStrategy({
-  usernameField: 'emailAddress',
-  passwordField: 'password',
-},
-  (emailAddress, password, done) => {
-    userController.findUserByEmailAddress(emailAddress)
-      .then((userInstance) => {
-        if (!userInstance) {
-          return done(null, false, { message: 'Incorrect user name' });
-        }
-        return userController.verifyUser(emailAddress, password)
-          .then((match) => {
-            if (!match) {
-              return done(null, false, { message: 'Incorrect password' });
-            }
-            return done(null, userInstance);
-          });
-      })
-      .catch(err => done(err));
-  }
-));
+const jwtOptions = {
+  secretOrKey: config.jwt.secret,
+  jwtFromRequest: ExtractJwt.fromAuthHeader(),
+};
+
+passport.use(new JwtStrategy(jwtOptions, (jwtPayload, done) => {
+  userController.findUserByEmailAddress(jwtPayload.emailAddress)
+    .then((userInstance) => {
+      if (!userInstance) {
+        return done(null, false, { message: 'User does not exist' });
+      }
+      return done(null, userInstance);
+    })
+    .catch(err => done(err));
+}));
 
 passport.serializeUser((user, done) => {
   done(null, user.get('emailAddress'));

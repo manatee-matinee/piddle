@@ -49,15 +49,18 @@ const createSampleUser = (done) => {
 
 // Log in sample user
   // use the userAgent to make authenticated request
-const userAgent = request.agent(app);
+let jwtHeaderValue;
 const logInSampleUser = (done) => {
-  userAgent
+  request(app)
     .post('/auth/login')
     .send({
       emailAddress: sampleUser.emailAddress,
       password: sampleUser.password,
     })
-    .end(() => done());
+    .end((err, response) => {
+      jwtHeaderValue = `JWT ${response.body.data.token}`;
+      done();
+    });
 };
 
 const emptyRecords = (done) => {
@@ -83,15 +86,17 @@ describe('Creating a bill', () => {
   });
 
   it('should respond with a 201 code', (done) => {
-    userAgent
+    request(app)
       .post('/api/bill')
+      .set('authorization', jwtHeaderValue)
       .send(bill)
       .expect(201, done);
   });
 
   it('should respond with the bill shortId', (done) => {
-    userAgent
+    request(app)
       .post('/api/bill')
+      .set('authorization', jwtHeaderValue)
       .send(bill)
       .end((err, response) => {
         expect(err).to.not.exist;
@@ -103,8 +108,9 @@ describe('Creating a bill', () => {
 
   it('should respond with an error for malformed bills', (done) => {
     delete bill.payerEmailAddress;
-    userAgent
+    request(app)
       .post('/api/bill')
+      .set('authorization', jwtHeaderValue)
       .send(bill)
       .end((err, response) => {
         expect(response.body.error).to.be.an('Object');
@@ -114,7 +120,7 @@ describe('Creating a bill', () => {
       });
   });
 
-  it('should not allow creation from users who are not logged in', (done) => {
+  it('should not allow creation from users who do not send auth token', (done) => {
     request(app)
       .post('/api/bill')
       .send(bill)
@@ -140,8 +146,9 @@ describe('Retrieving a bill', () => {
   });
 
   it('should retrieve bills', (done) => {
-    userAgent
+    request(app)
       .get(`/api/bill/${createdBillShortId}`)
+      .set('authorization', jwtHeaderValue)
       .end((err, response) => {
         expect(err).to.not.exist;
         expect(response.status).to.equal(200);
@@ -153,7 +160,7 @@ describe('Retrieving a bill', () => {
       });
   });
 
-  it('should not retrieve bills unless the user is logged in', (done) => {
+  it('should not retrieve bills unless the user sends auth token', (done) => {
     request(app)
     .get(`/api/bill/${createdBillShortId}`)
     .end((err, response) => {
@@ -163,8 +170,9 @@ describe('Retrieving a bill', () => {
   });
 
   it('should respond with an error if the bill does not exist', (done) => {
-    userAgent
+    request(app)
       .get('/api/bill/badId1')
+      .set('authorization', jwtHeaderValue)
       .end((err, response) => {
         expect(response.status).to.equal(400);
         expect(response.body.error).to.exist;
