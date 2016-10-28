@@ -78,6 +78,7 @@ class Bill extends React.Component {
        * @todo Extract these variables and functions into a module (DRY).
        */
       // ref: https://github.com/github/fetch
+      /*
       const checkStatus = (response) => {
         if (response.status >= 200 && response.status < 300) {
           return response;
@@ -87,6 +88,7 @@ class Bill extends React.Component {
         error.response = response;
         throw error;
       };
+      */
 
       this.setState({
         billItems: [
