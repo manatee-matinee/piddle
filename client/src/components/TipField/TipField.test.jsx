@@ -62,8 +62,8 @@ describe('editable', () => {
 describe('uneditable', () => {
   const component = renderedComponent.shallow.uneditable;
 
-  it('should not have an input field', () => {
-    expect(component.find(inputSelector))
+  it('should not have input fields', () => {
+    expect(component.find('input'))
       .to.have.length(0);
   });
 

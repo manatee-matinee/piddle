@@ -55,8 +55,8 @@ describe('editable', () => {
 describe('uneditable', () => {
   const taxField = renderedComponent.shallow.uneditable;
 
-  it('should not have an input field', () => {
-    expect(taxField.find(inputSelector))
+  it('should not have input fields', () => {
+    expect(taxField.find('input'))
       .to.have.length(0);
   });
 

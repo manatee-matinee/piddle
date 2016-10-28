@@ -55,12 +55,12 @@ describe('editable', () => {
 describe('uneditable', () => {
   const component = renderedComponent.shallow.uneditable;
 
-  it('should not have an input field', () => {
-    expect(component.find(inputSelector))
+  it('should not have input fields', () => {
+    expect(component.find('input'))
       .to.have.length(0);
   });
 
-  it('should hold the description', () => {
+  it('should display the description', () => {
     // eslint-disable-next-line no-unused-expressions
     expect(component.html().includes(description))
       .to.be.true;
