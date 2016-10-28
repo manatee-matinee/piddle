@@ -46,6 +46,10 @@ const Item = sequelize.define('item', {
   paid: {
     type: Sequelize.BOOLEAN,
   },
+  claimed: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 const User = sequelize.define('user', {
@@ -53,6 +57,7 @@ const User = sequelize.define('user', {
     type: Sequelize.STRING,
     allowNull: false,
     isEmail: true,
+    unique: true,
   },
   password: {
     type: Sequelize.STRING,
@@ -86,6 +91,20 @@ const User = sequelize.define('user', {
   }
 );
 
+
+/*
+Currently, we assign debtors to bills through items.
+So, a bill has items, and each item may or may not
+have a debtor associated with it.
+
+In the future, it may be useful to associate debtors with
+bills without assigning them to a specific item. The user story would
+be, the payer generates the bill, then lists his friends as debtors,
+without assigning them items. The debtors would then get notified somehow.
+
+This many-to-many relationship can be set up through the BillDebtors join
+table:
+
 const BillDebtors = sequelize.define('bill_debtors', {
 });
 
@@ -96,9 +115,10 @@ User.belongsToMany(Bill, {
 });
 
 Bill.belongsToMany(User, { through: BillDebtors });
+*/
 
 Bill.belongsTo(User, {
-  as: 'Payer',
+  as: 'payer',
   foreignKey: 'payerId',
 });
 
@@ -108,8 +128,8 @@ Bill.hasMany(Item);
 Item.belongsTo(Bill);
 
 Item.belongsTo(User, {
-  as: 'Payer',
-  foreignKey: 'payerId',
+  as: 'debtor',
+  foreignKey: 'debtorId',
 });
 
 
@@ -117,7 +137,6 @@ Item.belongsTo(User, {
 User.sync();
 Bill.sync();
 Item.sync();
-BillDebtors.sync();
 
 module.exports = {
   models: {

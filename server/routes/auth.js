@@ -31,7 +31,7 @@ const router = express.Router(); // eslint-disable-line new-cap
  * @apiError (401) Unauthorized The <code>emailAddress</code> and <code>password</code> did
  * not match a registered user.
  */
-router.post('/login', authHandler.loginHandler);
+router.post('/login', authHandler.loginHandler, authHandler.loginResponse);
 
 /**
  * @api {post} /auth/signup Create a new user and log them in

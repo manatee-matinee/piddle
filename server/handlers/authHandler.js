@@ -19,10 +19,11 @@ const ensureAuthenticated = (request, response, next) => {
   });
 };
 
-const loginHandler = passport.authenticate('local', (request, response) => {
-  response.status(201).json({ data: { message: 'User session created.' } });
-});
+const loginHandler = passport.authenticate('local');
 
+const loginResponse = (request, response) => {
+  response.status(201).json({ data: { message: 'User session created.' } });
+};
 
 const signupHandler = (request, response) => {
   userController.findUserByEmailAddress(request.body.emailAddress)
@@ -74,6 +75,7 @@ const logoutHandler = (request, response) => {
 module.exports = {
   ensureAuthenticated,
   loginHandler,
+  loginResponse,
   signupHandler,
   logoutHandler,
 };
