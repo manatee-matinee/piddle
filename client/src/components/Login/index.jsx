@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-<<<<<<< HEAD
-=======
 import { Link } from 'react-router';
->>>>>>> ffe6b7a3ab9126f1490f4c14268d08d5cc3b7a71
 import Request from '../../utils/requestHandler';
 
 class Login extends Component {
