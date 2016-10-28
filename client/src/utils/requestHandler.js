@@ -1,10 +1,10 @@
-module.exports = {
-
-  postLogin: (emailAddress, password, callback) => {
-    return fetch('/api/login', {
+export default {
+  postLogin: (emailAddress, password, callback) => (
+    // eslint-disable-next-line no-undef
+    fetch('/api/login', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -12,14 +12,15 @@ module.exports = {
         password,
       }),
     })
-    .then(res => callback(res));
-  },
+    .then(res => callback(res))
+  ),
 
-  postSignup: (emailAddress, password, callback) => {
-    return fetch('/api/signup', {
+  postSignup: (emailAddress, password, callback) => (
+    // eslint-disable-next-line no-undef
+    fetch('/api/signup', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -27,14 +28,14 @@ module.exports = {
         password,
       }),
     })
-    .then(res => callback(res));
-  },
+    .then(res => callback(res))
+  ),
 
-  getLogout: (callback) => {
-    return fetch('/api/logout', {
+  getLogout: callback => (
+    // eslint-disable-next-line no-undef
+    fetch('/api/logout', {
       method: 'GET',
     })
-    .then(res => callback(res));
-  },
-
+    .then(res => callback(res))
+  ),
 };
