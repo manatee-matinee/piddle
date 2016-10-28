@@ -1,37 +1,41 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import Request from '../../utils/requestHandler';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      emailAddress: '',
-      password: '',
+      inputs: {
+        emailAddress: null,
+        password: null,
+      },
+      error: '',
     };
-    this.handleEmailAdddressChange = this.handleEmailAddressChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.submitLoginForm = this.submitLoginForm.bind(this);
   }
 
-  handleEmailAddressChange(event) {
-    this.setState({ emailAddress: event.target.value });
-  }
-
-  handlePasswordChange(event) {
-    this.setState({ password: event.target.value });
+  handleInputChange(event) {
+    const stateObj = this.state.inputs;
+    stateObj[event.target.name] = event.target.value;
+    this.setState({ inputs: stateObj });
   }
 
   submitLoginForm(event) {
     event.preventDefault();
-    const emailAddress = this.state.emailAddress;
-    const password = this.state.password;
-    Request.postLogin(emailAddress, password, res => console.log(res));
+    Request.postLogin(this.state.inputs, (res) => {
+      if (res.status === 201) {
+        browserHistory.push('/');
+      } else {
+        this.setState({ error: 'Invalid username or password, please try again' });
+      }
+    });
   }
 
   render() {
     return (
-      <div className="Login Page">
+      <div className="loginPage">
         <p className="Login-intro">
           Welcome to the login page
         </p>
@@ -39,16 +43,16 @@ class Login extends Component {
           <label htmlFor="emailAddress">email</label>
           <input
             type="text"
-            className="emailAddress"
+            className="loginForm"
             name="emailAddress"
-            onChange={event => this.handleEmailAddressChange(event)}
+            onChange={event => this.handleInputChange(event)}
           />
           <label htmlFor="password">password</label>
           <input
             type="password"
-            className="password"
+            className="loginForm"
             name="password"
-            onChange={event => this.handlePasswordChange(event)}
+            onChange={event => this.handleInputChange(event)}
           />
           <input
             type="submit"
@@ -57,6 +61,7 @@ class Login extends Component {
             onClick={event => this.submitLoginForm(event)}
           />
         </form>
+        <div className="loginError">{this.state.error}</div>
         <span>Need an account? </span>
         <Link to="/signup">Sign up</Link>
       </div>
