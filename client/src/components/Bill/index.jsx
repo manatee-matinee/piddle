@@ -335,6 +335,7 @@ class Bill extends React.Component {
           <TipField
             changeTipValue={this.changeTipValue}
             changeTipPercent={this.changeTipPercent}
+            isEditable={this.state.isEditable}
             tipValue={this.state.tip.value}
           />
           <input
