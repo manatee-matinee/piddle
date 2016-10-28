@@ -3,54 +3,43 @@ import './TaxField.css';
 
 /**
  * @class TaxField
+ * @param {object} props
+ * @param {function} props.changeTaxValue
+ * @param {symbol} props.interactionType
+ * @param {number} props.taxValue
  */
-class TaxField extends React.Component {
-  /**
-   * @constructs
-   * @param {object} props
-   * @param {function} props.changeTaxValue
-   * @param {number} props.taxValue
-   */
-  constructor(props) {
-    super(props);
+const TaxField = (props) => {
+  const isEditable = (
+    props.interactionType === Symbol.for('new')
+    || props.interactionType === Symbol.for('edit')
+  );
 
-    this.valueChange = this.valueChange.bind(this);
-  }
-
-  /**
-   * Update Bill state with new tax value.
-   * @method
-   * @name valueChange
-   * @param {object} event
-   */
-  valueChange(event) {
-    this.props.changeTaxValue(Number.parseFloat(event.target.value));
-  }
-
-  /**
-   * Render the component
-   * @method
-   * @name render
-   * @returns {object}
-   */
-  render() {
-    return (
-      <div>
-        <label htmlFor="tax">Tax</label>
-        <input
-          type="number"
-          name="tax"
-          placeholder="Tax"
-          value={this.props.taxValue}
-          onChange={this.valueChange}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {isEditable &&
+        <div>
+          <label htmlFor="tax">Tax</label>
+          <input
+            type="number"
+            name="tax"
+            placeholder="Tax"
+            value={props.taxValue}
+            onChange={event => (
+              props.changeTaxValue(Number.parseFloat(event.target.value))
+            )}
+          />
+        </div>
+      }
+      {!isEditable &&
+        <p><span>Tax</span> {props.taxValue}</p>
+      }
+    </div>
+  );
+};
 
 TaxField.propTypes = {
   changeTaxValue: React.PropTypes.func.isRequired,
+  interactionType: React.PropTypes.symbol.isRequired,
   taxValue: React.PropTypes.number.isRequired,
 };
 

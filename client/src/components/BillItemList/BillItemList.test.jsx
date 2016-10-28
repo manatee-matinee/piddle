@@ -9,35 +9,114 @@ const changeBillItem = () => {};
 const deleteBillItem = () => {};
 const newBillItem = () => {};
 
-const billItemListProps = {
-  changeBillItem,
-  deleteBillItem,
-  newBillItem,
-  billItems: [
-    { description: 'a', price: 1 },
-    { description: 'b', price: 2 },
-    { description: 'c', price: 3 },
-  ],
+const props = {
+  shallow: {
+    changeBillItem,
+    deleteBillItem,
+    newBillItem,
+    billItems: [
+      { description: 'a', price: 1 },
+      { description: 'b', price: 2 },
+      { description: 'c', price: 3 },
+    ],
+  },
 };
-const shallowBillItemList = shallow(
-  <BillItemList {...billItemListProps} />
-);
 
-it('renders without crashing', () => {
-  // eslint-disable-next-line no-undef
-  const div = document.createElement('div');
-  ReactDOM.render(
-    <BillItemList {...billItemListProps} />,
-    div
-  );
+const renderedComponent = {
+  shallow: {
+    new: shallow(
+      <BillItemList
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
+      />
+    ),
+    edit: shallow(
+      <BillItemList
+        {...props.shallow}
+        interactionType={Symbol.for('edit')}
+      />
+    ),
+    claim: shallow(
+      <BillItemList
+        {...props.shallow}
+        interactionType={Symbol.for('claim')}
+      />
+    ),
+  },
+};
+
+describe('new', () => {
+  const component = renderedComponent.shallow.new;
+
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <BillItemList
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
+
+  it('has a button for adding additional bill items', () => {
+    expect(component.find('button'))
+      .to.have.length(1);
+  });
+
+  it('has a bill item for each provided bill item', () => {
+    expect(component.find(BillItem))
+      .to.have.length(props.shallow.billItems.length);
+  });
 });
 
-it('has a button for adding additional bill items', () => {
-  expect(shallowBillItemList.find('button'))
-    .to.have.length(1);
+describe('edit', () => {
+  const component = renderedComponent.shallow.edit;
+
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <BillItemList
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
+
+  it('has a button for adding additional bill items', () => {
+    expect(component.find('button'))
+      .to.have.length(1);
+  });
+
+  it('has a bill item for each provided bill item', () => {
+    expect(component.find(BillItem))
+      .to.have.length(props.shallow.billItems.length);
+  });
 });
 
-it('has a bill item for each provided bill item', () => {
-  expect(shallowBillItemList.find(BillItem))
-    .to.have.length(billItemListProps.billItems.length);
+describe('claim', () => {
+  const component = renderedComponent.shallow.claim;
+
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <BillItemList
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
+
+  it('should not have input fields', () => {
+    expect(component.find('input'))
+      .to.have.length(0);
+  });
+
+  it('should not have a button for adding additional bill items', () => {
+    expect(component.find('button'))
+      .to.have.length(0);
+  });
 });
+

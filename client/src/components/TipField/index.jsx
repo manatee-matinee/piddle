@@ -3,94 +3,79 @@ import './TipField.css';
 
 /**
  * @class TipField
+ * @param {object} props
+ * @param {function} props.changeTipValue
+ * @param {function} props.changeTipPercent
+ * @param {symbol} props.interactionType
+ * @param {number} props.tipValue
  */
-class TipField extends React.Component {
-  /**
-   * @constructs
-   * @param {object} props
-   * @param {function} props.changeTipValue
-   * @param {function} props.changeTipPercent
-   * @param {number} props.tipValue
-   */
-  constructor(props) {
-    super(props);
+const TipField = (props) => {
+  const isEditable = (
+    props.interactionType === Symbol.for('new')
+    || props.interactionType === Symbol.for('edit')
+  );
 
-    this.changeTipPercent = this.changeTipPercent.bind(this);
-    this.changeTipValue = this.changeTipValue.bind(this);
-  }
-
-  /**
-   * Update Bill state with new tip percent.
-   * @method
-   * @name changeTipPercent
-   * @param {object} event
-   */
-  changeTipPercent(event) {
+  const changeTipPercent = (event) => {
     event.preventDefault();
-    this.props.changeTipPercent(event.target.getAttribute('data-percent'));
-  }
+    props.changeTipPercent(event.target.getAttribute('data-percent'));
+  };
 
-  /**
-   * Update Bill state with new tip value.
-   * @method
-   * @name changeTipValue
-   * @param {object} event
-   */
-  changeTipValue(event) {
-    this.props.changeTipValue(event.target.value);
-  }
+  const changeTipValue = (event) => {
+    props.changeTipValue(event.target.value);
+  };
 
-  /**
-   * Render the component
-   * @method
-   * @name render
-   * @returns {object}
-   */
-  render() {
-    return (
-      <div>
-        <label htmlFor="tip">Tip</label>
-        <input
-          type="number"
-          name="tip"
-          placeholder="Tip"
-          value={this.props.tipValue}
-          onChange={this.changeTipValue}
-        />
-        <div className="tipSuggestions">
-          <button
-            onClick={this.changeTipPercent}
-            data-percent="0"
-          >
-            No Tip
-          </button>
-          <button
-            onClick={this.changeTipPercent}
-            data-percent="10"
-          >
-            10%
-          </button>
-          <button
-            onClick={this.changeTipPercent}
-            data-percent="15"
-          >
-            15%
-          </button>
-          <button
-            onClick={this.changeTipPercent}
-            data-percent="20"
-          >
-            20%
-          </button>
+  return (
+    <div>
+      {isEditable &&
+        <div>
+          <label htmlFor="tip">Tip</label>
+          <input
+            type="number"
+            name="tip"
+            placeholder="Tip"
+            value={props.tipValue}
+            onChange={changeTipValue}
+          />
+          <div className="tipSuggestions">
+            <button
+              onClick={changeTipPercent}
+              data-percent="0"
+            >
+              No Tip
+            </button>
+            <button
+              onClick={changeTipPercent}
+              data-percent="10"
+            >
+              10%
+            </button>
+            <button
+              onClick={changeTipPercent}
+              data-percent="15"
+            >
+              15%
+            </button>
+            <button
+              onClick={changeTipPercent}
+              data-percent="20"
+            >
+              20%
+            </button>
+          </div>
         </div>
-      </div>
-    );
-  }
-}
+      }
+      {!isEditable &&
+        <p><span>Tip</span> {props.tipValue}</p>
+      }
+    </div>
+  );
+};
 
 TipField.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
   changeTipPercent: React.PropTypes.func.isRequired,
   changeTipValue: React.PropTypes.func.isRequired,
+  interactionType: React.PropTypes.symbol.isRequired,
   tipValue: React.PropTypes.number.isRequired,
 };
 

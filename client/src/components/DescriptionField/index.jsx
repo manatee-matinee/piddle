@@ -3,55 +3,44 @@ import './DescriptionField.css';
 
 /**
  * @class DescriptionField
+ * @param {object} props
+ * @param {function} props.changeDescriptionValue
+ * @param {string} props.descriptionValue
+ * @param {symbol} props.interactionType
  */
-class DescriptionField extends React.Component {
-  /**
-   * @constructs
-   * @param {object} props
-   * @param {function} props.changeDescriptionValue
-   * @param {string} props.descriptionValue
-   */
-  constructor(props) {
-    super(props);
+const DescriptionField = (props) => {
+  const isEditable = (
+    props.interactionType === Symbol.for('new')
+    || props.interactionType === Symbol.for('edit')
+  );
 
-    this.valueChange = this.valueChange.bind(this);
-  }
-
-  /**
-   * Update Bill state with new description value.
-   * @method
-   * @name valueChange
-   * @param {object} event
-   */
-  valueChange(event) {
-    this.props.changeDescriptionValue(event.target.value);
-  }
-
-  /**
-   * Render the component
-   * @method
-   * @name render
-   * @returns {object}
-   */
-  render() {
-    return (
-      <div>
-        <label htmlFor="description">Description</label>
-        <input
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={this.props.descriptionValue}
-          onChange={this.valueChange}
-        />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {isEditable &&
+        <div>
+          <label htmlFor="description">Description</label>
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={props.descriptionValue}
+            onChange={event => (
+              props.changeDescriptionValue(event.target.value)
+            )}
+          />
+        </div>
+      }
+      {!isEditable &&
+        <p>{props.descriptionValue}</p>
+      }
+    </div>
+  );
+};
 
 DescriptionField.propTypes = {
   changeDescriptionValue: React.PropTypes.func.isRequired,
   descriptionValue: React.PropTypes.string.isRequired,
+  interactionType: React.PropTypes.symbol.isRequired,
 };
 
 export default DescriptionField;

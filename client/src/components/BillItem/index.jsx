@@ -1,32 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './BillItem.css';
+
 
 /**
  * @class BillItem
+ * @param {object} props
+ * @param {function} props.changeBillItem
+ * @param {function} props.deleteBillItem
+ * @param {string} props.description
+ * @param {number} props.index
+ * @param {symbol} props.interactionType
+ * @param {number} props.price
  */
-class BillItem extends Component {
-  /**
-   * @constructs
-   * @param {object} props
-   * @param {function} props.changeBillItem
-   * @param {function} props.deleteBillItem
-   * @param {string} props.description
-   * @param {number} props.index
-   * @param {number} props.price
-   */
-  constructor(props) {
-    super(props);
+const BillItem = (props) => {
+  const isEditable = (
+    props.interactionType === Symbol.for('new')
+    || props.interactionType === Symbol.for('edit')
+  );
 
-    this.fieldChange = this.fieldChange.bind(this);
-  }
-
-  /**
-   * Update BillItem's parent's state for a given field.
-   * @method
-   * @name fieldChange
-   * @param {object} event
-   */
-  fieldChange(event) {
+  const fieldChange = (event) => {
     const field = {
       name: event.target.getAttribute('name').match(/([a-z]+)$/)[1],
       tagName: event.target.tagName,
@@ -36,51 +28,55 @@ class BillItem extends Component {
       Number.parseFloat(event.target.value) :
       event.target.value;
 
-    this.props.changeBillItem(this.props.index, {
+    props.changeBillItem(props.index, {
       [field.name]: field.value,
     });
-  }
+  };
 
-  /**
-   * Render the component
-   * @method
-   * @name render
-   * @returns {object}
-   */
-  render() {
-    return (
-      <div className="BillItem">
-        <input
-          className="description"
-          name={`billItem-${this.props.index}-description`}
-          onChange={this.fieldChange}
-          placeholder="Description"
-          type="text"
-          value={this.props.description}
-        />
-        <input
-          className="price"
-          name={`billItem-${this.props.index}-price`}
-          onChange={this.fieldChange}
-          placeholder="Price"
-          type="number"
-          value={this.props.price}
-        />
-        <button
-          onClick={event => this.props.deleteBillItem(event, this.props.index)}
-        >
-          Delete
-        </button>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="BillItem">
+      {isEditable &&
+        <div>
+          <input
+            className="description"
+            name={`billItem-${props.index}-description`}
+            onChange={fieldChange}
+            placeholder="Description"
+            type="text"
+            value={props.description}
+          />
+          <input
+            className="price"
+            name={`billItem-${props.index}-price`}
+            onChange={fieldChange}
+            placeholder="Price"
+            type="number"
+            value={props.price}
+          />
+          <button
+            onClick={event => props.deleteBillItem(event, props.index)}
+          >
+            Delete
+          </button>
+        </div>
+      }
+      {!isEditable &&
+        <div>
+          <p><span>Description</span> {props.description}</p>
+          <p><span>Price</span> {props.price}</p>
+        </div>
+      }
+    </div>
+  );
+};
 
 BillItem.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
   changeBillItem: React.PropTypes.func.isRequired,
   deleteBillItem: React.PropTypes.func.isRequired,
   description: React.PropTypes.string.isRequired,
   index: React.PropTypes.number.isRequired,
+  interactionType: React.PropTypes.symbol.isRequired,
   price: React.PropTypes.number.isRequired,
 };
 

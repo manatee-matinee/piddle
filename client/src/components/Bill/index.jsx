@@ -38,6 +38,15 @@ class Bill extends React.Component {
     // Tip
     this.changeTipValue = this.changeTipValue.bind(this);
     this.changeTipPercent = this.changeTipPercent.bind(this);
+
+    /**
+     * @todo Move this into library module?
+     */
+    this.interactionTypes = {
+      new: Symbol.for('new'),
+      edit: Symbol.for('edit'),
+      claim: Symbol.for('claim'),
+    };
   }
 
   /**
@@ -56,6 +65,7 @@ class Bill extends React.Component {
         { description: '', price: 0 },
       ],
       description: '',
+      interactionType: this.interactionTypes.new,
       tax: 0,
       tip: {
         value: 0,
@@ -87,17 +97,48 @@ class Bill extends React.Component {
         throw error;
       };
 
+      /*
+        this.setState({
+          billItems: [
+            { description: 'Item 1', price: 10 },
+            { description: 'Item 2', price: 20 },
+          ],
+          description: 'Some Description',
+          interactionType: this.interactionTypes.claim,
+          tax: 0,
+          tip: {
+            value: 0,
+            percent: null,
+            usePercent: false,
+          },
+        });
+      */
+
+      // eslint-disable-next-line no-undef
       fetch(`${this.serverUrl}/api/bill/${billId}`)
         .then(checkStatus)
         .then(response => response.json())
         .then(({ data }) => {
-          /**
-           * @todo Set the current bill state to the data we receive from this GET request.
-           */
-          console.log(data);
+          this.setState({
+            ...this.state,
+            ...data,
+            isEditable: false,
+            tip: {
+              value: data.tip,
+              percent: null,
+              usePercent: false,
+            },
+          });
         })
         .catch((error) => {
-          console.error(error);
+          /**
+           * @todo handle this error appropriately
+           */
+          const userNotAuthorizedToViewBill = (error.response.status === 401);
+          if (userNotAuthorizedToViewBill) {
+            this.setState({ error });
+          }
+          console.dir(error);
         });
     }
   }
@@ -137,6 +178,7 @@ class Bill extends React.Component {
       throw error;
     };
 
+    // eslint-disable-next-line no-undef
     fetch(`${this.serverUrl}/api/bill`, {
       method: 'POST',
       headers: jsonHeaders,
@@ -148,6 +190,9 @@ class Bill extends React.Component {
         this.props.router.push(`/bill/${data.shortId}`);
       })
       .catch((error) => {
+        /**
+         * @todo handle this error appropriately
+         */
         console.error(error);
       });
   }
@@ -283,38 +328,72 @@ class Bill extends React.Component {
   render() {
     return (
       <div className="Bill">
-        <p className="Bill-intro">
-          Here is your bill
-        </p>
-        <form
-          id="createBillForm"
-          ref={(c) => { this.createBillForm = c; }}
-        >
-          <DescriptionField
-            changeDescriptionValue={this.changeDescriptionValue}
-            descriptionValue={this.state.description}
-          />
-          <BillItemList
-            billItems={this.state.billItems}
-            deleteBillItem={this.deleteBillItem}
-            changeBillItem={this.changeBillItem}
-            newBillItem={this.newBillItem}
-          />
-          <TaxField
-            changeTaxValue={this.changeTaxValue}
-            taxValue={this.state.tax}
-          />
-          <TipField
-            changeTipValue={this.changeTipValue}
-            changeTipPercent={this.changeTipPercent}
-            tipValue={this.state.tip.value}
-          />
-          <input
-            type="submit"
-            value="Create Bill"
-            onClick={this.createBill}
-          />
-        </form>
+        {this.state.error &&
+          <p>{this.state.error.message}</p>
+        }
+        {!this.state.error &&
+          <div>
+            <p className="Bill-intro">
+              Here is your bill
+            </p>
+            <form
+              id="createBillForm"
+              ref={(c) => { this.createBillForm = c; }}
+            >
+              <DescriptionField
+                changeDescriptionValue={this.changeDescriptionValue}
+                descriptionValue={this.state.description}
+                interactionType={this.state.interactionType}
+              />
+              <BillItemList
+                billItems={this.state.billItems}
+                deleteBillItem={this.deleteBillItem}
+                changeBillItem={this.changeBillItem}
+                interactionType={this.state.interactionType}
+                newBillItem={this.newBillItem}
+              />
+              <TaxField
+                changeTaxValue={this.changeTaxValue}
+                interactionType={this.state.interactionType}
+                taxValue={this.state.tax}
+              />
+              <TipField
+                changeTipValue={this.changeTipValue}
+                changeTipPercent={this.changeTipPercent}
+                interactionType={this.state.interactionType}
+                tipValue={this.state.tip.value}
+              />
+              {
+                /**
+                 * @todo Make into a component
+                 */
+              }
+              {(this.state.interactionType === Symbol.for('new')) &&
+                <input
+                  type="submit"
+                  value="Create New Bill"
+                  onClick={this.createBill}
+                />
+              }
+              {(this.state.interactionType === Symbol.for('edit')) &&
+                <input
+                  type="submit"
+                  value="Save Changes"
+                  onClick={this.createBill}
+                  disabled="true"
+                />
+              }
+              {(this.state.interactionType === Symbol.for('claim')) &&
+                <input
+                  type="submit"
+                  value="Claim Bill Items"
+                  onClick={this.createBill}
+                  disabled="true"
+                />
+              }
+            </form>
+          </div>
+        }
       </div>
     );
   }
@@ -328,6 +407,5 @@ Bill.propTypes = {
     id: React.PropTypes.string,
   }),
 };
-
 
 export default withRouter(Bill);

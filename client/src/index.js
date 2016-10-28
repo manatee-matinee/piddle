@@ -18,5 +18,6 @@ ReactDOM.render((
     </Route>
   </Router>
   ),
+  // eslint-disable-next-line no-undef
   document.getElementById('root')
 );
