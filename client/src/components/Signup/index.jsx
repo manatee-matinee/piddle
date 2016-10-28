@@ -14,8 +14,6 @@ class Signup extends Component {
       paypalId: '',
       venmoId: '',
     };
-    this.handleEmailAdddressChange = this.handleEmailAddressChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.submitSignupForm = this.submitSignupForm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }

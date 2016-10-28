@@ -31,19 +31,6 @@ class Login extends Component {
 
   render() {
     return (
-<<<<<<< b51bbfd3db9bc6a5dbb2d8d5ab902655331c1dd1
-    <div className="Login Page">
-      <p className="Login-intro">
-        Welcome to the login page
-      </p>
-      <form id="loginForm">
-        <label htmlFor="emailAddress">email</label>
-        <input
-          type="text"
-          className="emailAddress"
-          name="emailAddress"
-          onChange={event => this.handleEmailChange(event)}
-=======
       <div className="Login Page">
         <p className="Login-intro">
           Welcome to the login page
@@ -62,7 +49,6 @@ class Login extends Component {
             className="password"
             name="password"
             onChange={event => this.handlePasswordChange(event)}
->>>>>>> Separate login and signup pages
           />
           <input
             type="submit"
