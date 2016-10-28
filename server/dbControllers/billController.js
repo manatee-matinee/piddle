@@ -63,7 +63,13 @@ const retrieveBill = function retrieveBill(shortId) {
   });
 };
 
+const deleteBill = function deleteBill(shortId) {
+  return Bill.findOne({ where: { shortId } })
+    .then(billInstance => billInstance.destroy());
+};
+
 module.exports = {
   createBill,
   retrieveBill,
+  deleteBill,
 };
