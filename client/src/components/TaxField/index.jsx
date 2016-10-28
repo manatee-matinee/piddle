@@ -8,7 +8,6 @@ import './TaxField.css';
  * @param {number} props.taxValue
  * @param {boolean} [props.isEditable]
  */
-
 const TaxField = (props) => {
   // Absent boolean props are assumed to be true
   const isEditable = (props.isEditable === undefined || props.isEditable);
