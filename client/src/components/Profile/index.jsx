@@ -36,48 +36,47 @@ class Profile extends Component {
           <label htmlFor="emailAddress">Email</label>
           <input
             type="text"
-            className="loginInput"
+            className="updateInput"
+            id="emailAddress"
             name="emailAddress"
             onChange={event => this.handleInputChange(event)}
           />
           <label htmlFor="name">First name</label>
           <input
             type="text"
-            className="loginInput"
+            className="updateInput"
+            id="firstName"
             name="firstName"
             onChange={event => this.handleInputChange(event)}
           />
           <label htmlFor="name">Last name</label>
           <input
             type="text"
-            className="loginInput"
+            className="updateInput"
+            id="lastName"
             name="lastName"
             onChange={event => this.handleInputChange(event)}
           />
           <label htmlFor="password">square Id</label>
           <input
             type="text"
-            className="loginInput"
+            className="updateInput"
+            id="squareId"
             name="squareId"
             onChange={event => this.handleInputChange(event)}
           />
           <label htmlFor="password">paypal Id</label>
           <input
             type="text"
-            className="loginInput"
+            className="updateInput"
+            id="paypalId"
             name="paypalId"
-            onChange={event => this.handleInputChange(event)}
-          />
-          <label htmlFor="password">venmo Id</label>
-          <input
-            type="text"
-            className="loginInput"
-            name="venmoId"
             onChange={event => this.handleInputChange(event)}
           />
           <input
             type="submit"
-            className="submitLogin"
+            className="submitUpdate"
+            id="submitUpdate"
             value="Update"
             onClick={event => this.submitUpdateForm(event)}
           />

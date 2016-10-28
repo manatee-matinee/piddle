@@ -44,6 +44,7 @@ class Login extends Component {
           <input
             type="text"
             className="loginForm"
+            id="emailAddress"
             name="emailAddress"
             onChange={event => this.handleInputChange(event)}
           />
@@ -51,12 +52,14 @@ class Login extends Component {
           <input
             type="password"
             className="loginForm"
+            id="password"
             name="password"
             onChange={event => this.handleInputChange(event)}
           />
           <input
             type="submit"
-            className="submit"
+            className="submitLogin"
+            id="submitLogin"
             value="Login"
             onClick={event => this.submitLoginForm(event)}
           />

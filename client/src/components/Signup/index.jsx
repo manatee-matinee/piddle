@@ -50,6 +50,7 @@ class Signup extends Component {
           <input
             type="text"
             className="loginInput"
+            id="emailAddress"
             name="emailAddress"
             onChange={event => this.handleInputChange(event)}
           />
@@ -57,6 +58,7 @@ class Signup extends Component {
           <input
             type="password"
             className="loginInput"
+            id="password"
             name="password"
             onChange={event => this.handleInputChange(event)}
           />
@@ -64,6 +66,7 @@ class Signup extends Component {
           <input
             type="text"
             className="loginInput"
+            id="loginInput"
             name="firstName"
             onChange={event => this.handleInputChange(event)}
           />
@@ -71,6 +74,7 @@ class Signup extends Component {
           <input
             type="text"
             className="loginInput"
+            id="lastName"
             name="lastName"
             onChange={event => this.handleInputChange(event)}
           />
@@ -78,6 +82,7 @@ class Signup extends Component {
           <input
             type="text"
             className="loginInput"
+            id="squareId"
             name="squareId"
             onChange={event => this.handleInputChange(event)}
           />
@@ -85,19 +90,14 @@ class Signup extends Component {
           <input
             type="text"
             className="loginInput"
+            id="paypalId"
             name="paypalId"
-            onChange={event => this.handleInputChange(event)}
-          />
-          <label htmlFor="password">venmo Id</label>
-          <input
-            type="text"
-            className="loginInput"
-            name="venmoId"
             onChange={event => this.handleInputChange(event)}
           />
           <input
             type="submit"
-            className="submitLogin"
+            className="submitSignup"
+            id="submitSignup"
             value="Signup"
             onClick={event => this.submitSignupForm(event)}
           />
