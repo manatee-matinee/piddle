@@ -56,6 +56,7 @@ class Bill extends React.Component {
         { description: '', price: 0 },
       ],
       description: '',
+      isEditable: true,
       tax: 0,
       tip: {
         value: 0,
@@ -87,18 +88,41 @@ class Bill extends React.Component {
         throw error;
       };
 
+      this.setState({
+        billItems: [
+          { description: 'Item 1', price: 10 },
+          { description: 'Item 2', price: 20 },
+        ],
+        description: 'Some Description',
+        isEditable: false,
+        tax: 0,
+        tip: {
+          value: 0,
+          percent: null,
+          usePercent: false,
+        },
+      });
+
+        /*
       fetch(`${this.serverUrl}/api/bill/${billId}`)
         .then(checkStatus)
         .then(response => response.json())
         .then(({ data }) => {
-          /**
-           * @todo Set the current bill state to the data we receive from this GET request.
-           */
-          console.log(data);
+          this.setState({
+            ...this.state,
+            ...data,
+            isEditable: false,
+            tip: {
+              value: data.tip
+              percent: null,
+              usePercent: false,
+            },
+          });
         })
         .catch((error) => {
           console.error(error);
         });
+        */
     }
   }
 
