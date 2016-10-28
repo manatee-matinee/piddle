@@ -3,61 +3,37 @@ import './DescriptionField.css';
 
 /**
  * @class DescriptionField
+ * @param {object} props
+ * @param {function} props.changeDescriptionValue
+ * @param {string} props.descriptionValue
+ * @param {bool} [props.isEditable]
  */
-class DescriptionField extends React.Component {
-  /**
-   * @constructs
-   * @param {object} props
-   * @param {function} props.changeDescriptionValue
-   * @param {string} props.descriptionValue
-   * @param {bool} [props.isEditable]
-   */
-  constructor(props) {
-    super(props);
+const DescriptionField = (props) => {
+  // Absent boolean props are assumed to be true
+  const isEditable = (props.isEditable === undefined || props.isEditable);
 
-    // Absent boolean props are assumed to be true
-    this.isEditable = (this.props.isEditable === undefined || this.props.isEditable);
-    this.valueChange = this.valueChange.bind(this);
-  }
-
-  /**
-   * Update Bill state with new description value.
-   * @method
-   * @name valueChange
-   * @param {object} event
-   */
-  valueChange(event) {
-    this.props.changeDescriptionValue(event.target.value);
-  }
-
-  /**
-   * Render the component
-   * @method
-   * @name render
-   * @returns {object}
-   */
-  render() {
-    return (
-      <div>
-        {this.isEditable &&
-          <div>
-            <label htmlFor="description">Description</label>
-            <input
-              type="text"
-              name="description"
-              placeholder="Description"
-              value={this.props.descriptionValue}
-              onChange={this.valueChange}
-            />
-          </div>
-        }
-        {!this.isEditable &&
-          <p>{this.props.descriptionValue}</p>
-        }
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {isEditable &&
+        <div>
+          <label htmlFor="description">Description</label>
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={props.descriptionValue}
+            onChange={event => (
+              props.changeDescriptionValue(event.target.value)
+            )}
+          />
+        </div>
+      }
+      {!isEditable &&
+        <p>{props.descriptionValue}</p>
+      }
+    </div>
+  );
+};
 
 DescriptionField.propTypes = {
   changeDescriptionValue: React.PropTypes.func.isRequired,
