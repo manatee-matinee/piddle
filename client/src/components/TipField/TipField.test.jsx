@@ -48,14 +48,13 @@ describe('new', () => {
   const component = renderedComponent.shallow.new;
 
   it('renders without crashing', () => {
-    // eslint-disable-next-line no-undef
-    const div = document.createElement('div');
     ReactDOM.render(
       <TipField
         {...props.shallow}
         interactionType={Symbol.for('new')}
       />,
-      div
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
     );
   });
 
@@ -80,14 +79,13 @@ describe('edit', () => {
   const component = renderedComponent.shallow.edit;
 
   it('renders without crashing', () => {
-    // eslint-disable-next-line no-undef
-    const div = document.createElement('div');
     ReactDOM.render(
       <TipField
         {...props.shallow}
         interactionType={Symbol.for('edit')}
       />,
-      div
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
     );
   });
 
@@ -111,14 +109,13 @@ describe('claim', () => {
   const component = renderedComponent.shallow.claim;
 
   it('renders without crashing', () => {
-    // eslint-disable-next-line no-undef
-    const div = document.createElement('div');
     ReactDOM.render(
       <TipField
         {...props.shallow}
         interactionType={Symbol.for('claim')}
       />,
-      div
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
     );
   });
 
