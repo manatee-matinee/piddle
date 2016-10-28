@@ -317,6 +317,7 @@ class Bill extends React.Component {
           <DescriptionField
             changeDescriptionValue={this.changeDescriptionValue}
             descriptionValue={this.state.description}
+            isEditable={this.state.isEditable}
           />
           <BillItemList
             billItems={this.state.billItems}
@@ -326,6 +327,7 @@ class Bill extends React.Component {
           />
           <TaxField
             changeTaxValue={this.changeTaxValue}
+            isEditable={this.state.isEditable}
             taxValue={this.state.tax}
           />
           <TipField
