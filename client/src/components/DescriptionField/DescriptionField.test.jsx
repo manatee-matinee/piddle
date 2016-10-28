@@ -6,6 +6,8 @@ import DescriptionField from './index';
 
 const changeDescriptionValue = () => {};
 const description = 'A description';
+const inputSelector = 'input[name="description"]';
+
 const renderedComponent = {
   shallow: {
     editable: shallow(
@@ -40,12 +42,12 @@ describe('editable', () => {
   const component = renderedComponent.shallow.editable;
 
   it('has a field for inputting the description', () => {
-    expect(component.find('input[name="description"]'))
+    expect(component.find(inputSelector))
       .to.have.length(1);
   });
 
   it('populates the appropriate description value', () => {
-    expect(component.find('input[name="description"]').props().value)
+    expect(component.find(inputSelector).props().value)
       .to.equal(description);
   });
 });
@@ -54,7 +56,7 @@ describe('uneditable', () => {
   const component = renderedComponent.shallow.uneditable;
 
   it('should not have an input field', () => {
-    expect(component.find('input[name="description"]'))
+    expect(component.find(inputSelector))
       .to.have.length(0);
   });
 
