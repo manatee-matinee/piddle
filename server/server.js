@@ -15,7 +15,11 @@ const app = express();
 if (/^(dev|test)$/.test(process.env.NODE_ENV)) {
   app.use(cors());
 }
-app.use(morgan('dev'));
+if (process.env.NODE_ENV !== 'test') {
+  // Don't log requests during testing
+  app.use(morgan('dev'));
+}
+
 app.use(bodyParser.json());
 app.use(session({
   secret: config.sessionSecret,
