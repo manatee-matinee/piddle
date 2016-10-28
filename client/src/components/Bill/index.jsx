@@ -134,7 +134,11 @@ class Bill extends React.Component {
           /**
            * @todo handle this error appropriately
            */
-          console.error(error);
+          const userNotAuthorizedToViewBill = (error.response.status === 401);
+          if (userNotAuthorizedToViewBill) {
+            this.setState({ error });
+          }
+          console.dir(error);
         });
     }
   }
@@ -324,65 +328,72 @@ class Bill extends React.Component {
   render() {
     return (
       <div className="Bill">
-        <p className="Bill-intro">
-          Here is your bill
-        </p>
-        <form
-          id="createBillForm"
-          ref={(c) => { this.createBillForm = c; }}
-        >
-          <DescriptionField
-            changeDescriptionValue={this.changeDescriptionValue}
-            descriptionValue={this.state.description}
-            interactionType={this.state.interactionType}
-          />
-          <BillItemList
-            billItems={this.state.billItems}
-            deleteBillItem={this.deleteBillItem}
-            changeBillItem={this.changeBillItem}
-            interactionType={this.state.interactionType}
-            newBillItem={this.newBillItem}
-          />
-          <TaxField
-            changeTaxValue={this.changeTaxValue}
-            interactionType={this.state.interactionType}
-            taxValue={this.state.tax}
-          />
-          <TipField
-            changeTipValue={this.changeTipValue}
-            changeTipPercent={this.changeTipPercent}
-            interactionType={this.state.interactionType}
-            tipValue={this.state.tip.value}
-          />
-          {
-            /**
-             * @todo Make into a component
-             */
-          }
-          {(this.state.interactionType === Symbol.for('new')) &&
-            <input
-              type="submit"
-              value="Create New Bill"
-              onClick={this.createBill}
-            />
-          }
-          {(this.state.interactionType === Symbol.for('edit')) &&
-            <input
-              type="submit"
-              value="Save Changes"
-              onClick={this.createBill}
-              disabled="true"
-            />
-          }
-          {(this.state.interactionType === Symbol.for('claim')) &&
-            <input
-              type="submit"
-              value="Claim Bill Items"
-              onClick={this.createBill}
-              disabled="true"
-            />
-          }
-        </form>
+        {this.state.error &&
+          <p>{this.state.error.message}</p>
+        }
+        {!this.state.error &&
+          <div>
+            <p className="Bill-intro">
+              Here is your bill
+            </p>
+            <form
+              id="createBillForm"
+              ref={(c) => { this.createBillForm = c; }}
+            >
+              <DescriptionField
+                changeDescriptionValue={this.changeDescriptionValue}
+                descriptionValue={this.state.description}
+                interactionType={this.state.interactionType}
+              />
+              <BillItemList
+                billItems={this.state.billItems}
+                deleteBillItem={this.deleteBillItem}
+                changeBillItem={this.changeBillItem}
+                interactionType={this.state.interactionType}
+                newBillItem={this.newBillItem}
+              />
+              <TaxField
+                changeTaxValue={this.changeTaxValue}
+                interactionType={this.state.interactionType}
+                taxValue={this.state.tax}
+              />
+              <TipField
+                changeTipValue={this.changeTipValue}
+                changeTipPercent={this.changeTipPercent}
+                interactionType={this.state.interactionType}
+                tipValue={this.state.tip.value}
+              />
+              {
+                /**
+                 * @todo Make into a component
+                 */
+              }
+              {(this.state.interactionType === Symbol.for('new')) &&
+                <input
+                  type="submit"
+                  value="Create New Bill"
+                  onClick={this.createBill}
+                />
+              }
+              {(this.state.interactionType === Symbol.for('edit')) &&
+                <input
+                  type="submit"
+                  value="Save Changes"
+                  onClick={this.createBill}
+                  disabled="true"
+                />
+              }
+              {(this.state.interactionType === Symbol.for('claim')) &&
+                <input
+                  type="submit"
+                  value="Claim Bill Items"
+                  onClick={this.createBill}
+                  disabled="true"
+                />
+              }
+            </form>
+          </div>
+        }
       </div>
     );
   }
