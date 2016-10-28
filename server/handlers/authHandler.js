@@ -3,26 +3,57 @@
  */
 
 const userController = require('../dbControllers/userController');
+const jwt = require('jwt-simple');
 const passport = require('../passportConfig');
-/**
- * Ensures the user trying to access the endpoint is authenticated.
- * Place as middleware function on routes you wish to protect.
- */
-const ensureAuthenticated = (request, response, next) => {
-  if (request.isAuthenticated()) {
-    return next();
-  }
-  return response.status(401).json({
-    error: {
-      message: 'This endpoint requires authentication',
-    },
-  });
+const config = require('../../config');
+
+const ensureAuthenticated = passport.authenticate('jwt', { session: false });
+
+const generateJWT = (userInstance) => {
+  const payload = {
+    id: userInstance.id,
+    emailAddress: userInstance.emailAddress,
+    name: userInstance.name,
+    squareId: userInstance.squareId,
+    paypalId: userInstance.paypalId,
+  };
+  return jwt.encode(payload, config.jwt.secret, 'HS512');
 };
 
-const loginHandler = passport.authenticate('local');
-
-const loginResponse = (request, response) => {
-  response.status(201).json({ data: { message: 'User session created.' } });
+const loginHandler = (request, response) => {
+  const emailAddress = request.body.emailAddress;
+  const password = request.body.password;
+  userController.findUserByEmailAddress(emailAddress)
+    .then((userInstance) => {
+      if (!userInstance) {
+        return response.status(400).json({
+          error: {
+            message: 'Incorrect email address or password',
+          },
+        });
+      }
+      return userController.verifyUser(emailAddress, password)
+        .then((match) => {
+          if (!match) {
+            return response.status(400).json({
+              error: {
+                message: 'Incorrect email address or password',
+              },
+            });
+          }
+          return response.status(201).json({
+            data: {
+              message: 'Successfully generated user token',
+              token: generateJWT(userInstance),
+            },
+          });
+        });
+    })
+    .catch(() => response.status(500).json({
+      error: {
+        message: 'There was an error processing your login.',
+      },
+    }));
 };
 
 const signupHandler = (request, response) => {
@@ -37,20 +68,12 @@ const signupHandler = (request, response) => {
       }
       // user does not exist
       return userController.createUser(request.body)
-        .then(user =>
-          request.login(user, (error) => {
-            if (!error) {
-              return response.status(201).json({
-                data: {
-                  message: 'User successfully created and logged in',
-                },
-              });
-            }
-            return response.status(400).json({
-              error: {
-                message: 'There was a problem logging in the user after creation',
-              },
-            });
+        .then(createdUserInstance =>
+          response.status(201).json({
+            data: {
+              message: 'Successfully generated user token',
+              token: generateJWT(createdUserInstance),
+            },
           })
         )
         .catch(() =>
@@ -75,7 +98,6 @@ const logoutHandler = (request, response) => {
 module.exports = {
   ensureAuthenticated,
   loginHandler,
-  loginResponse,
   signupHandler,
   logoutHandler,
 };
