@@ -1,8 +1,10 @@
 const express = require('express');
+const apiHandler = require('../handlers/apiHandler');
+const authHandler = require('../handlers/authHandler');
+const billController = require('../dbControllers/billController');
 
 const router = express.Router(); // eslint-disable-line
 
-const handler = require('../handlers/apiHandler');
 
 /**
  * @api {get} /api/bill/:id Retrieve a bill
@@ -23,11 +25,13 @@ const handler = require('../handlers/apiHandler');
  * @apiSuccess (200) {string} data.items.description Description of the item.
  * @apiSuccess (200) {number} data.items.price Price of the item in local currency.
  * @apiSuccess (200) {boolean} data.items.claimed True if a debtor has claimed the item.
- * @apiSuccess (200) {boolean} data.items.paid True if the item has been paid for (reserved for future use).
+ * @apiSuccess (200) {boolean} data.items.paid True if the item has
+ * been paid for (reserved for future use).
  * @apiSuccess (200) {Object} data.items.debtor Person responsible for paying for the item.
  * @apiSuccess (200) {string} data.items.debtor.emailAddress The email address of the debtor.
  * @apiSuccess (200) {string} data.items.debtor.displayName Name of the debtor to display.
- * @apiSuccess (200) {Object} data.payer The payer of the bill; presumably who created the bill in the app.
+ * @apiSuccess (200) {Object} data.payer The payer of the bill; presumably who
+ * created the bill in the app.
  * @apiSuccess (200) {string} data.payer.emailAddress Email address of the payer.
  * @apiSuccess (200) {string} data.payer.displayName Name of the payer to display.
  * @apiSuccess (200) {string} data.payer.squareId SquareCash www.cash.me 'cashtag' of the payer
@@ -68,16 +72,14 @@ const handler = require('../handlers/apiHandler');
  *      }
  *    }
  */
-router.get('/bill/:shortId' (request, response) => {
-  response.send(500, "Not implemented");
-});
+router.get('/bill/:shortId', authHandler.ensureAuthenticated, apiHandler.getBill);
 
 /**
  * @api {post} /api/bill Create a bill
  * @apiName CreateBill
  * @apiGroup Bill
  *
- * @apiPermission user 
+ * @apiPermission user
  *
  * @apiParam {string} [description] Description of the bill.
  * @apiParam {number} [tax] Tax in local currency associated with the bill.
@@ -102,6 +104,6 @@ router.get('/bill/:shortId' (request, response) => {
  *    }
  *
  */
-router.post('/bill', handler.saveBill);
+router.post('/bill', authHandler.ensureAuthenticated, apiHandler.saveBill);
 
 module.exports = router;
