@@ -6,68 +6,133 @@ import TipField from './index';
 
 const changeTipPercent = () => {};
 const changeTipValue = () => {};
-const inputSelector = 'input[name="tip"]';
 const tipValue = 12.34;
+
+const selectors = {
+  tip: 'input[name="tip"]',
+  tipButtons: 'button[data-percent]',
+};
+
+const props = {
+  shallow: {
+    changeTipValue,
+    changeTipPercent,
+    tipValue,
+  },
+};
 
 const renderedComponent = {
   shallow: {
-    editable: shallow(
+    new: shallow(
       <TipField
-        changeTipValue={changeTipValue}
-        changeTipPercent={changeTipPercent}
-        tipValue={tipValue}
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
       />
     ),
-    uneditable: shallow(
+    edit: shallow(
       <TipField
-        changeTipValue={changeTipValue}
-        changeTipPercent={changeTipPercent}
-        isEditable={false}
-        tipValue={tipValue}
+        {...props.shallow}
+        interactionType={Symbol.for('edit')}
+      />
+    ),
+    claim: shallow(
+      <TipField
+        {...props.shallow}
+        interactionType={Symbol.for('claim')}
       />
     ),
   },
 };
 
+describe('new', () => {
+  const component = renderedComponent.shallow.new;
 
-
-it('renders without crashing', () => {
-  // eslint-disable-next-line no-undef
-  const div = document.createElement('div');
-  ReactDOM.render(
-    <TipField
-      changeTipValue={changeTipValue}
-      changeTipPercent={changeTipPercent}
-      tipValue={tipValue}
-    />,
-    div
-  );
-});
-
-describe('editable', () => {
-  const component = renderedComponent.shallow.editable;
+  it('renders without crashing', () => {
+    // eslint-disable-next-line no-undef
+    const div = document.createElement('div');
+    ReactDOM.render(
+      <TipField
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
+      />,
+      div
+    );
+  });
 
   it('has a field for inputting the tip', () => {
-    expect(component.find(inputSelector))
+    expect(component.find(selectors.tip))
       .to.have.length(1);
   });
 
+  it('has buttons for computing the tip', () => {
+    expect(component.find(selectors.tipButtons))
+      .to.have.length.above(0);
+  });
+
   it('populates the appropriate tip value', () => {
-    expect(component.find(inputSelector).props().value)
-      .to.equal(12.34);
+    expect(component.find(selectors.tip).props().value)
+      .to.equal(tipValue);
   });
 });
 
 
-describe('uneditable', () => {
-  const component = renderedComponent.shallow.uneditable;
+describe('edit', () => {
+  const component = renderedComponent.shallow.edit;
+
+  it('renders without crashing', () => {
+    // eslint-disable-next-line no-undef
+    const div = document.createElement('div');
+    ReactDOM.render(
+      <TipField
+        {...props.shallow}
+        interactionType={Symbol.for('edit')}
+      />,
+      div
+    );
+  });
+
+  it('has a field for inputting the tip', () => {
+    expect(component.find(selectors.tip))
+      .to.have.length(1);
+  });
+
+  it('has buttons for computing the tip', () => {
+    expect(component.find(selectors.tipButtons))
+      .to.have.length.above(0);
+  });
+
+  it('populates the appropriate tip value', () => {
+    expect(component.find(selectors.tip).props().value)
+      .to.equal(tipValue);
+  });
+});
+
+describe('claim', () => {
+  const component = renderedComponent.shallow.claim;
+
+  it('renders without crashing', () => {
+    // eslint-disable-next-line no-undef
+    const div = document.createElement('div');
+    ReactDOM.render(
+      <TipField
+        {...props.shallow}
+        interactionType={Symbol.for('claim')}
+      />,
+      div
+    );
+  });
 
   it('should not have input fields', () => {
     expect(component.find('input'))
       .to.have.length(0);
   });
 
-  it('should hold the description', () => {
+  it('should not have buttons for computing the tip', () => {
+    expect(component.find(selectors.tipButtons))
+      .to.have.length(0);
+  });
+
+  it('should hold the tip', () => {
     // eslint-disable-next-line no-unused-expressions
     expect(component.html().includes(tipValue))
       .to.be.true;

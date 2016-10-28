@@ -38,6 +38,15 @@ class Bill extends React.Component {
     // Tip
     this.changeTipValue = this.changeTipValue.bind(this);
     this.changeTipPercent = this.changeTipPercent.bind(this);
+
+    /**
+     * @todo Move this into library module?
+     */
+    this.interactionTypes = {
+      new: Symbol.for('new'),
+      edit: Symbol.for('edit'),
+      claim: Symbol.for('claim'),
+    };
   }
 
   /**
@@ -56,7 +65,7 @@ class Bill extends React.Component {
         { description: '', price: 0 },
       ],
       description: '',
-      isEditable: true,
+      interactionType: this.interactionTypes.new,
       tax: 0,
       tip: {
         value: 0,
@@ -96,7 +105,7 @@ class Bill extends React.Component {
           { description: 'Item 2', price: 20 },
         ],
         description: 'Some Description',
-        isEditable: false,
+        interactionType: this.interactionTypes.claim,
         tax: 0,
         tip: {
           value: 0,
@@ -319,23 +328,24 @@ class Bill extends React.Component {
           <DescriptionField
             changeDescriptionValue={this.changeDescriptionValue}
             descriptionValue={this.state.description}
-            isEditable={this.state.isEditable}
+            interactionType={this.state.interactionType}
           />
           <BillItemList
             billItems={this.state.billItems}
             deleteBillItem={this.deleteBillItem}
             changeBillItem={this.changeBillItem}
+            interactionType={this.state.interactionType}
             newBillItem={this.newBillItem}
           />
           <TaxField
             changeTaxValue={this.changeTaxValue}
-            isEditable={this.state.isEditable}
+            interactionType={this.state.interactionType}
             taxValue={this.state.tax}
           />
           <TipField
             changeTipValue={this.changeTipValue}
             changeTipPercent={this.changeTipPercent}
-            isEditable={this.state.isEditable}
+            interactionType={this.state.interactionType}
             tipValue={this.state.tip.value}
           />
           <input

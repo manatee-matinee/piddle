@@ -7,7 +7,6 @@ import BillItem from './index';
 const changeBillItem = () => {};
 const deleteBillItem = () => {};
 
-
 const props = {
   shallow: {
     changeBillItem,
@@ -23,35 +22,42 @@ const selectors = {
   price: `input[name="billItem-${props.shallow.index}-price"]`,
 };
 
-const shallowBillItem =
-  shallow(
-  <BillItem {...props.shallow} />
-);
-
 const renderedComponent = {
   shallow: {
-    editable: shallow(
-      <BillItem {...props.shallow} />
-    ),
-    uneditable: shallow(
+    new: shallow(
       <BillItem
         {...props.shallow}
-        isEditable={false}
+        interactionType={Symbol.for('new')}
+      />
+    ),
+    edit: shallow(
+      <BillItem
+        {...props.shallow}
+        interactionType={Symbol.for('edit')}
+      />
+    ),
+    claim: shallow(
+      <BillItem
+        {...props.shallow}
+        interactionType={Symbol.for('claim')}
       />
     ),
   },
 };
 
-it('renders without crashing', () => {
-  ReactDOM.render(
-    <BillItem {...props.shallow} />,
-    // eslint-disable-next-line no-undef
-    document.createElement('div'),
-  );
-});
+describe('new', () => {
+  const component = renderedComponent.shallow.new;
 
-describe('editable', () => {
-  const component = renderedComponent.shallow.editable;
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <BillItem
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
 
   it('has a field for inputting the description', () => {
     expect(component.find(selectors.description))
@@ -74,8 +80,55 @@ describe('editable', () => {
   });
 });
 
-describe('uneditable', () => {
-  const component = renderedComponent.shallow.uneditable;
+
+describe('edit', () => {
+  const component = renderedComponent.shallow.edit;
+
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <BillItem
+        {...props.shallow}
+        interactionType={Symbol.for('edit')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
+
+  it('has a field for inputting the description', () => {
+    expect(component.find(selectors.description))
+      .to.have.length(1);
+  });
+
+  it('has a field for inputting the price', () => {
+    expect(component.find(selectors.price))
+      .to.have.length(1);
+  });
+
+  it('populates the appropriate description', () => {
+    expect(component.find(selectors.description).props().value)
+      .to.equal(props.shallow.description);
+  });
+
+  it('populates the appropriate price', () => {
+    expect(component.find(selectors.price).props().value)
+      .to.equal(props.shallow.price);
+  });
+});
+
+describe('claim', () => {
+  const component = renderedComponent.shallow.claim;
+
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <BillItem
+        {...props.shallow}
+        interactionType={Symbol.for('claim')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
 
   it('should not have input fields', () => {
     expect(component.find('input'))

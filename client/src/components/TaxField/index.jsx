@@ -5,12 +5,14 @@ import './TaxField.css';
  * @class TaxField
  * @param {object} props
  * @param {function} props.changeTaxValue
+ * @param {symbol} props.interactionType
  * @param {number} props.taxValue
- * @param {boolean} [props.isEditable]
  */
 const TaxField = (props) => {
-  // Absent boolean props are assumed to be true
-  const isEditable = (props.isEditable === undefined || props.isEditable);
+  const isEditable = (
+    props.interactionType === Symbol.for('new')
+    || props.interactionType === Symbol.for('edit')
+  );
 
   return (
     <div>
@@ -29,7 +31,7 @@ const TaxField = (props) => {
         </div>
       }
       {!isEditable &&
-        <p>{props.taxValue}</p>
+        <p><span>Tax</span> {props.taxValue}</p>
       }
     </div>
   );
@@ -37,7 +39,7 @@ const TaxField = (props) => {
 
 TaxField.propTypes = {
   changeTaxValue: React.PropTypes.func.isRequired,
-  isEditable: React.PropTypes.bool,
+  interactionType: React.PropTypes.symbol.isRequired,
   taxValue: React.PropTypes.number.isRequired,
 };
 

@@ -6,61 +6,112 @@ import DescriptionField from './index';
 
 const changeDescriptionValue = () => {};
 const description = 'A description';
-const inputSelector = 'input[name="description"]';
+
+const selectors = {
+  description: 'input[name="description"]',
+};
+
+const props = {
+  shallow: {
+    changeDescriptionValue,
+    descriptionValue: description,
+  },
+};
 
 const renderedComponent = {
   shallow: {
-    editable: shallow(
+    new: shallow(
       <DescriptionField
-        descriptionValue={description}
-        changeDescriptionValue={changeDescriptionValue}
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
       />
     ),
-    uneditable: shallow(
+    edit: shallow(
       <DescriptionField
-        descriptionValue={description}
-        changeDescriptionValue={changeDescriptionValue}
-        isEditable={false}
+        {...props.shallow}
+        interactionType={Symbol.for('edit')}
+      />
+    ),
+    claim: shallow(
+      <DescriptionField
+        {...props.shallow}
+        interactionType={Symbol.for('claim')}
       />
     ),
   },
 };
 
-it('renders without crashing', () => {
-  // eslint-disable-next-line no-undef
-  const div = document.createElement('div');
-  ReactDOM.render(
-    <DescriptionField
-      descriptionValue={description}
-      changeDescriptionValue={changeDescriptionValue}
-    />,
-    div
-  );
-});
+describe('new', () => {
+  const component = renderedComponent.shallow.new;
 
-describe('editable', () => {
-  const component = renderedComponent.shallow.editable;
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <DescriptionField
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
 
   it('has a field for inputting the description', () => {
-    expect(component.find(inputSelector))
+    expect(component.find(selectors.description))
       .to.have.length(1);
   });
 
   it('populates the appropriate description value', () => {
-    expect(component.find(inputSelector).props().value)
+    expect(component.find(selectors.description).props().value)
       .to.equal(description);
   });
 });
 
-describe('uneditable', () => {
-  const component = renderedComponent.shallow.uneditable;
+
+describe('edit', () => {
+  const component = renderedComponent.shallow.edit;
+
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <DescriptionField
+        {...props.shallow}
+        interactionType={Symbol.for('edit')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
+
+  it('has a field for inputting the description', () => {
+    expect(component.find(selectors.description))
+      .to.have.length(1);
+  });
+
+  it('populates the appropriate description value', () => {
+    expect(component.find(selectors.description).props().value)
+      .to.equal(description);
+  });
+});
+
+describe('claim', () => {
+  const component = renderedComponent.shallow.claim;
+
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <DescriptionField
+        {...props.shallow}
+        interactionType={Symbol.for('claim')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
 
   it('should not have input fields', () => {
     expect(component.find('input'))
       .to.have.length(0);
   });
 
-  it('should display the description', () => {
+  it('should hold the description', () => {
     // eslint-disable-next-line no-unused-expressions
     expect(component.html().includes(description))
       .to.be.true;
