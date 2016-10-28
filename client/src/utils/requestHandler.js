@@ -8,10 +8,11 @@ export default {
    * @param {requestCallback} cb - The callback that handles the response.
    */
   postLogin: (emailAddress, password, callback) => {
+    // eslint-disable-next-line no-undef
     fetch(`${url}/auth/login`, {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

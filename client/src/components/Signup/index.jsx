@@ -8,25 +8,28 @@ class Signup extends Component {
     this.state = {
       emailAddress: '',
       password: '',
+      firstName: '',
+      lastName: '',
+      squareId: '',
+      paypalId: '',
+      venmoId: '',
     };
     this.handleEmailAdddressChange = this.handleEmailAddressChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.submitSignupForm = this.submitSignupForm.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  handleEmailAddressChange(event) {
-    this.setState({ emailAddress: event.target.value });
-  }
 
-  handlePasswordChange(event) {
-    this.setState({ password: event.target.value });
+  handleInputChange(event) {
+    const stateObj = {};
+    stateObj[event.target.name] = event.target.value;
+    this.setState(stateObj);
   }
 
   submitSignupForm(event) {
     event.preventDefault();
-    const emailAddress = this.state.emailAddress;
-    const password = this.state.password;
-    Request.postSignup(emailAddress, password, res => console.log(res));
+    Request.postSignup(this.state, res => console.log(res));
   }
 
   render() {
@@ -36,23 +39,58 @@ class Signup extends Component {
           Welcome to the signup page
         </p>
         <form id="signupForm">
-          <label htmlFor="emailAddress">email</label>
+          <label htmlFor="emailAddress">Email</label>
           <input
             type="text"
-            className="emailAddress"
+            className="loginInput"
             name="emailAddress"
-            onChange={event => this.handleEmailAddressChange(event)}
-            />
-          <label htmlFor="password">password</label>
+            onChange={event => this.handleInputChange(event)}
+          />
+          <label htmlFor="password">Password</label>
           <input
             type="password"
-            className="password"
+            className="loginInput"
             name="password"
-            onChange={event => this.handlePasswordChange(event)}
+            onChange={event => this.handleInputChange(event)}
+          />
+          <label htmlFor="name">First name</label>
+          <input
+            type="text"
+            className="loginInput"
+            name="firstName"
+            onChange={event => this.handleInputChange(event)}
+          />
+          <label htmlFor="name">Last name</label>
+          <input
+            type="text"
+            className="loginInput"
+            name="lastName"
+            onChange={event => this.handleInputChange(event)}
+          />
+          <label htmlFor="password">square Id</label>
+          <input
+            type="text"
+            className="loginInput"
+            name="squareId"
+            onChange={event => this.handleInputChange(event)}
+          />
+          <label htmlFor="password">paypal Id</label>
+          <input
+            type="text"
+            className="loginInput"
+            name="paypalId"
+            onChange={event => this.handleInputChange(event)}
+          />
+          <label htmlFor="password">venmo Id</label>
+          <input
+            type="text"
+            className="loginInput"
+            name="venmoId"
+            onChange={event => this.handleInputChange(event)}
           />
           <input
             type="submit"
-            className="submit"
+            className="submitLogin"
             value="Signup"
             onClick={event => this.submitSignupForm(event)}
           />
