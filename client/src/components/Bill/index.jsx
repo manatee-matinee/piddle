@@ -348,11 +348,34 @@ class Bill extends React.Component {
             interactionType={this.state.interactionType}
             tipValue={this.state.tip.value}
           />
-          <input
-            type="submit"
-            value="Create Bill"
-            onClick={this.createBill}
-          />
+          {
+            /**
+             * @todo Make into a component
+             */
+          }
+          {(this.state.interactionType === Symbol.for('new')) &&
+            <input
+              type="submit"
+              value="Create New Bill"
+              onClick={this.createBill}
+            />
+          }
+          {(this.state.interactionType === Symbol.for('edit')) &&
+            <input
+              type="submit"
+              value="Save Changes"
+              onClick={this.createBill}
+              disabled="true"
+            />
+          }
+          {(this.state.interactionType === Symbol.for('claim')) &&
+            <input
+              type="submit"
+              value="Claim Bill Items"
+              onClick={this.createBill}
+              disabled="true"
+            />
+          }
         </form>
       </div>
     );
