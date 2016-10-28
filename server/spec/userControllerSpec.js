@@ -59,17 +59,30 @@ describe('With existing users', () => {
     emptyUserRecords(done);
   });
 
+  let createdUserId;
+
   before((done) => {
     userController.createUser({
       emailAddress: 'existing@user.com',
       password: 'password123',
       name: 'Tricia Will',
     })
-    .then(() => done());
+    .then((createdUserInstance) => {
+      createdUserId = createdUserInstance.get('id');
+      done();
+    });
   });
 
   it('should find users by email address', (done) => {
     userController.findUserByEmailAddress('existing@user.com')
+      .then((userInstance) => {
+        expect(userInstance.get('name')).to.equal('Tricia Will');
+        done();
+      });
+  });
+
+  it('should find users by id', (done) => {
+    userController.findUserById(createdUserId)
       .then((userInstance) => {
         expect(userInstance.get('name')).to.equal('Tricia Will');
         done();
@@ -101,12 +114,22 @@ describe('With existing users', () => {
   });
 
   it('should update properties on a user', (done) => {
-    userController.updateUser('existing@user.com', {
+    userController.updateUser(createdUserId, {
       squareId: '$twill',
     })
       .then((userInstance) => {
         expect(userInstance.get('emailAddress')).to.equal('existing@user.com');
         expect(userInstance.get('squareId')).to.equal('$twill');
+        done();
+      });
+  });
+
+  it('should not update properties if the new value is null', (done) => {
+    userController.updateUser(createdUserId, {
+      squareId: null,
+    })
+      .then((userInstance) => {
+        expect(userInstance.get('squareId')).to.equal('$twill'); // not changed
         done();
       });
   });

@@ -71,7 +71,7 @@ const signupHandler = (request, response) => {
         .then(createdUserInstance =>
           response.status(201).json({
             data: {
-              message: 'Successfully generated user token',
+              message: 'Successfully created user and generated user token',
               token: generateJWT(createdUserInstance),
             },
           })
@@ -86,18 +86,35 @@ const signupHandler = (request, response) => {
     });
 };
 
-const logoutHandler = (request, response) => {
-  request.logout();
-  return response.status(200).json({
-    data: {
-      message: 'User logged out',
-    },
-  });
+const updateUserHandler = (request, response) => {
+  const userId = request.params.id;
+  const loggedInUserId = request.user.id;
+  if (+userId !== +loggedInUserId) {
+    return response.status(403).json({
+      error: {
+        message: 'You may not edit other user\'s data',
+      },
+    });
+  }
+  return userController.updateUser(userId, request.body)
+    .then((userInstance) => {
+      response.status(200).json({
+        data: {
+          message: 'User successfully updated. New token included',
+          token: generateJWT(userInstance),
+        },
+      });
+    })
+    .catch(() => response.status(500).json({
+      error: {
+        message: 'There was an error updating the user',
+      } })
+    );
 };
 
 module.exports = {
   ensureAuthenticated,
   loginHandler,
   signupHandler,
-  logoutHandler,
+  updateUserHandler,
 };

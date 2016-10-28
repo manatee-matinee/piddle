@@ -48,7 +48,7 @@ const retrieveBill = function retrieveBill(shortId) {
           model: User,
           as: 'debtor',
           attributes: {
-            exclude: ['id', 'password'],
+            exclude: ['password'],
           },
         }],
       },
@@ -56,7 +56,7 @@ const retrieveBill = function retrieveBill(shortId) {
         model: User,
         as: 'payer',
         attributes: {
-          exclude: ['id', 'password'],
+          exclude: ['password'],
         },
       },
     ],
