@@ -5,29 +5,62 @@ import { shallow } from 'enzyme';
 import DescriptionField from './index';
 
 const changeDescriptionValue = () => {};
-const shallowDescriptionField = shallow(
-  <DescriptionField
-    descriptionValue={'A Description'}
-    changeDescriptionValue={changeDescriptionValue}
-  />
-);
+const description = 'A description';
+const renderedComponent = {
+  shallow: {
+    editable: shallow(
+      <DescriptionField
+        descriptionValue={description}
+        changeDescriptionValue={changeDescriptionValue}
+      />
+    ),
+    uneditable: shallow(
+      <DescriptionField
+        descriptionValue={description}
+        changeDescriptionValue={changeDescriptionValue}
+        isEditable={false}
+      />
+    ),
+  },
+};
 
 it('renders without crashing', () => {
   // eslint-disable-next-line no-undef
   const div = document.createElement('div');
   ReactDOM.render(
     <DescriptionField
-      descriptionValue={'A Description'}
+      descriptionValue={description}
       changeDescriptionValue={changeDescriptionValue}
     />,
     div
   );
 });
 
-it('has a field for inputting the description', () => {
-  expect(shallowDescriptionField.find('input[name="description"]')).to.have.length(1);
+describe('editable', () => {
+  const component = renderedComponent.shallow.editable;
+
+  it('has a field for inputting the description', () => {
+    expect(component.find('input[name="description"]'))
+      .to.have.length(1);
+  });
+
+  it('populates the appropriate description value', () => {
+    expect(component.find('input[name="description"]').props().value)
+      .to.equal(description);
+  });
 });
 
-it('populates the appropriate description value', () => {
-  expect(shallowDescriptionField.find('input[name="description"]').props().value).to.equal('A Description');
+describe('uneditable', () => {
+  const component = renderedComponent.shallow.uneditable;
+
+  it('should not have an input field', () => {
+    expect(component.find('input[name="description"]'))
+      .to.have.length(0);
+  });
+
+  it('should hold the description', () => {
+    // eslint-disable-next-line no-unused-expressions
+    expect(component.html().includes(description))
+      .to.be.true;
+  });
 });
