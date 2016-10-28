@@ -72,6 +72,7 @@ const TipField = (props) => {
 };
 
 TipField.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
   changeTipPercent: React.PropTypes.func.isRequired,
   changeTipValue: React.PropTypes.func.isRequired,
   interactionType: React.PropTypes.symbol.isRequired,

@@ -40,8 +40,10 @@ BillItemList.propTypes = {
   billItems: React.PropTypes.arrayOf(
     React.PropTypes.object
   ).isRequired,
-  deleteBillItem: React.PropTypes.func.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
   changeBillItem: React.PropTypes.func.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
+  deleteBillItem: React.PropTypes.func.isRequired,
   interactionType: React.PropTypes.symbol.isRequired,
   newBillItem: React.PropTypes.func.isRequired,
 };

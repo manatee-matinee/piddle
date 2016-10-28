@@ -71,6 +71,7 @@ const BillItem = (props) => {
 };
 
 BillItem.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
   changeBillItem: React.PropTypes.func.isRequired,
   deleteBillItem: React.PropTypes.func.isRequired,
   description: React.PropTypes.string.isRequired,

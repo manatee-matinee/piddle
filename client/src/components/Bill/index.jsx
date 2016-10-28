@@ -87,7 +87,6 @@ class Bill extends React.Component {
        * @todo Extract these variables and functions into a module (DRY).
        */
       // ref: https://github.com/github/fetch
-      /*
       const checkStatus = (response) => {
         if (response.status >= 200 && response.status < 300) {
           return response;
@@ -97,24 +96,25 @@ class Bill extends React.Component {
         error.response = response;
         throw error;
       };
+
+      /*
+        this.setState({
+          billItems: [
+            { description: 'Item 1', price: 10 },
+            { description: 'Item 2', price: 20 },
+          ],
+          description: 'Some Description',
+          interactionType: this.interactionTypes.claim,
+          tax: 0,
+          tip: {
+            value: 0,
+            percent: null,
+            usePercent: false,
+          },
+        });
       */
 
-      this.setState({
-        billItems: [
-          { description: 'Item 1', price: 10 },
-          { description: 'Item 2', price: 20 },
-        ],
-        description: 'Some Description',
-        interactionType: this.interactionTypes.claim,
-        tax: 0,
-        tip: {
-          value: 0,
-          percent: null,
-          usePercent: false,
-        },
-      });
-
-        /*
+      // eslint-disable-next-line no-undef
       fetch(`${this.serverUrl}/api/bill/${billId}`)
         .then(checkStatus)
         .then(response => response.json())
@@ -124,16 +124,18 @@ class Bill extends React.Component {
             ...data,
             isEditable: false,
             tip: {
-              value: data.tip
+              value: data.tip,
               percent: null,
               usePercent: false,
             },
           });
         })
         .catch((error) => {
+          /**
+           * @todo handle this error appropriately
+           */
           console.error(error);
         });
-        */
     }
   }
 
@@ -172,6 +174,7 @@ class Bill extends React.Component {
       throw error;
     };
 
+    // eslint-disable-next-line no-undef
     fetch(`${this.serverUrl}/api/bill`, {
       method: 'POST',
       headers: jsonHeaders,
@@ -183,6 +186,9 @@ class Bill extends React.Component {
         this.props.router.push(`/bill/${data.shortId}`);
       })
       .catch((error) => {
+        /**
+         * @todo handle this error appropriately
+         */
         console.error(error);
       });
   }
@@ -390,6 +396,5 @@ Bill.propTypes = {
     id: React.PropTypes.string,
   }),
 };
-
 
 export default withRouter(Bill);
