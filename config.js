@@ -11,4 +11,7 @@ module.exports = {
   },
   bcryptHashRounds: 10,
   sessionSecret: 'manatee_session_secret',
+  jwt: {
+    secret: 'manatee_jwt_secret',
+  },
 };

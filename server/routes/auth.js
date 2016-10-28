@@ -14,8 +14,8 @@ const router = express.Router(); // eslint-disable-line new-cap
  * @apiParam {string} password Password of the user.
  *
  * @apiSuccess (201) {object} data Data associated with the response.
- * @apiSuccess (201) {string} data.message A human-readable message saying the session
- * has been created.
+ * @apiSuccess (201) {object} data.token JWT representing the user. This token will need
+ * to be stored and sent as the Authorization header on requests requiring authentication.
  *
  * @apiSuccessExample {json} Success-Response
  * HTTP/1.1 201 CREATED
@@ -31,7 +31,7 @@ const router = express.Router(); // eslint-disable-line new-cap
  * @apiError (401) Unauthorized The <code>emailAddress</code> and <code>password</code> did
  * not match a registered user.
  */
-router.post('/login', authHandler.loginHandler, authHandler.loginResponse);
+router.post('/login', authHandler.loginHandler);
 
 /**
  * @api {post} /auth/signup Create a new user and log them in
@@ -47,14 +47,14 @@ router.post('/login', authHandler.loginHandler, authHandler.loginResponse);
  * @apiParam {string} [paypalId] PayPal www.paypal.me ID of the user.
  *
  * @apiSuccess (201) {object} data Data associated with the response.
- * @apiSuccess (201) {string} data.message A human-readable message saying the session
- * has been created.
+ * @apiSuccess (201) {object} data.token JWT representing the user. This token will need to be
+ * stored and sent as the Authorization header on requests requiring authentication.
  *
  * @apiSuccessExample {json} Success-Response
  * HTTP/1.1 201 CREATED
  * {
  *   "data": {
- *     "message": "User successfully created and logged in"
+ *     "token": "User successfully created and logged in"
  *   }
  * }
  *
