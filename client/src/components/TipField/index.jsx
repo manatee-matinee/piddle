@@ -6,12 +6,14 @@ import './TipField.css';
  * @param {object} props
  * @param {function} props.changeTipValue
  * @param {function} props.changeTipPercent
- * @param {boolean} [props.isEditable]
+ * @param {symbol} props.interactionType
  * @param {number} props.tipValue
  */
 const TipField = (props) => {
-  // Absent boolean props are assumed to be true
-  const isEditable = (props.isEditable === undefined || props.isEditable);
+  const isEditable = (
+    props.interactionType === Symbol.for('new')
+    || props.interactionType === Symbol.for('edit')
+  );
 
   const changeTipPercent = (event) => {
     event.preventDefault();
@@ -72,7 +74,7 @@ const TipField = (props) => {
 TipField.propTypes = {
   changeTipPercent: React.PropTypes.func.isRequired,
   changeTipValue: React.PropTypes.func.isRequired,
-  isEditable: React.PropTypes.bool,
+  interactionType: React.PropTypes.symbol.isRequired,
   tipValue: React.PropTypes.number.isRequired,
 };
 

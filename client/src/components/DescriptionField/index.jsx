@@ -6,11 +6,13 @@ import './DescriptionField.css';
  * @param {object} props
  * @param {function} props.changeDescriptionValue
  * @param {string} props.descriptionValue
- * @param {bool} [props.isEditable]
+ * @param {symbol} props.interactionType
  */
 const DescriptionField = (props) => {
-  // Absent boolean props are assumed to be true
-  const isEditable = (props.isEditable === undefined || props.isEditable);
+  const isEditable = (
+    props.interactionType === Symbol.for('new')
+    || props.interactionType === Symbol.for('edit')
+  );
 
   return (
     <div>
@@ -38,7 +40,7 @@ const DescriptionField = (props) => {
 DescriptionField.propTypes = {
   changeDescriptionValue: React.PropTypes.func.isRequired,
   descriptionValue: React.PropTypes.string.isRequired,
-  isEditable: React.PropTypes.bool,
+  interactionType: React.PropTypes.symbol.isRequired,
 };
 
 export default DescriptionField;

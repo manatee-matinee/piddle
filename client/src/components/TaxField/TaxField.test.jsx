@@ -5,64 +5,115 @@ import { shallow } from 'enzyme';
 import TaxField from './index';
 
 const changeTaxValue = () => {};
-const inputSelector = 'input[name="tax"]';
 const taxValue = 12.34;
+
+const selectors = {
+  tax: 'input[name="tax"]',
+};
+
+const props = {
+  shallow: {
+    changeTaxValue,
+    taxValue,
+  },
+};
 
 const renderedComponent = {
   shallow: {
-    editable: shallow(
+    new: shallow(
       <TaxField
-        taxValue={taxValue}
-        changeTaxValue={changeTaxValue}
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
       />
     ),
-    uneditable: shallow(
+    edit: shallow(
       <TaxField
-        taxValue={taxValue}
-        changeTaxValue={changeTaxValue}
-        isEditable={false}
+        {...props.shallow}
+        interactionType={Symbol.for('edit')}
+      />
+    ),
+    claim: shallow(
+      <TaxField
+        {...props.shallow}
+        interactionType={Symbol.for('claim')}
       />
     ),
   },
 };
 
-it('renders without crashing', () => {
-  // eslint-disable-next-line no-undef
-  const div = document.createElement('div');
-  ReactDOM.render(
-    <TaxField
-      taxValue={taxValue}
-      changeTaxValue={changeTaxValue}
-    />,
-    div
-  );
-});
+describe('new', () => {
+  const component = renderedComponent.shallow.new;
 
-describe('editable', () => {
-  const taxField = renderedComponent.shallow.editable;
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <TaxField
+        {...props.shallow}
+        interactionType={Symbol.for('new')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
 
   it('has a field for inputting the tax', () => {
-    expect(taxField.find(inputSelector))
+    expect(component.find(selectors.tax))
       .to.have.length(1);
   });
 
   it('populates the appropriate tax value', () => {
-    expect(taxField.find(inputSelector).props().value)
+    expect(component.find(selectors.tax).props().value)
       .to.equal(taxValue);
   });
 });
 
-describe('uneditable', () => {
-  const taxField = renderedComponent.shallow.uneditable;
+
+describe('edit', () => {
+  const component = renderedComponent.shallow.edit;
+
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <TaxField
+        {...props.shallow}
+        interactionType={Symbol.for('edit')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
+
+  it('has a field for inputting the tax', () => {
+    expect(component.find(selectors.tax))
+      .to.have.length(1);
+  });
+
+  it('populates the appropriate tax value', () => {
+    expect(component.find(selectors.tax).props().value)
+      .to.equal(taxValue);
+  });
+});
+
+describe('claim', () => {
+  const component = renderedComponent.shallow.claim;
+
+  it('renders without crashing', () => {
+    ReactDOM.render(
+      <TaxField
+        {...props.shallow}
+        interactionType={Symbol.for('claim')}
+      />,
+      // eslint-disable-next-line no-undef
+      document.createElement('div'),
+    );
+  });
 
   it('should not have input fields', () => {
-    expect(taxField.find('input'))
+    expect(component.find('input'))
       .to.have.length(0);
   });
 
-  it('should display the tax', () => {
+  it('should hold the tax', () => {
     // eslint-disable-next-line no-unused-expressions
-    expect(taxField.html().includes(taxValue))
+    expect(component.html().includes(taxValue))
       .to.be.true;
   });
 });

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './BillItem.css';
 
 
@@ -9,9 +9,14 @@ import './BillItem.css';
  * @param {function} props.deleteBillItem
  * @param {string} props.description
  * @param {number} props.index
+ * @param {symbol} props.interactionType
  * @param {number} props.price
  */
 const BillItem = (props) => {
+  const isEditable = (
+    props.interactionType === Symbol.for('new')
+    || props.interactionType === Symbol.for('edit')
+  );
 
   const fieldChange = (event) => {
     const field = {
@@ -30,27 +35,37 @@ const BillItem = (props) => {
 
   return (
     <div className="BillItem">
-      <input
-        className="description"
-        name={`billItem-${props.index}-description`}
-        onChange={fieldChange}
-        placeholder="Description"
-        type="text"
-        value={props.description}
-      />
-      <input
-        className="price"
-        name={`billItem-${props.index}-price`}
-        onChange={fieldChange}
-        placeholder="Price"
-        type="number"
-        value={props.price}
-      />
-      <button
-        onClick={event => props.deleteBillItem(event, props.index)}
-      >
-        Delete
-      </button>
+      {isEditable &&
+        <div>
+          <input
+            className="description"
+            name={`billItem-${props.index}-description`}
+            onChange={fieldChange}
+            placeholder="Description"
+            type="text"
+            value={props.description}
+          />
+          <input
+            className="price"
+            name={`billItem-${props.index}-price`}
+            onChange={fieldChange}
+            placeholder="Price"
+            type="number"
+            value={props.price}
+          />
+          <button
+            onClick={event => props.deleteBillItem(event, props.index)}
+          >
+            Delete
+          </button>
+        </div>
+      }
+      {!isEditable &&
+        <div>
+          <p><span>Description</span> {props.description}</p>
+          <p><span>Price</span> {props.price}</p>
+        </div>
+      }
     </div>
   );
 };
@@ -60,6 +75,7 @@ BillItem.propTypes = {
   deleteBillItem: React.PropTypes.func.isRequired,
   description: React.PropTypes.string.isRequired,
   index: React.PropTypes.number.isRequired,
+  interactionType: React.PropTypes.symbol.isRequired,
   price: React.PropTypes.number.isRequired,
 };
 

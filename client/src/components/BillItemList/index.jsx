@@ -6,29 +6,35 @@ import BillItem from './../BillItem';
  * @class BillItemList
  * @param {object} props
  * @param {object[]} props.billItems[]
- * @param {function} deleteBillItem
- * @param {function} changeBillItem
- * @param {function} newBillItem
+ * @param {function} props.deleteBillItem
+ * @param {function} props.changeBillItem
+ * @param {symbol} props.interactionType
+ * @param {function} props.newBillItem
  */
-const BillItemList = ({
-  billItems,
-  changeBillItem,
-  deleteBillItem,
-  newBillItem,
-}) => (
-  <div className="BillItemList">
-    {billItems.map((item, i) => (
-      <BillItem
-        key={i}
-        index={i}
-        {...item}
-        deleteBillItem={deleteBillItem}
-        changeBillItem={changeBillItem}
-      />
-      ))}
-    <button onClick={newBillItem}>New Bill Item</button>
-  </div>
-);
+const BillItemList = (props) => {
+  const isEditable = (
+    props.interactionType === Symbol.for('new')
+    || props.interactionType === Symbol.for('edit')
+  );
+
+  return (
+    <div className="BillItemList">
+      {props.billItems.map((item, i) => (
+        <BillItem
+          key={i}
+          index={i}
+          {...item}
+          deleteBillItem={props.deleteBillItem}
+          changeBillItem={props.changeBillItem}
+          interactionType={props.interactionType}
+        />
+        ))}
+      {isEditable &&
+        <button onClick={props.newBillItem}>New Bill Item</button>
+      }
+    </div>
+  );
+};
 
 BillItemList.propTypes = {
   billItems: React.PropTypes.arrayOf(
@@ -36,6 +42,7 @@ BillItemList.propTypes = {
   ).isRequired,
   deleteBillItem: React.PropTypes.func.isRequired,
   changeBillItem: React.PropTypes.func.isRequired,
+  interactionType: React.PropTypes.symbol.isRequired,
   newBillItem: React.PropTypes.func.isRequired,
 };
 
