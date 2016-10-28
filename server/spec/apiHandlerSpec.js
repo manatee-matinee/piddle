@@ -1,9 +1,7 @@
 const expect = require('chai').expect;
-
 const app = require('../server');
-
 const request = require('supertest');
-
+const userController = require('../dbControllers/userController');
 const config = require('../../config');
 
 if (/test/.test(config.db.path) === false) {
@@ -13,13 +11,25 @@ if (/test/.test(config.db.path) === false) {
 
 describe('Creating a bill', () => {
   let bill;
+  let userId;
+
+  before('Create user to own bill', (done) => {
+    userController.createUser({
+      emailAddress: 'sample@gmail.com',
+      password: 'password123',
+    })
+    .then((userInstance) => {
+      userId = userInstance.get('id');
+      done();
+    });
+  });
 
   beforeEach(() => {
     bill = {
       description: 'Tu Lan lunch',
       tax: 2.46,
       tip: 9.50,
-      payer: '345326',
+      payerEmailAddress: 'sample@gmail.com',
       items: [
         { description: '#27 Dragon Roll', price: 10.99 },
         { description: '#8 Curry Rice', price: 6.50 },
@@ -48,7 +58,7 @@ describe('Creating a bill', () => {
   });
 
   it('should respond with an error for malformed bills', (done) => {
-    delete bill.payer;
+    delete bill.payerEmailAddress;
     request(app)
       .post('/api/bill')
       .send(bill)
