@@ -5,7 +5,7 @@ import BillItem from './../BillItem';
 /**
  * @class BillItemList
  * @param {object} props
- * @param {object[]} props.billItems[]
+ * @param {object[]} props.billItems
  * @param {function} props.deleteBillItem
  * @param {function} props.changeBillItem
  * @param {symbol} props.interactionType
