@@ -11,7 +11,7 @@ import TipField from './../TipField';
  */
 class Bill extends React.Component {
   /**
-   * @constructs
+   * @constructor
    * @param {object} props
    */
   constructor(props) {
