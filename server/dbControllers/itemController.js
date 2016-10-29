@@ -1,6 +1,23 @@
 const Item = require('../db').models.Item;
+const Bill = require('../db').models.Bill;
+const User = require('../db').models.User;
 
-const findItemById = id => Item.findById(id);
+const findItemById = id => Item.findOne({
+  where: { id },
+  include: [Bill],
+});
+
+const findItemByIdForUpdateReturn = id => Item.findOne({
+  where: { id },
+  include: {
+    model: User,
+    as: 'debtor',
+    attributes: {
+      exclude: ['password'],
+    },
+  },
+  plain: true,
+});
 
 const createItemsForBill = (billId, items) => {
   if (!Array.isArray(items)) {
@@ -43,6 +60,7 @@ const deleteItem = id =>
 
 module.exports = {
   findItemById,
+  findItemByIdForUpdateReturn,
   createItemsForBill,
   updateItem,
   deleteItem,
