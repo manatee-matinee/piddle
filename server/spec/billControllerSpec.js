@@ -45,7 +45,7 @@ const createSampleUser = (done) => {
     });
 };
 
-const emptyBills = (done) => {
+const emptyRecords = (done) => {
   Promise.all([
     db.models.Bill.sync({ force: true }),
     db.models.Item.sync({ force: true }),
@@ -56,51 +56,68 @@ const emptyBills = (done) => {
   });
 };
 
-describe('retrieving bills', () => {
-  beforeEach((done) => {
-    emptyBills(done);
+describe('Bill controller', () => {
+  describe('creating bills', () => {
+    before(done => emptyRecords(done));
+    it('should create bills', (done) => {
+      billController.createBill(bill)
+        .then((billRecord) => {
+          expect(billRecord.dataValues.description).to.equal(bill.description);
+          expect(billRecord.dataValues.shortId).to.match(/\w{5,}/);
+          done();
+        })
+        .catch(() => {
+          done();
+        });
+    });
   });
 
-  beforeEach((done) => {
-    createSampleUser(done);
+  describe('retrieving bills', () => {
+    beforeEach((done) => {
+      emptyRecords(done);
+    });
+
+    beforeEach((done) => {
+      createSampleUser(done);
+    });
+
+    beforeEach((done) => {
+      createSampleBill(done);
+    });
+
+    it('should retrieve a bill by shortId', (done) => {
+      billController.retrieveBill(createdBillShortId)
+        .then((billInstance) => {
+          expect(billInstance.get('shortId')).to.equal(createdBillShortId);
+          expect(billInstance.get('payerId')).to.match(/\d+/); // Payer ID has been set
+          expect(billInstance.get('payer').get('emailAddress')).to.equal('sample@gmail.com');
+          expect(billInstance.get('payer').get('password')).to.equal(undefined); // don't include password in response
+          expect(billInstance.get('payer').get('name')).to.equal('Elsabeth Theudobald');
+          expect(billInstance.get('description')).to.equal(bill.description);
+          expect(billInstance.get('items').length).to.equal(bill.items.length);
+          done();
+        });
+    });
   });
 
-  beforeEach((done) => {
-    createSampleBill(done);
-  });
+  describe('deleting bills', () => {
+    beforeEach(done => emptyRecords(done));
+    beforeEach(done => createSampleUser(done));
+    beforeEach(done => createSampleBill(done));
 
-  it('should retrieve a bill by shortId', (done) => {
-    billController.retrieveBill(createdBillShortId)
-      .then((billInstance) => {
-        expect(billInstance.get('shortId')).to.equal(createdBillShortId);
-        expect(billInstance.get('payerId')).to.match(/\d+/); // Payer ID has been set
-        expect(billInstance.get('payer').get('emailAddress')).to.equal('sample@gmail.com');
-        expect(billInstance.get('payer').get('password')).to.equal(undefined); // don't include password in response
-        expect(billInstance.get('payer').get('name')).to.equal('Elsabeth Theudobald');
-        expect(billInstance.get('description')).to.equal(bill.description);
-        expect(billInstance.get('items').length).to.equal(bill.items.length);
-        done();
-      });
-  });
-});
-
-describe('deleting bills', () => {
-  beforeEach(done => emptyBills(done));
-  beforeEach(done => createSampleUser(done));
-  beforeEach(done => createSampleBill(done));
-
-  it('should delete bills by shortId', (done) => {
-    billController.retrieveBill(createdBillShortId)
-      .then((billRecord) => {
-        expect(billRecord).to.exist;
-        billController.deleteBill(createdBillShortId)
-          .then(() => {
-            billController.retrieveBill(createdBillShortId)
-              .then((deletedBillRecord) => {
-                expect(deletedBillRecord).to.not.exist;
-                done();
-              });
-          });
-      });
+    it('should delete bills by shortId', (done) => {
+      billController.retrieveBill(createdBillShortId)
+        .then((billRecord) => {
+          expect(billRecord).to.exist;
+          billController.deleteBill(createdBillShortId)
+            .then(() => {
+              billController.retrieveBill(createdBillShortId)
+                .then((deletedBillRecord) => {
+                  expect(deletedBillRecord).to.not.exist;
+                  done();
+                });
+            });
+        });
+    });
   });
 });
