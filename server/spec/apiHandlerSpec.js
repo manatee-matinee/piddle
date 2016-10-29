@@ -3,8 +3,10 @@ const app = require('../server');
 const db = require('../db');
 const request = require('supertest');
 const userController = require('../dbControllers/userController');
+const billController = require('../dbControllers/billController');
 const specHelpers = require('./specHelpers');
 const config = require('../../config');
+/* eslint-disable no-unused-expressions */
 
 if (/test/.test(config.db.path) === false) {
   throw new Error('NODE_ENV not set to \'test\'.');
@@ -17,14 +19,15 @@ const sampleBill = {
     tip: 9.50,
     payerEmailAddress: 'sample@gmail.com',
     items: [
-      { description: '#27 Dragon Roll', price: 10.99 },
-      { description: '#8 Curry Rice', price: 6.50 },
+      { description: 'Dragon Roll', price: 10.99 },
+      { description: 'Curry Rice', price: 6.50 },
       { description: 'Soda', price: 2.99 },
+      { description: 'Cake', price: 4.00 },
+      { description: 'Pie', price: 4.99 },
     ],
   },
 };
 
-// Create Sample User
 const sampleUser = {
   sampleData: {
     emailAddress: 'sample@gmail.com',
@@ -33,8 +36,16 @@ const sampleUser = {
   },
 };
 
+const sampleDebtor = {
+  sampleData: {
+    emailAddress: 'debtor@gmail.com',
+    password: 'password456',
+    name: 'Hambone',
+  },
+};
+
 describe('API Interactions', () => {
-  describe('creating a bill', () => {
+  describe('Creating a bill', () => {
     // run createSampleBill to populate 'bill' with sample data, then
     // destroy the record
     before(done => specHelpers.createSampleUser(sampleUser, done));
@@ -93,7 +104,7 @@ describe('API Interactions', () => {
     });
   });
 
-  describe('retrieving a bill', () => {
+  describe('Retrieving a bill', () => {
     sampleBill.sampleData.payerEmailAddress = 'sample@gmail.com'; // put back
     before(done => specHelpers.emptyRecords(done));
     before(done => specHelpers.createSampleUser(sampleUser, done));
@@ -137,7 +148,159 @@ describe('API Interactions', () => {
     });
   });
 
-  describe('updating users', () => {
+  describe('Items', () => {
+    describe('Updating items', () => {
+      before(done => specHelpers.emptyRecords(done));
+      before(done => specHelpers.createSampleUser(sampleUser, done));
+      before(done => specHelpers.setSampleUserToken(sampleUser, done));
+      before(done => specHelpers.createSampleUser(sampleDebtor, done));
+      before(done => specHelpers.setSampleUserToken(sampleDebtor, done));
+      before(done => specHelpers.createSampleBill(sampleBill, done));
+      const itemIds = [];
+      before((done) => {
+        billController.retrieveBill(sampleBill.generatedData.shortId)
+          .then((billInstance) => {
+            billInstance.get('items').forEach((itemRecord) => {
+              itemIds.push(itemRecord.get('id'));
+            });
+            done();
+          });
+      });
+
+      it('should not be able to update items unless authenticated', (done) => {
+        request(app)
+          .put(`/api/item/${itemIds[0]}`)
+          .send({
+            price: 69.96,
+          })
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(401);
+            done();
+          });
+      });
+
+      it('should be able to update all parameters as bill owner', (done) => {
+        request(app)
+          .put(`/api/item/${itemIds[0]}`)
+          .set('authorization', `JWT ${sampleUser.generatedData.token}`) // sampleUser is bill owner
+          .send({
+            price: 69.96,
+          })
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(200);
+            expect(response.body.data.item.price).to.equal(69.96);
+            done();
+          });
+      });
+
+      it('should not be able to update all parameters as non-bill owner', (done) => {
+        request(app)
+          .put(`/api/item/${itemIds[0]}`)
+          .set('authorization', `JWT ${sampleDebtor.generatedData.token}`)
+          .send({
+            price: 22.96,
+          })
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(403);
+            done();
+          });
+      });
+
+      it('should be able to claim items as a non-bill owner', (done) => {
+        request(app)
+          .put(`/api/item/${itemIds[0]}`)
+          .set('authorization', `JWT ${sampleDebtor.generatedData.token}`)
+          .send({
+            debtorId: sampleDebtor.generatedData.id,
+          })
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(200);
+            expect(response.body.data.item.debtorId).to.equal(sampleDebtor.generatedData.id);
+            expect(response.body.data.item.debtor.name).to.equal(sampleDebtor.sampleData.name);
+            done();
+          });
+      });
+
+      it('should not be able to set the debtor as someone else as non-bill owner', (done) => {
+        request(app)
+          .put(`/api/item/${itemIds[1]}`)
+          .set('authorization', `JWT ${sampleDebtor.generatedData.token}`)
+          .send({
+            debtorId: sampleDebtor.generatedData.id + 6, // not the debtor's id
+          })
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(403);
+            done();
+          });
+      });
+
+      it('should be able to "unclaim" an item it is marked as the debtor on', (done) => {
+        db.models.Item.findById(itemIds[2])
+          .then(itemRecord => itemRecord.update({ debtorId: sampleDebtor.generatedData.id }))
+          .then(() => {
+            request(app)
+              .put(`/api/item/${itemIds[2]}`)
+              .set('authorization', `JWT ${sampleDebtor.generatedData.token}`)
+              .send({
+                debtorId: null,
+              })
+              .end((err, response) => {
+                expect(err).to.not.exist;
+                expect(response.status).to.equal(200);
+                expect(response.body.data.item.debtorId).to.equal(null);
+                done();
+              });
+          });
+      });
+
+      it('should not be able to claim an item that is already claimed by someone else', (done) => {
+        db.models.Item.findById(itemIds[3])
+          // item claimed by payer
+          .then(itemRecord => itemRecord.update({ debtorId: sampleUser.generatedData.id }))
+          .then(() => {
+            request(app)
+              .put(`/api/item/${itemIds[3]}`)
+              .set('authorization', `JWT ${sampleDebtor.generatedData.token}`)
+              .send({
+                debtorId: sampleDebtor.generatedData.id,
+              })
+              .end((err, response) => {
+                expect(err).to.not.exist;
+                expect(response.status).to.equal(403);
+                done();
+              });
+          });
+      });
+
+      it('should not be able to change an item marked paid, except to mark it unpaid', (done) => {
+        db.models.Item.findById(itemIds[4])
+          .then(itemRecord => itemRecord.update({
+            debtorId: sampleDebtor.generatedData.id,
+            paid: true,
+          }))
+          .then(() => {
+            request(app)
+              .put(`/api/item/${itemIds[4]}`)
+              .set('authorization', `JWT ${sampleUser.generatedData.token}`)
+              .send({
+                description: 'New description',
+              })
+              .end((err, response) => {
+                expect(err).to.not.exist;
+                expect(response.status).to.equal(403);
+                done();
+              });
+          });
+      });
+    });
+  });
+
+  describe('Updating users', () => {
     before(done => specHelpers.emptyRecords(done));
     before(done => specHelpers.createSampleUser(sampleUser, done));
     before(done => specHelpers.setSampleUserToken(sampleUser, done));
