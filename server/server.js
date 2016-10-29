@@ -21,10 +21,19 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
+app.use('/', express.static(path.join(__dirname, '../client/build')));
+
 app.use('/api', api);
 app.use('/auth', auth);
 
-app.use('/', express.static(path.join(__dirname, '../client/public')));
+app.use('*', (request, response) => {
+  if (request.xhr || request.headers.accept.indexOf('json') > -1) {
+    // request is an API request; respond with 404
+    return response.sendStatus(404);
+  }
+  // request probably came from browser; send back index page and let React client handle
+  return response.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
 const port = process.env.PORT || 3000;
 app.listen(port);
