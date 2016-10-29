@@ -86,8 +86,8 @@ new Promise((resolve, reject) => {
  * @param {string} emailAddress - The email address of the user.
  * @returns {Promise} Resolves to undefined.
  */
-const deleteUser = emailAddress =>
-  findUserByEmailAddress(emailAddress)
+const deleteUser = id =>
+  findUserById(id)
     .then(userInstance => userInstance.destroy());
 
 module.exports = {
