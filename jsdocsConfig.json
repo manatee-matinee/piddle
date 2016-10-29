@@ -1,0 +1,20 @@
+{
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc","closure"]
+    },
+    "source": {
+        "include": ["client/src/components", "server"],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": ".\/node_modules\/.|.test."
+    },
+    "plugins": [],
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
+    },
+    "opts": {
+        "destination": "./docs/source",
+        "recurse": true
+    }
+}

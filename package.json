@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test mocha server/spec",
     "start": "NODE_ENV=dev nodemon server/server.js",
-    "doc": "apidoc -i server/routes -o docs/api"
+    "doc": "./node_modules/.bin/apidoc -i server/routes -o docs/api & ./node_modules/.bin/jsdoc -c ./jsdocsConfig.json"
   },
   "apidoc": {
     "title": "The API for the Piddle bill splitting application",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/manatee-matinee/piddle#readme",
   "devDependencies": {
+    "apidoc": "^0.16.1",
     "chai": "^3.5.0",
     "cors": "^2.8.1",
     "eslint": "^3.8.1",
@@ -31,6 +32,7 @@
     "eslint-plugin-import": "^1.16.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.4.1",
+    "jsdoc": "^3.4.2",
     "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
     "supertest": "^2.0.1"
