@@ -45,39 +45,39 @@ const router = express.Router(); // eslint-disable-line
  * @apiSuccess (200) {string} data.payer.paypalId PayPal paypal.me id of the payer.
  *
  * @apiSuccessExample Success-Response
- *    HTTP/1.1 200 OK
- *    {
- *      data: {
- *        shortId: "s5y26",
- *        description: "Tu Lan lunch",
- *        tax: 2.46,
- *        tip: 9.50,
- *        items: [
- *          {
- *            id: 45,
- *            description: "#27 Dragon Roll",
- *            price: 10.99,
- *            claimed: true,
- *            debtor: {
- *              emailAddress: "charding@gmail.com",
- *              displayName: "Carl Harding"
- *            }
- *          },
- *          {
- *            id: 89,
- *            description: '#8 Curry Rice',
- *            price: 6.50,
- *            claimed: false
- *          }
- *        ],
- *        payer: {
- *          emailAddress: "sample-payer@gmail.com",
- *          displayName: "Lindsie Tanya"
- *          squareId: "$LindsieT",
- *          paypalId: "LTanya"
- *        }
- *      }
- *    }
+ * HTTP/1.1 200 OK
+ * {
+ *   data: {
+ *     shortId: "s5y26",
+ *     description: "Tu Lan lunch",
+ *     tax: 2.46,
+ *     tip: 9.50,
+ *     items: [
+ *       {
+ *         id: 45,
+ *         description: "#27 Dragon Roll",
+ *         price: 10.99,
+ *         claimed: true,
+ *         debtor: {
+ *           emailAddress: "charding@gmail.com",
+ *           displayName: "Carl Harding"
+ *         }
+ *       },
+ *       {
+ *         id: 89,
+ *         description: '#8 Curry Rice',
+ *         price: 6.50,
+ *         claimed: false
+ *       }
+ *     ],
+ *     payer: {
+ *       emailAddress: "sample-payer@gmail.com",
+ *       displayName: "Lindsie Tanya"
+ *       squareId: "$LindsieT",
+ *       paypalId: "LTanya"
+ *     }
+ *   }
+ * }
  */
 router.get('/bill/:shortId', authHandler.ensureAuthenticated, apiHandler.getBill);
 
@@ -111,12 +111,12 @@ router.get('/bill/:shortId', authHandler.ensureAuthenticated, apiHandler.getBill
  * @apiError {string} error.message Human-readable description of the error.
  *
  * @apiSuccessExample Success-Response
- *    HTTP/1.1 201 CREATED
- *    {
- *      data: {
- *        shortId: "s5y26"
- *      }
- *    }
+ * HTTP/1.1 201 CREATED
+ * {
+ *   data: {
+ *     shortId: "s5y26"
+ *   }
+ * }
  *
  */
 router.post('/bill', authHandler.ensureAuthenticated, apiHandler.saveBill);
@@ -150,7 +150,36 @@ router.post('/bill', authHandler.ensureAuthenticated, apiHandler.saveBill);
  * @apiParam {number} [price] Price of the item in local currency.
  * @apiParam {number} [debtorId] Id of the person responsible for paying the item.
  * @apiParam {boolean} [paid] Whether the item has been paid for or not.
- * @return {Promise} Resolves to the instance of the Item from the database.
+ *
+ * @apiError {Object} error Error information associated with the bill.
+ * @apiError {string} error.message Human-readable description of the error.
+ *
+ * @apiSuccessExample Success-Response
+ * HTTP/1.1 200 OK
+ * {
+ *  data: {
+ *    message: 'Item updated successfully',
+ *    item: {
+ *      id: 25,
+ *      description: 'Dragon Roll',
+ *      price: 12.05,
+ *      paid: false,
+ *      createdAt: '2016-10-29T08:20:54.261Z',
+ *      updatedAt: '2016-10-29T08:20:54.318Z',
+ *      billId: 1,
+ *      debtorId: 2,
+ *      debtor: {
+ *        id: 2,
+ *        emailAddress: 'debtor@gmail.com',
+ *        name: 'Hambone',
+ *        squareId: '$hammy',
+ *        paypalId: 'hbone',
+ *        createdAt: '2016-10-29T08:22:32.054Z',
+ *        updatedAt: '2016-10-29T08:22:32.146Z'
+ *      }
+ *    }
+ *  }
+ * }
  */
 router.put('/item/:id', authHandler.ensureAuthenticated, apiHandler.updateItem);
 
