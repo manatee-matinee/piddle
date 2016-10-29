@@ -21,6 +21,20 @@ const sampleBill = {
   },
 };
 
+const sampleBill2 = {
+  sampleData: {
+    description: 'Chipogo',
+    tax: 1.99,
+    tip: 1,
+    payerEmailAddress: 'sample@gmail.com',
+    items: [
+      { description: 'Burrito', price: 7.99 },
+      { description: 'Veggie Bowl', price: 6.50 },
+      { description: 'Chips and Guac', price: 3.79 },
+    ],
+  },
+};
+
 const sampleUser = {
   sampleData: {
     emailAddress: 'sample@gmail.com',
@@ -31,7 +45,7 @@ const sampleUser = {
 
 
 describe('Bill controller', () => {
-  describe('creating bills', () => {
+  describe('Creating bills', () => {
     before(done => specHelpers.emptyRecords(done));
     before(done => specHelpers.createSampleUser(sampleUser, done));
     it('should create bills', (done) => {
@@ -47,10 +61,11 @@ describe('Bill controller', () => {
     });
   });
 
-  describe('retrieving bills', () => {
-    beforeEach(done => specHelpers.emptyRecords(done));
-    beforeEach(done => specHelpers.createSampleUser(sampleUser, done));
-    beforeEach(done => specHelpers.createSampleBill(sampleBill, done));
+  describe('Retrieving bills', () => {
+    before(done => specHelpers.emptyRecords(done));
+    before(done => specHelpers.createSampleUser(sampleUser, done));
+    before(done => specHelpers.createSampleBill(sampleBill, done));
+    before(done => specHelpers.createSampleBill(sampleBill2, done));
 
     it('should retrieve a bill by shortId', (done) => {
       billController.retrieveBill(sampleBill.generatedData.shortId)
@@ -65,9 +80,19 @@ describe('Bill controller', () => {
           done();
         });
     });
+
+    it('should retrieve all the bills a user is a payer of', (done) => {
+      billController.retrievePayerBills(sampleUser.generatedData.id)
+        .then((bills) => {
+          expect(bills).to.be.an('Array');
+          expect(bills.length).to.be.above(1);
+          expect(bills[0].get().description).to.equal(sampleBill.sampleData.description);
+          done();
+        });
+    });
   });
 
-  describe('deleting bills', () => {
+  describe('Deleting bills', () => {
     beforeEach(done => specHelpers.emptyRecords(done));
     beforeEach(done => specHelpers.createSampleUser(sampleUser, done));
     beforeEach(done => specHelpers.createSampleBill(sampleBill, done));

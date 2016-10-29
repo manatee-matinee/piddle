@@ -63,6 +63,26 @@ const retrieveBill = function retrieveBill(shortId) {
   });
 };
 
+const retrievePayerBills = function retrievePayerBills(payerId) {
+  return Bill.findAll({
+    where: {
+      payerId,
+    },
+    include: [
+      {
+        model: Item,
+        include: [{
+          model: User,
+          as: 'debtor',
+          attributes: {
+            exclude: ['password'],
+          },
+        }],
+      }],
+  });
+};
+
+
 const deleteBill = function deleteBill(shortId) {
   return Bill.findOne({ where: { shortId } })
     .then(billInstance => billInstance.destroy());
@@ -71,5 +91,6 @@ const deleteBill = function deleteBill(shortId) {
 module.exports = {
   createBill,
   retrieveBill,
+  retrievePayerBills,
   deleteBill,
 };

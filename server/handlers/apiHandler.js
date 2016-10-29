@@ -37,12 +37,26 @@ const getBill = (request, response) => {
       data: billInstance.dataValues,
     });
   })
-  .catch(err => response.status(400).json({
+  .catch(() => response.status(500).json({
     error: {
       message: 'There was an error retrieving the bill.',
     },
   })
   );
+};
+
+const getUserBills = (request, response) => {
+  const payerId = request.user.id;
+  billController.retrievePayerBills(payerId)
+    .then((bills) => {
+      const billsJSON = bills.map(bill => bill.toJSON());
+      response.status(200).json({ data: billsJSON });
+    })
+    .catch((err) => response.status(500).json({
+      error: {
+        message: 'There was an error retrieving the user\'s bills' + err,
+      },
+    }));
 };
 
 /*
@@ -116,19 +130,16 @@ const updateItem = (request, response) => {
           itemController.findItemByIdForUpdateReturn(itemInstance.get('id'))
             .then(returnItemInstance =>
               response.status(200).json({
-                data: {
-                  message: 'Item updated successfully',
-                  item: returnItemInstance.toJSON(),
-                },
+                data: returnItemInstance.toJSON(),
               })
             );
         });
-
     });
 };
 
 module.exports = {
   saveBill,
   getBill,
+  getUserBills,
   updateItem,
 };

@@ -28,6 +28,34 @@ const sampleBill = {
   },
 };
 
+const sampleBill2 = {
+  sampleData: {
+    description: 'Chipogo',
+    tax: 1.99,
+    tip: 1,
+    payerEmailAddress: 'sample@gmail.com',
+    items: [
+      { description: 'Burrito', price: 7.99 },
+      { description: 'Veggie Bowl', price: 6.50 },
+      { description: 'Chips and Guac', price: 3.79 },
+    ],
+  },
+};
+
+const sampleBill3 = {
+  sampleData: {
+    description: 'Super Burger Dinner',
+    tax: 2.99,
+    tip: null,
+    payerEmailAddress: 'otheruser@gmail.com',
+    items: [
+      { description: 'Big Burger', price: 5.99 },
+      { description: 'Seasoned fries', price: 3.50 },
+      { description: 'Chicken nuggerts', price: 4.79 },
+    ],
+  },
+};
+
 const sampleUser = {
   sampleData: {
     emailAddress: 'sample@gmail.com',
@@ -44,107 +72,154 @@ const sampleDebtor = {
   },
 };
 
+const otherUser = {
+  sampleData: {
+    emailAddress: 'otheruser@gmail.com',
+    password: '1qaz2wsx3edc',
+    name: 'Joel Moore',
+  },
+};
+
 describe('API Interactions', () => {
-  describe('Creating a bill', () => {
-    // run createSampleBill to populate 'bill' with sample data, then
-    // destroy the record
-    before(done => specHelpers.createSampleUser(sampleUser, done));
-    beforeEach(done => specHelpers.createSampleBill(sampleBill, done));
-    before(done => specHelpers.setSampleUserToken(sampleUser, done));
-    beforeEach((done) => {
-      db.models.Bill.sync({ force: true });
-      done();
-    });
-
-    it('should respond with a 201 code', (done) => {
-      request(app)
-        .post('/api/bill')
-        .set('authorization', `JWT ${sampleUser.generatedData.token}`)
-        .send(sampleBill.sampleData)
-        .expect(201, done);
-    });
-
-    it('should respond with the bill shortId', (done) => {
-      request(app)
-        .post('/api/bill')
-        .set('authorization', `JWT ${sampleUser.generatedData.token}`)
-        .send(sampleBill.sampleData)
-        .end((err, response) => {
-          expect(err).to.not.exist;
-          expect(response.body.data.shortId).to.be.a('String');
-          expect(response.body.data.id).to.match(/\w+/);
-          done();
-        });
-    });
-
-    it('should respond with an error for malformed bills', (done) => {
-      delete sampleBill.sampleData.payerEmailAddress;
-      request(app)
-        .post('/api/bill')
-        .set('authorization', `JWT ${sampleUser.generatedData.token}`)
-        .send(sampleBill.sampleData)
-        .end((err, response) => {
-          expect(response.body.error).to.be.an('Object');
-          expect(response.status).to.equal(400);
-          expect(response.body.error.message).to.be.a('String');
-          sampleBill.sampleData.payerEmailAddress = 'sample@gmail.com';
-          done();
-        });
-    });
-
-    it('should not allow creation from users who do not send auth token', (done) => {
-      request(app)
-        .post('/api/bill')
-        .send(sampleBill.sampleData)
-        .end((err, response) => {
-          expect(err).to.not.exist;
-          expect(response.status).to.equal(401);
-          done();
-        });
-    });
-  });
-
-  describe('Retrieving a bill', () => {
-    sampleBill.sampleData.payerEmailAddress = 'sample@gmail.com'; // put back
-    before(done => specHelpers.emptyRecords(done));
-    before(done => specHelpers.createSampleUser(sampleUser, done));
-    before(done => specHelpers.setSampleUserToken(sampleUser, done));
-    before(done => specHelpers.createSampleBill(sampleBill, done));
-
-    it('should retrieve bills', (done) => {
-      request(app)
-        .get(`/api/bill/${sampleBill.generatedData.shortId}`)
-        .set('authorization', `JWT ${sampleUser.generatedData.token}`)
-        .end((err, response) => {
-          expect(err).to.not.exist;
-          expect(response.status).to.equal(200);
-          const billResponse = response.body.data;
-          expect(billResponse).to.exist;
-          expect(billResponse.description).to.equal(sampleBill.sampleData.description);
-          expect(billResponse.items.length).to.equal(sampleBill.sampleData.items.length);
-          done();
-        });
-    });
-
-    it('should not retrieve bills unless the user sends auth token', (done) => {
-      request(app)
-      .get(`/api/bill/${sampleBill.generatedData.shortId}`)
-      .end((err, response) => {
-        expect(response.status).to.equal(401);
+  describe('Bills', () => {
+    describe('Creating a bill', () => {
+      // run createSampleBill to populate 'bill' with sample data, then
+      // destroy the record
+      before(done => specHelpers.emptyRecords(done));
+      before(done => specHelpers.createSampleUser(sampleUser, done));
+      beforeEach(done => specHelpers.createSampleBill(sampleBill, done));
+      before(done => specHelpers.setSampleUserToken(sampleUser, done));
+      beforeEach((done) => {
+        db.models.Bill.sync({ force: true });
         done();
+      });
+
+      it('should respond with a 201 code', (done) => {
+        request(app)
+          .post('/api/bill')
+          .set('authorization', `JWT ${sampleUser.generatedData.token}`)
+          .send(sampleBill.sampleData)
+          .expect(201, done);
+      });
+
+      it('should respond with the bill shortId', (done) => {
+        request(app)
+          .post('/api/bill')
+          .set('authorization', `JWT ${sampleUser.generatedData.token}`)
+          .send(sampleBill.sampleData)
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.body.data.shortId).to.be.a('String');
+            expect(response.body.data.id).to.match(/\w+/);
+            done();
+          });
+      });
+
+      it('should respond with an error for malformed bills', (done) => {
+        delete sampleBill.sampleData.payerEmailAddress;
+        request(app)
+          .post('/api/bill')
+          .set('authorization', `JWT ${sampleUser.generatedData.token}`)
+          .send(sampleBill.sampleData)
+          .end((err, response) => {
+            expect(response.body.error).to.be.an('Object');
+            expect(response.status).to.equal(400);
+            expect(response.body.error.message).to.be.a('String');
+            sampleBill.sampleData.payerEmailAddress = 'sample@gmail.com';
+            done();
+          });
+      });
+
+      it('should not allow creation from users who do not send auth token', (done) => {
+        request(app)
+          .post('/api/bill')
+          .send(sampleBill.sampleData)
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(401);
+            done();
+          });
       });
     });
 
-    it('should respond with an error if the bill does not exist', (done) => {
-      request(app)
-        .get('/api/bill/badId1')
-        .set('authorization', `JWT ${sampleUser.generatedData.token}`)
+    describe('Retrieving a bill', () => {
+      sampleBill.sampleData.payerEmailAddress = 'sample@gmail.com'; // put back
+      before(done => specHelpers.emptyRecords(done));
+      before(done => specHelpers.createSampleUser(sampleUser, done));
+      before(done => specHelpers.setSampleUserToken(sampleUser, done));
+      before(done => specHelpers.createSampleBill(sampleBill, done));
+
+      it('should retrieve bills', (done) => {
+        request(app)
+          .get(`/api/bill/${sampleBill.generatedData.shortId}`)
+          .set('authorization', `JWT ${sampleUser.generatedData.token}`)
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(200);
+            const billResponse = response.body.data;
+            expect(billResponse).to.exist;
+            expect(billResponse.description).to.equal(sampleBill.sampleData.description);
+            expect(billResponse.items.length).to.equal(sampleBill.sampleData.items.length);
+            done();
+          });
+      });
+
+      it('should not retrieve bills unless the user sends auth token', (done) => {
+        request(app)
+        .get(`/api/bill/${sampleBill.generatedData.shortId}`)
         .end((err, response) => {
-          expect(response.status).to.equal(400);
-          expect(response.body.error).to.exist;
-          expect(response.body.error.message).to.match(/not found/gi);
+          expect(response.status).to.equal(401);
           done();
         });
+      });
+
+      it('should respond with an error if the bill does not exist', (done) => {
+        request(app)
+          .get('/api/bill/badId1')
+          .set('authorization', `JWT ${sampleUser.generatedData.token}`)
+          .end((err, response) => {
+            expect(response.status).to.equal(400);
+            expect(response.body.error).to.exist;
+            expect(response.body.error.message).to.match(/not found/gi);
+            done();
+          });
+      });
+    });
+
+    describe('Retrieving bills of users', () => {
+      before(done => specHelpers.emptyRecords(done));
+      before(done => specHelpers.createSampleUser(sampleUser, done));
+      before(done => specHelpers.createSampleUser(sampleDebtor, done));
+      before(done => specHelpers.createSampleUser(otherUser, done));
+      before(done => specHelpers.setSampleUserToken(sampleUser, done));
+      before(done => specHelpers.createSampleBill(sampleBill, done));
+      before(done => specHelpers.createSampleBill(sampleBill2, done));
+      before(done => specHelpers.createSampleBill(sampleBill3, done));
+
+      it('should require authentication', (done) => {
+        request(app)
+          .get('/api/bills')
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(401);
+            done();
+          });
+      });
+
+      it('should respond with the authenticated user\'s bills', (done) => {
+        request(app)
+          .get('/api/bills')
+          .set('authorization', `JWT ${sampleUser.generatedData.token}`)
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(200);
+            expect(response.body.error).to.not.exist;
+            expect(response.body.data).to.be.an('Array');
+            expect(response.body.data[0].payerId).to.equal(sampleUser.generatedData.id);
+            expect(response.body.data[1].description).to.equal(sampleBill2.sampleData.description);
+            done();
+          });
+      });
     });
   });
 
@@ -190,7 +265,7 @@ describe('API Interactions', () => {
           .end((err, response) => {
             expect(err).to.not.exist;
             expect(response.status).to.equal(200);
-            expect(response.body.data.item.price).to.equal(69.96);
+            expect(response.body.data.price).to.equal(69.96);
             done();
           });
       });
@@ -219,8 +294,8 @@ describe('API Interactions', () => {
           .end((err, response) => {
             expect(err).to.not.exist;
             expect(response.status).to.equal(200);
-            expect(response.body.data.item.debtorId).to.equal(sampleDebtor.generatedData.id);
-            expect(response.body.data.item.debtor.name).to.equal(sampleDebtor.sampleData.name);
+            expect(response.body.data.debtorId).to.equal(sampleDebtor.generatedData.id);
+            expect(response.body.data.debtor.name).to.equal(sampleDebtor.sampleData.name);
             done();
           });
       });
@@ -252,7 +327,7 @@ describe('API Interactions', () => {
               .end((err, response) => {
                 expect(err).to.not.exist;
                 expect(response.status).to.equal(200);
-                expect(response.body.data.item.debtorId).to.equal(null);
+                expect(response.body.data.debtorId).to.equal(null);
                 done();
               });
           });
