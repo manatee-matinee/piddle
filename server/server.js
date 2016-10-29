@@ -18,7 +18,6 @@ if (process.env.NODE_ENV !== 'test') {
   // Don't log requests during testing
   app.use(morgan('dev'));
 }
-
 app.use(bodyParser.json());
 app.use(passport.initialize());
 

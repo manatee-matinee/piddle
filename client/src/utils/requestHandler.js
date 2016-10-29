@@ -7,7 +7,7 @@ export default {
    * @param {string} password
    * @param {requestCallback} cb - The callback that handles the response.
    */
-  postLogin: (emailAddress, password, callback) => {
+  postLogin: (data, callback) => {
     // eslint-disable-next-line no-undef
     fetch(`${url}/auth/login`, {
       method: 'POST',
@@ -15,14 +15,10 @@ export default {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        emailAddress,
-        password,
-      }),
+      body: JSON.stringify(data),
     })
     .then(res => callback(res));
   },
-
   /**
    * Signup POST request to /auth/signup
    * @param {string} emailAddress
@@ -41,7 +37,6 @@ export default {
     })
     .then(res => callback(res));
   },
-
   /**
    * Signout GET request to /auth/signout
    * @param {requestCallback} cb - The callback that handles the response.
@@ -50,6 +45,25 @@ export default {
     // eslint-disable-next-line no-undef
     fetch(`${url}/auth/logout`, {
       method: 'GET',
+    })
+    .then(res => callback(res));
+  },
+  /**
+   * Signup PUT request to /auth/signup
+   * @param {string} emailAddress
+   * @param {string} password
+   * @param {requestCallback} cb - The callback that handles the response.
+   */
+  putUpdate: (data, callback) => {
+    // TODO: get id from webtoken
+    // eslint-disable-next-line no-undef
+    fetch(`${url}/api/user/id`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     })
     .then(res => callback(res));
   },

@@ -19,14 +19,14 @@ it('renders without crashing', () => {
 });
 
 it('has a field for inputting the user\'s email', () => {
-  expect(shallowLogin.find('input.emailAddress')).to.have.length(1);
+  expect(shallowLogin.find('#emailAddress')).to.have.length(1);
 });
 
 it('has a field for inputting the user\'s password', () => {
-  expect(shallowLogin.find('input.password')).to.have.length(1);
+  expect(shallowLogin.find('#password')).to.have.length(1);
 });
 
 it('has a submit input for submitting Login form', () => {
-  expect(shallowLogin.find('input.submit'))
+  expect(shallowLogin.find('#submitLogin'))
     .to.have.length(1);
 });

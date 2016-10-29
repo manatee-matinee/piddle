@@ -7,6 +7,7 @@ import Bill from './components/Bill';
 import Home from './components/Home';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import Profile from './components/Profile';
 
 ReactDOM.render((
   <Router history={browserHistory}>
@@ -17,6 +18,7 @@ ReactDOM.render((
       </Route>
       <Route path="login" component={Login} />
       <Route path="signup" component={Signup} />
+      <Route path="profile" component={Profile} />
     </Route>
   </Router>
   ),
