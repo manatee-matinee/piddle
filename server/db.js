@@ -45,6 +45,7 @@ const Item = sequelize.define('item', {
   },
   paid: {
     type: Sequelize.BOOLEAN,
+    defaultValue: false,
   },
   // claimed: {
   //   type: Sequelize.BOOLEAN,
