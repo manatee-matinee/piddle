@@ -13,6 +13,13 @@ const findUserByEmailAddress = emailAddress => User.findOne({
 });
 
 /**
+ * Find a user by id.
+ * @param {number} id - Id of the user.
+ * @return {Promise} Resolves to the instance of the User from the database.
+ */
+const findUserById = id => User.findById(id);
+
+/**
  * Update a user.
  * @param {String} emailAddress - The email address of the user.
  * @param {Object} params - The parameters to update.
@@ -21,10 +28,18 @@ const findUserByEmailAddress = emailAddress => User.findOne({
  * @param {String} [params.paypalId] - The Paypal 'paypal.me' ID of the user.
  * @return {Promise} Resolves to the instance of the User from the database.
  */
-const updateUser = (emailAddress, params) =>
-  findUserByEmailAddress(emailAddress)
+const updateUser = (id, params) => {
+  const updateParameters = Object.assign({}, params);
+  delete updateParameters.id; // don't allow id to be updated
+  Object.keys(updateParameters).forEach((key) => {
+    if (updateParameters[key] === null) {
+      delete updateParameters[key];
+    }
+  });
+  return findUserById(id)
     .then(userRecord =>
-      userRecord.update(params));
+      userRecord.update(updateParameters));
+};
 
 /**
  * Confirm a user's password.
@@ -77,6 +92,7 @@ const deleteUser = emailAddress =>
 
 module.exports = {
   findUserByEmailAddress,
+  findUserById,
   updateUser,
   verifyUser,
   createUser,

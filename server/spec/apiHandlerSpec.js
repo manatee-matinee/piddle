@@ -181,3 +181,44 @@ describe('Retrieving a bill', () => {
       });
   });
 });
+
+describe('updating users', () => {
+  before(done => emptyRecords(done));
+  before(done => createSampleUser(done));
+  before(done => logInSampleUser(done));
+
+  it('should update a user', (done) => {
+    request(app)
+      .put(`/auth/user/${sampleUserId}`)
+      .set('authorization', jwtHeaderValue)
+      .send({
+        paypalId: 'newPPId',
+      })
+      .end((err, response) => {
+        expect(err).to.not.exist;
+        expect(response.status).to.equal(200);
+        expect(response.body.data.token).to.exist;
+        userController.findUserById(sampleUserId)
+          .then((userInstance) => {
+            expect(userInstance.get('paypalId')).to.equal('newPPId');
+            done();
+          });
+      });
+  });
+
+  it('should not be able to update a different user than the authorized user',
+    (done) => {
+      request(app)
+       .put(`/auth/user/${sampleUserId + 1}`) // not the logged in user
+       .set('authorization', jwtHeaderValue)
+       .send({
+         paypalId: 'newPPId',
+       })
+       .end((err, response) => {
+         expect(err).to.not.exist;
+         expect(response.status).to.equal(403);
+         expect(response.error).to.exist;
+         done();
+       });
+    });
+});
