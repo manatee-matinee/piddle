@@ -1,7 +1,6 @@
 const express = require('express');
 const apiHandler = require('../handlers/apiHandler');
 const authHandler = require('../handlers/authHandler');
-const billController = require('../dbControllers/billController');
 
 const router = express.Router(); // eslint-disable-line
 
