@@ -1,18 +1,14 @@
 const expect = require('chai').expect;
-const db = require('../db');
 const billController = require('../dbControllers/billController');
-const userController = require('../dbControllers/userController');
+const specHelpers = require('./specHelpers');
 const config = require('../../config');
 
 if (/test/.test(config.db.path) === false) {
   throw new Error('NODE_ENV not set to \'test\'.');
 }
 
-// Create Sample Bill
-let bill;
-let createdBillShortId;
-const createSampleBill = (done) => {
-  bill = {
+const sampleBill = {
+  sampleData: {
     description: 'Tu Lan lunch',
     tax: 2.46,
     tip: 9.50,
@@ -22,85 +18,98 @@ const createSampleBill = (done) => {
       { description: '#8 Curry Rice', price: 6.50 },
       { description: 'Soda', price: 2.99 },
     ],
-  };
-  billController.createBill(bill)
-    .then((billInstance) => {
-      createdBillShortId = billInstance.get('shortId');
-      done();
-    });
+  },
 };
 
-// Create Sample User
+const sampleBill2 = {
+  sampleData: {
+    description: 'Chipogo',
+    tax: 1.99,
+    tip: 1,
+    payerEmailAddress: 'sample@gmail.com',
+    items: [
+      { description: 'Burrito', price: 7.99 },
+      { description: 'Veggie Bowl', price: 6.50 },
+      { description: 'Chips and Guac', price: 3.79 },
+    ],
+  },
+};
+
 const sampleUser = {
-  emailAddress: 'sample@gmail.com',
-  password: 'password1234',
-  name: 'Elsabeth Theudobald',
+  sampleData: {
+    emailAddress: 'sample@gmail.com',
+    password: 'password1234',
+    name: 'Elsabeth Theudobald',
+  },
 };
-let sampleUserId;
-const createSampleUser = (done) => {
-  userController.createUser(sampleUser)
-    .then((userInstance) => {
-      sampleUserId = userInstance.id;
-      done();
+
+
+describe('Bill controller', () => {
+  describe('Creating bills', () => {
+    before(done => specHelpers.emptyRecords(done));
+    before(done => specHelpers.createSampleUser(sampleUser, done));
+    it('should create bills', (done) => {
+      billController.createBill(sampleBill.sampleData)
+        .then((billRecord) => {
+          expect(billRecord.dataValues.description).to.equal(sampleBill.sampleData.description);
+          expect(billRecord.dataValues.shortId).to.match(/\w{5,}/);
+          done();
+        })
+        .catch(() => {
+          done();
+        });
     });
-};
-
-const emptyBills = (done) => {
-  Promise.all([
-    db.models.Bill.sync({ force: true }),
-    db.models.Item.sync({ force: true }),
-    db.models.User.sync({ force: true }),
-  ])
-  .then(() => {
-    done();
-  });
-};
-
-describe('retrieving bills', () => {
-  beforeEach((done) => {
-    emptyBills(done);
   });
 
-  beforeEach((done) => {
-    createSampleUser(done);
+  describe('Retrieving bills', () => {
+    before(done => specHelpers.emptyRecords(done));
+    before(done => specHelpers.createSampleUser(sampleUser, done));
+    before(done => specHelpers.createSampleBill(sampleBill, done));
+    before(done => specHelpers.createSampleBill(sampleBill2, done));
+
+    it('should retrieve a bill by shortId', (done) => {
+      billController.retrieveBill(sampleBill.generatedData.shortId)
+        .then((billInstance) => {
+          expect(billInstance.get('shortId')).to.equal(sampleBill.generatedData.shortId);
+          expect(billInstance.get('payerId')).to.match(/\d+/); // Payer ID has been set
+          expect(billInstance.get('payer').get('emailAddress')).to.equal(sampleUser.sampleData.emailAddress);
+          expect(billInstance.get('payer').get('password')).to.equal(undefined); // don't include password in response
+          expect(billInstance.get('payer').get('name')).to.equal(sampleUser.sampleData.name);
+          expect(billInstance.get('description')).to.equal(sampleBill.sampleData.description);
+          expect(billInstance.get('items').length).to.equal(sampleBill.sampleData.items.length);
+          done();
+        });
+    });
+
+    it('should retrieve all the bills a user is a payer of', (done) => {
+      billController.retrievePayerBills(sampleUser.generatedData.id)
+        .then((bills) => {
+          expect(bills).to.be.an('Array');
+          expect(bills.length).to.be.above(1);
+          expect(bills[0].get().description).to.equal(sampleBill.sampleData.description);
+          done();
+        });
+    });
   });
 
-  beforeEach((done) => {
-    createSampleBill(done);
-  });
+  describe('Deleting bills', () => {
+    beforeEach(done => specHelpers.emptyRecords(done));
+    beforeEach(done => specHelpers.createSampleUser(sampleUser, done));
+    beforeEach(done => specHelpers.createSampleBill(sampleBill, done));
 
-  it('should retrieve a bill by shortId', (done) => {
-    billController.retrieveBill(createdBillShortId)
-      .then((billInstance) => {
-        expect(billInstance.get('shortId')).to.equal(createdBillShortId);
-        expect(billInstance.get('payerId')).to.match(/\d+/); // Payer ID has been set
-        expect(billInstance.get('payer').get('emailAddress')).to.equal('sample@gmail.com');
-        expect(billInstance.get('payer').get('password')).to.equal(undefined); // don't include password in response
-        expect(billInstance.get('payer').get('name')).to.equal('Elsabeth Theudobald');
-        expect(billInstance.get('description')).to.equal(bill.description);
-        expect(billInstance.get('items').length).to.equal(bill.items.length);
-        done();
-      });
-  });
-});
-
-describe('deleting bills', () => {
-  beforeEach(done => emptyBills(done));
-  beforeEach(done => createSampleUser(done));
-  beforeEach(done => createSampleBill(done));
-
-  it('should delete bills by shortId', (done) => {
-    billController.retrieveBill(createdBillShortId)
-      .then((billRecord) => {
-        expect(billRecord).to.exist;
-        billController.deleteBill(createdBillShortId)
-          .then(() => {
-            billController.retrieveBill(createdBillShortId)
-              .then((deletedBillRecord) => {
-                expect(deletedBillRecord).to.not.exist;
-                done();
-              });
-          });
-      });
+    it('should delete bills by shortId', (done) => {
+      billController.retrieveBill(sampleBill.generatedData.shortId)
+        .then((billRecord) => {
+          expect(billRecord).to.exist;
+          billController.deleteBill(sampleBill.generatedData.shortId)
+            .then(() => {
+              billController.retrieveBill(sampleBill.generatedData.shortId)
+                .then((deletedBillRecord) => {
+                  expect(deletedBillRecord).to.not.exist;
+                  done();
+                });
+            });
+        });
+    });
   });
 });
