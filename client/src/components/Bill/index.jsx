@@ -24,6 +24,7 @@ class Bill extends React.Component {
 
     // Bill
     this.createBill = this.createBill.bind(this);
+    this.updateBill = this.updateBill.bind(this);
 
     // Bill Item
     this.changeBillItem = this.changeBillItem.bind(this);
@@ -74,7 +75,7 @@ class Bill extends React.Component {
       // the Bill.
 
       this.state = {
-        billItems: [
+        items: [
           { description: '', price: 0 },
         ],
         description: '',
@@ -118,7 +119,7 @@ class Bill extends React.Component {
 
       /*
         this.setState({
-          billItems: [
+          items: [
             { description: 'Item 1', price: 10 },
             { description: 'Item 2', price: 20 },
           ],
@@ -134,33 +135,113 @@ class Bill extends React.Component {
       */
 
       // eslint-disable-next-line no-undef
-      fetch(`${this.serverUrl}/api/bill/${billId}`)
-        .then(checkStatus)
-        .then(response => response.json())
-        .then(({ data }) => {
-          this.setState({
-            ...this.state,
-            ...data,
-            isEditable: false,
-            tip: {
-              value: data.tip,
-              percent: null,
-              usePercent: false,
-            },
-          });
-        })
-        .catch((error) => {
+      fetch(`${this.serverUrl}/api/bill/${billId}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `JWT ${this.state.token.raw}`,
+        },
+      })
+      .then(checkStatus)
+      .then(response => response.json())
+      .then(({ data }) => {
+        console.log('data', data);
+        const interactionType =
+          (data.payerId === this.state.token.decoded.id) ?
+          this.interactionTypes.edit : this.interactionTypes.claim;
+
+        return this.setState({
+          ...this.state,
+          ...data,
           /**
-           * @todo handle this error appropriately
+           * @todo edit/claim based on whether the current user owns the retreived bill
            */
-          const userNotAuthorizedToViewBill = (error.response.status === 401);
-          if (userNotAuthorizedToViewBill) {
-            this.setState({ error });
-          }
-          console.dir(error);
+          interactionType,
+          tip: {
+            value: data.tip,
+            percent: null,
+            usePercent: false,
+          },
         });
+      })
+      .then(() => {
+        console.log('state', this.state);
+      })
+      .catch((error) => {
+        /**
+         * @todo handle this error appropriately
+         */
+        const userNotAuthorizedToViewBill = (error.response.status === 401);
+        if (userNotAuthorizedToViewBill) {
+          this.setState({ error });
+        }
+        console.dir(error);
+      });
     }
   }
+
+  /**
+   * Create a JSON representation of the current state of the bill
+   * @method
+   * @name updateBill
+   * @param {object} event
+   */
+  updateBill(event) {
+    event.preventDefault();
+
+    const bill = {
+      description: this.state.description,
+      items: this.state.items,
+      payerEmailAddress: this.state.token.decoded.emailAddress,
+      tax: this.state.tax,
+      tip: this.state.tip.value,
+    };
+
+    /**
+     * @todo Extract these variables and functions into a module (DRY).
+     */
+
+    const jsonHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${this.state.token.raw}`,
+    };
+
+    // ref: https://github.com/github/fetch
+    const checkStatus = (response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response;
+      }
+
+      const error = new Error(response.statusText);
+      error.response = response;
+      throw error;
+    };
+
+    // eslint-disable-next-line no-undef
+    fetch(`${this.serverUrl}/api/bill/${this.props.params.id}`, {
+      method: 'PUT',
+      headers: jsonHeaders,
+      body: JSON.stringify(bill),
+    })
+      .then(checkStatus)
+      .then(response => response.json())
+      .then(({ data }) => {
+        console.log('successful PUT');
+        console.log(data);
+        /**
+         * @todo this changes the URL but doesn't re-render the Bill in edit interactionMode
+         */
+        this.props.router.push(`/bill/${data.shortId}`);
+      })
+      .catch((error) => {
+        /**
+         * @todo handle this error appropriately
+         */
+        console.log('unsuccessful PUT');
+        console.error(error);
+      });
+  }
+
 
   /**
    * Create a JSON representation of the current state of the bill
@@ -173,7 +254,7 @@ class Bill extends React.Component {
 
     const bill = {
       description: this.state.description,
-      items: this.state.billItems,
+      items: this.state.items,
       payerEmailAddress: this.state.token.decoded.emailAddress,
       tax: this.state.tax,
       tip: this.state.tip.value,
@@ -209,6 +290,9 @@ class Bill extends React.Component {
       .then(checkStatus)
       .then(response => response.json())
       .then(({ data }) => {
+        /**
+         * @todo this changes the URL but doesn't re-render the Bill in edit interactionMode
+         */
         this.props.router.push(`/bill/${data.shortId}`);
       })
       .catch((error) => {
@@ -228,9 +312,9 @@ class Bill extends React.Component {
    */
   deleteBillItem(event, id) {
     event.preventDefault();
-    const previousItems = this.state.billItems;
+    const previousItems = this.state.items;
     previousItems.splice(id, 1);
-    this.setState({ billItems: previousItems });
+    this.setState({ items: previousItems });
 
     this.updateTip();
   }
@@ -248,7 +332,7 @@ class Bill extends React.Component {
       price: 0,
     };
 
-    this.setState({ billItems: [...this.state.billItems, newItem] });
+    this.setState({ items: [...this.state.items, newItem] });
   }
 
   /**
@@ -315,7 +399,7 @@ class Bill extends React.Component {
     // tip based on a given percent.
     let tip = this.state.tip.value;
     if (this.state.tip.usePercent) {
-      const total = this.state.billItems.reduce((sum, billItem) => (
+      const total = this.state.items.reduce((sum, billItem) => (
         sum + billItem.price
       ), 0);
       tip = total * (this.state.tip.percent / 100);
@@ -333,10 +417,10 @@ class Bill extends React.Component {
    */
   changeBillItem(index, fields) {
     // Update the bill state
-    const billItem = { ...this.state.billItems[index], ...fields };
-    const previousItems = this.state.billItems;
+    const billItem = { ...this.state.items[index], ...fields };
+    const previousItems = this.state.items;
     previousItems[index] = billItem;
-    this.setState({ billItems: previousItems });
+    this.setState({ items: previousItems });
 
     this.updateTip();
   }
@@ -385,7 +469,7 @@ class Bill extends React.Component {
                 interactionType={this.state.interactionType}
               />
               <BillItemList
-                billItems={this.state.billItems}
+                items={this.state.items}
                 deleteBillItem={this.deleteBillItem}
                 changeBillItem={this.changeBillItem}
                 interactionType={this.state.interactionType}
@@ -418,7 +502,7 @@ class Bill extends React.Component {
                 <input
                   type="submit"
                   value="Save Changes"
-                  onClick={this.createBill}
+                  onClick={this.updateBill}
                   disabled="true"
                 />
               }
