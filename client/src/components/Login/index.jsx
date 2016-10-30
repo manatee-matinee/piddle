@@ -16,6 +16,13 @@ class Login extends Component {
     this.submitLoginForm = this.submitLoginForm.bind(this);
   }
 
+  componentDidMount() {
+    // Send the user away if they're already logged in
+    if (localStorage.getItem('piddleToken')) {
+      browserHistory.push('/');
+    }
+  }
+
   handleInputChange(event) {
     const stateObj = this.state.inputs;
     stateObj[event.target.name] = event.target.value;
@@ -26,9 +33,11 @@ class Login extends Component {
     event.preventDefault();
     Request.postLogin(this.state.inputs, (res) => {
       if (res.status === 201) {
+        // eslint-disable-next-line no-undef
+        localStorage.setItem('piddleToken', res.body.data.token);
         browserHistory.push('/');
       } else {
-        this.setState({ error: 'Invalid username or password, please try again' });
+        this.setState({ error: res.body.error.message });
       }
     });
   }
