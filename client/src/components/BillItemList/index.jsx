@@ -5,7 +5,7 @@ import BillItem from './../BillItem';
 /**
  * @class BillItemList
  * @param {object} props
- * @param {object[]} props.billItems
+ * @param {object[]} props.items
  * @param {function} props.deleteBillItem
  * @param {function} props.changeBillItem
  * @param {symbol} props.interactionType
@@ -19,7 +19,7 @@ const BillItemList = (props) => {
 
   return (
     <div className="BillItemList">
-      {props.billItems.map((item, i) => (
+      {props.items.map((item, i) => (
         <BillItem
           key={i}
           index={i}
@@ -37,7 +37,7 @@ const BillItemList = (props) => {
 };
 
 BillItemList.propTypes = {
-  billItems: React.PropTypes.arrayOf(
+  items: React.PropTypes.arrayOf(
     React.PropTypes.object
   ).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types

@@ -14,7 +14,6 @@ const saveBill = (request, response) => {
     })
     .catch((error) => {
       response.status(400);
-      console.error(error);
       response.json({
         error: {
           message: error.message,
