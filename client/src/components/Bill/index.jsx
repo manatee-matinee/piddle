@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode';
 import React from 'react';
 import { withRouter } from 'react-router';
 import './Bill.css';
@@ -55,24 +56,41 @@ class Bill extends React.Component {
    * @name componentWillMount
    */
   componentWillMount() {
-    // Set the default state here. We'll load the actual Bill data later
-    // in componentDidMount if the user has requested a specific bill to
-    // avoid waiting for the API GET request to complete before rendering
-    // the Bill.
+    // Send the user away if they're not already logged in
+    // eslint-disable-next-line no-undef
+    const token = localStorage.getItem('piddleToken');
+    const decodedToken = jwtDecode(token);
 
-    this.state = {
-      billItems: [
-        { description: '', price: 0 },
-      ],
-      description: '',
-      interactionType: this.interactionTypes.new,
-      tax: 0,
-      tip: {
-        value: 0,
-        percent: null,
-        usePercent: false,
-      },
-    };
+    if (!token) {
+      /**
+       * @todo where is the proper place to redirect the user away from Bill?
+       * This approach is giving a console error in local dev
+       */
+      this.props.router.push('/');
+    } else {
+      // Set the default state here. We'll load the actual Bill data later
+      // in componentDidMount if the user has requested a specific bill to
+      // avoid waiting for the API GET request to complete before rendering
+      // the Bill.
+
+      this.state = {
+        billItems: [
+          { description: '', price: 0 },
+        ],
+        description: '',
+        interactionType: this.interactionTypes.new,
+        token: {
+          raw: token,
+          decoded: decodedToken,
+        },
+        tax: 0,
+        tip: {
+          value: 0,
+          percent: null,
+          usePercent: false,
+        },
+      };
+    }
   }
 
   /**
@@ -82,6 +100,7 @@ class Bill extends React.Component {
    */
   componentDidMount() {
     const billId = this.props.params.id;
+
     if (typeof billId !== 'undefined') {
       /**
        * @todo Extract these variables and functions into a module (DRY).
@@ -151,10 +170,11 @@ class Bill extends React.Component {
    */
   createBill(event) {
     event.preventDefault();
+
     const bill = {
       description: this.state.description,
       items: this.state.billItems,
-      payer: 1,
+      payerEmailAddress: this.state.token.decoded.emailAddress,
       tax: this.state.tax,
       tip: this.state.tip.value,
     };
@@ -162,9 +182,11 @@ class Bill extends React.Component {
     /**
      * @todo Extract these variables and functions into a module (DRY).
      */
+
     const jsonHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      Authorization: `JWT ${this.state.token.raw}`,
     };
 
     // ref: https://github.com/github/fetch
@@ -333,9 +355,26 @@ class Bill extends React.Component {
         }
         {!this.state.error &&
           <div>
-            <p className="Bill-intro">
-              Here is your bill
-            </p>
+            {
+              /**
+               * @todo Make into a component
+               */
+            }
+            {(this.state.interactionType === Symbol.for('new')) &&
+              <p className="Bill-intro">
+                Create a new Bill!
+              </p>
+            }
+            {(this.state.interactionType === Symbol.for('edit')) &&
+              <p className="Bill-intro">
+                Edit the bill!
+              </p>
+            }
+            {(this.state.interactionType === Symbol.for('claim')) &&
+              <p className="Bill-intro">
+                Claim the items that belong to you!
+              </p>
+            }
             <form
               id="createBillForm"
               ref={(c) => { this.createBillForm = c; }}
