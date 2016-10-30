@@ -18,6 +18,7 @@ class Login extends Component {
 
   componentDidMount() {
     // Send the user away if they're already logged in
+    // eslint-disable-next-line no-undef
     if (localStorage.getItem('piddleToken')) {
       browserHistory.push('/');
     }
