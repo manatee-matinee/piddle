@@ -26,6 +26,8 @@ export default {
    * @param {requestCallback} cb - The callback that handles the response.
    */
   postSignup: (data, callback) => {
+    let status;
+
     // eslint-disable-next-line no-undef
     fetch(`${url}/auth/signup`, {
       method: 'POST',
@@ -35,7 +37,13 @@ export default {
       },
       body: JSON.stringify(data),
     })
-    .then(res => callback(res));
+    .then((res) => {
+      status = res.status;
+      return res.json();
+    })
+    .then((body) => {
+      callback({ body, status });
+    });
   },
   /**
    * Signout GET request to /auth/signout
