@@ -36,7 +36,7 @@ class Signup extends Component {
         localStorage.setItem('piddleToken', res.body.data.token);
         browserHistory.push('/');
       } else {
-        this.setState({ error: res.body.error });
+        this.setState({ error: res.body.error.message });
       }
     });
   }
