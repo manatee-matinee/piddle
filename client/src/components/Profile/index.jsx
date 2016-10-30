@@ -1,16 +1,26 @@
+import jwtDecode from 'jwt-decode';
 import React, { Component } from 'react';
-// import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import Request from '../../utils/requestHandler';
 
 class Profile extends Component {
   constructor(props) {
     super(props);
+
+    // Send the user away if they're not already logged in
+    // eslint-disable-next-line no-undef
+    const token = localStorage.getItem('piddleToken');
+    if (!token) {
+      browserHistory.push('/login');
+    }
+
+    const userData = jwtDecode(token);
     this.state = {
-      emailAddress: null,
+      emailAddress: userData.emailAddress,
       password: null,
       name: null,
-      squareId: null,
-      paypalId: null,
+      squareId: userData.squareId,
+      paypalId: userData.paypalId,
     };
     this.submitUpdateForm = this.submitUpdateForm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -40,6 +50,7 @@ class Profile extends Component {
             id="emailAddress"
             name="emailAddress"
             onChange={event => this.handleInputChange(event)}
+            value={this.state.emailAddress}
           />
           <label htmlFor="name">First name</label>
           <input
@@ -64,6 +75,7 @@ class Profile extends Component {
             id="squareId"
             name="squareId"
             onChange={event => this.handleInputChange(event)}
+            value={this.state.squareId}
           />
           <label htmlFor="password">paypal Id</label>
           <input
@@ -72,6 +84,7 @@ class Profile extends Component {
             id="paypalId"
             name="paypalId"
             onChange={event => this.handleInputChange(event)}
+            value={this.state.paypalId}
           />
           <input
             type="submit"
