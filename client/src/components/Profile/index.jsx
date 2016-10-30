@@ -17,8 +17,8 @@ class Profile extends Component {
     const userData = jwtDecode(token);
     this.state = {
       emailAddress: userData.emailAddress,
-      password: null,
-      name: null,
+      // password: null,
+      name: userData.name,
       squareId: userData.squareId,
       paypalId: userData.paypalId,
     };
@@ -52,21 +52,14 @@ class Profile extends Component {
             onChange={event => this.handleInputChange(event)}
             value={this.state.emailAddress}
           />
-          <label htmlFor="name">First name</label>
+          <label htmlFor="name">Name</label>
           <input
             type="text"
             className="updateInput"
-            id="firstName"
-            name="firstName"
+            id="name"
+            name="name"
             onChange={event => this.handleInputChange(event)}
-          />
-          <label htmlFor="name">Last name</label>
-          <input
-            type="text"
-            className="updateInput"
-            id="lastName"
-            name="lastName"
-            onChange={event => this.handleInputChange(event)}
+            value={this.state.name}
           />
           <label htmlFor="password">square Id</label>
           <input
