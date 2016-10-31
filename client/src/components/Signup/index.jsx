@@ -9,11 +9,9 @@ class Signup extends Component {
       inputs: {
         emailAddress: null,
         password: null,
-        firstName: null,
-        lastName: null,
+        name: null,
         squareId: null,
         paypalId: null,
-        venmoId: null,
       },
       error: '',
     };
@@ -62,20 +60,12 @@ class Signup extends Component {
             name="password"
             onChange={event => this.handleInputChange(event)}
           />
-          <label htmlFor="name">First name</label>
+          <label htmlFor="name">Name</label>
           <input
             type="text"
             className="loginInput"
-            id="loginInput"
-            name="firstName"
-            onChange={event => this.handleInputChange(event)}
-          />
-          <label htmlFor="name">Last name</label>
-          <input
-            type="text"
-            className="loginInput"
-            id="lastName"
-            name="lastName"
+            id="name"
+            name="name"
             onChange={event => this.handleInputChange(event)}
           />
           <label htmlFor="password">square Id</label>

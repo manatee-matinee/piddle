@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import Request from '../../utils/requestHandler';
 
 class Profile extends Component {
@@ -24,7 +24,13 @@ class Profile extends Component {
 
   submitUpdateForm(event) {
     event.preventDefault();
-    Request.putUpdate(this.state, res => console.log(res));
+    Request.putUpdate(this.state, (res) => {
+      if (res.status === 201) {
+        browserHistory.push('/');
+      } else {
+        this.setState({ error: 'Error updating info.' });
+      }
+    });
   }
 
   render() {
@@ -41,20 +47,12 @@ class Profile extends Component {
             name="emailAddress"
             onChange={event => this.handleInputChange(event)}
           />
-          <label htmlFor="name">First name</label>
+          <label htmlFor="name">Name</label>
           <input
             type="text"
             className="updateInput"
-            id="firstName"
-            name="firstName"
-            onChange={event => this.handleInputChange(event)}
-          />
-          <label htmlFor="name">Last name</label>
-          <input
-            type="text"
-            className="updateInput"
-            id="lastName"
-            name="lastName"
+            id="name"
+            name="name"
             onChange={event => this.handleInputChange(event)}
           />
           <label htmlFor="password">square Id</label>
