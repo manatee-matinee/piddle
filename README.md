@@ -1,6 +1,8 @@
 # Piddle
 
-> Bill splitting through OCR and Venmo.
+> Easy bill splitting.
+
+Piddle starts with a bill paid (outside of Piddle) in whole by one person (the Payer). The payer then creates a new Bill in Piddle and shares it with everyone who has some responsibility to pay (Debtors). Debtors can select for themselves which parts of the Bill they are responsible for (Items) and pay their share to the original payer (Payer) through Paypal or Square.
 
 ## Table of Contents
 
