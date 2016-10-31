@@ -61,9 +61,16 @@ const BillItem = (props) => {
         </div>
       }
       {!isEditable &&
+            // checked={!!props.debtorId}
         <div>
-          <p><span>Description</span> {props.description}</p>
-          <p><span>Price</span> {props.price}</p>
+          <input
+            type="checkbox"
+            value={props.id}
+            checked={!!props.debtorId}
+            onChange={props.claimBillItem}
+            disabled={!!props.paid}
+          />
+          <span>{props.description}: {props.price}</span>
         </div>
       }
     </div>
@@ -73,6 +80,7 @@ const BillItem = (props) => {
 BillItem.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
   changeBillItem: React.PropTypes.func.isRequired,
+  claimBillItem: React.PropTypes.func.isRequired,
   deleteBillItem: React.PropTypes.func.isRequired,
   description: React.PropTypes.string.isRequired,
   index: React.PropTypes.number.isRequired,

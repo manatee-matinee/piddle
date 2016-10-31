@@ -26,6 +26,7 @@ const BillItemList = (props) => {
           {...item}
           deleteBillItem={props.deleteBillItem}
           changeBillItem={props.changeBillItem}
+          claimBillItem={props.claimBillItem}
           interactionType={props.interactionType}
         />
         ))}
@@ -42,6 +43,7 @@ BillItemList.propTypes = {
   ).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   changeBillItem: React.PropTypes.func.isRequired,
+  claimBillItem: React.PropTypes.func.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   deleteBillItem: React.PropTypes.func.isRequired,
   interactionType: React.PropTypes.symbol.isRequired,
