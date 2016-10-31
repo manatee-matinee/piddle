@@ -2,6 +2,7 @@ import jwtDecode from 'jwt-decode';
 import React from 'react';
 import { withRouter } from 'react-router';
 import { round } from 'mathjs';
+import { Form, Well, Button } from 'react-bootstrap';
 import './Bill.css';
 import BillItemList from './../BillItemList';
 import DescriptionField from './../DescriptionField';
@@ -595,37 +596,40 @@ class Bill extends React.Component {
                */
             }
             {(this.state.interactionType === Symbol.for('new')) &&
-              <p className="Bill-intro">
+              <p className="Bill-intro lead">
                 Create a new Bill!
               </p>
             }
             {(this.state.interactionType === Symbol.for('edit')) &&
-              <p className="Bill-intro">
+              <p className="Bill-intro lead">
                 Edit the bill!
               </p>
             }
             {(this.state.interactionType === Symbol.for('claim')) &&
-              <p className="Bill-intro">
+              <p className="Bill-intro lead">
                 Claim the items that belong to you!
               </p>
             }
-            <form
+            <Form
+              inline
               id="createBillForm"
               ref={(c) => { this.createBillForm = c; }}
             >
-              <DescriptionField
-                changeDescriptionValue={this.changeDescriptionValue}
-                descriptionValue={this.state.description}
-                interactionType={this.state.interactionType}
-              />
-              <BillItemList
-                items={this.state.items}
-                deleteBillItem={this.deleteBillItem}
-                claimBillItem={this.claimBillItem}
-                changeBillItem={this.changeBillItem}
-                interactionType={this.state.interactionType}
-                newBillItem={this.newBillItem}
-              />
+              <Well bsSize="lg">
+                <DescriptionField
+                  changeDescriptionValue={this.changeDescriptionValue}
+                  descriptionValue={this.state.description}
+                  interactionType={this.state.interactionType}
+                />
+                <BillItemList
+                  items={this.state.items}
+                  deleteBillItem={this.deleteBillItem}
+                  claimBillItem={this.claimBillItem}
+                  changeBillItem={this.changeBillItem}
+                  interactionType={this.state.interactionType}
+                  newBillItem={this.newBillItem}
+                />
+              </Well>
               <TaxField
                 changeTaxValue={this.changeTaxValue}
                 interactionType={this.state.interactionType}
@@ -643,14 +647,20 @@ class Bill extends React.Component {
                  */
               }
               {(this.state.interactionType === Symbol.for('new')) &&
-                <input
-                  type="submit"
-                  value="Create New Bill"
-                  onClick={this.createBill}
-                />
+                <div className="text-center">
+                  <Button
+                    className="btn-primary"
+                    id="create-new-bill-btn"
+                    bsSize="lg"
+                    type="submit"
+                    value="Create New Bill"
+                    onClick={this.createBill}
+                  >Create New Bill
+                  </Button>
+                </div>
               }
               {(this.state.interactionType === Symbol.for('edit')) &&
-                <input
+                <Button
                   type="submit"
                   value="Save Changes"
                   onClick={this.updateBill}
@@ -674,7 +684,7 @@ class Bill extends React.Component {
                   </a>
                 </div>
               }
-            </form>
+            </Form>
           </div>
         }
       </div>

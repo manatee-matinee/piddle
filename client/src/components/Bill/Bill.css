@@ -1,4 +1,4 @@
-.Bill {
+.Bill-intro {
   text-align: center;
 }
 
@@ -18,7 +18,14 @@
   font-size: large;
 }
 
-@keyframes Bill-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+#create-new-bill-btn {
+  margin-top: 1em;
+}
+
+.well-lg {
+  background-color: rgba(245, 245, 245, 0.7) !important;
+}
+
+.lead {
+  font-size: 2em !important;
 }

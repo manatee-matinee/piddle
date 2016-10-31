@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'react-bootstrap';
 import './BillItemList.css';
 import BillItem from './../BillItem';
 
@@ -31,7 +32,15 @@ const BillItemList = (props) => {
         />
         ))}
       {isEditable &&
-        <button onClick={props.newBillItem}>New Bill Item</button>
+        <div className="row">
+          <Button
+            className="pull-right"
+            id="new-bill-item-btn"
+            bsStyle="success"
+            onClick={props.newBillItem}
+          >New Bill Item
+          </Button>
+        </div>
       }
     </div>
   );
