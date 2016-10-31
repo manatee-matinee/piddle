@@ -2,14 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
+import sinon from 'sinon';
 import BillItem from './index';
 
-const changeBillItem = () => {};
-const deleteBillItem = () => {};
+const changeBillItem = sinon.spy();
+const claimBillItem = sinon.spy();
+const deleteBillItem = sinon.spy();
 
 const props = {
   shallow: {
     changeBillItem,
+    claimBillItem,
     deleteBillItem,
     description: 'A wonderful BillItem',
     index: 14,
@@ -130,9 +133,11 @@ describe('claim', () => {
     );
   });
 
-  it('should not have input fields', () => {
-    expect(component.find('input'))
-      .to.have.length(0);
+  it('should only have input fields of type checkbox', () => {
+    const inputCount = component.find('input');
+    const checkboxCount = component.find('input[type="checkbox"]');
+    expect(inputCount.length)
+      .to.equal(checkboxCount.length);
   });
 
   it('should display the description', () => {
