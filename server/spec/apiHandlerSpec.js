@@ -4,6 +4,7 @@ const db = require('../db');
 const request = require('supertest');
 const userController = require('../dbControllers/userController');
 const billController = require('../dbControllers/billController');
+const itemController = require('../dbControllers/itemController');
 const specHelpers = require('./specHelpers');
 const config = require('../../config');
 /* eslint-disable no-unused-expressions */
@@ -218,6 +219,87 @@ describe('API Interactions', () => {
             expect(response.body.data[0].payerId).to.equal(sampleUser.generatedData.id);
             expect(response.body.data[1].description).to.equal(sampleBill2.sampleData.description);
             done();
+          });
+      });
+    });
+
+    describe('Updating bills', () => {
+      before(done => specHelpers.emptyRecords(done));
+      before(done => specHelpers.createSampleUser(sampleUser, done));
+      before(done => specHelpers.createSampleUser(otherUser, done));
+      before(done => specHelpers.setSampleUserToken(sampleUser, done));
+      before(done => specHelpers.setSampleUserToken(otherUser, done));
+      before(done => specHelpers.createSampleBill(sampleBill, done));
+
+      it('should not be able to update bills unless authenticated', (done) => {
+        request(app)
+          .put(`/api/bill/${sampleBill.generatedData.shortId}`)
+          .send({
+            description: 'New Description',
+          })
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(401);
+            done();
+          });
+      });
+
+      it('should not be able to update a bill unless the user is the payer', (done) => {
+        request(app)
+          .put(`/api/bill/${sampleBill.generatedData.shortId}`)
+          .set('authorization', `JWT ${otherUser.generatedData.token}`) // otherUser is NOT bill owner
+          .send({
+            description: 'New Description',
+          })
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(403);
+            done();
+          });
+      });
+
+      it('should be able to update the bill', (done) => {
+        request(app)
+          .put(`/api/bill/${sampleBill.generatedData.shortId}`)
+          .set('authorization', `JWT ${sampleUser.generatedData.token}`) // sampleUser is bill owner
+          .send({
+            description: 'New Description',
+            tax: 3.33,
+            tip: 7.54,
+          })
+          .end((err, response) => {
+            expect(err).to.not.exist;
+            expect(response.status).to.equal(200);
+            expect(response.body.data.description).to.equal('New Description');
+            expect(response.body.data.tax).to.equal(3.33);
+            expect(response.body.data.tip).to.equal(7.54);
+            done();
+          });
+      });
+
+      it('should not be able to update tax or tip once an item has been marked paid', (done) => {
+        const itemIds = [];
+
+        billController.retrieveBill(sampleBill.generatedData.shortId)
+          .then((billInstance) => {
+            billInstance.get('items').forEach((itemRecord) => {
+              itemIds.push(itemRecord.get('id'));
+            });
+            itemController.updateItem(itemIds[1], { paid: true })
+              .then(() => {
+                request(app)
+                  .put(`/api/bill/${sampleBill.generatedData.shortId}`)
+                  .set('authorization', `JWT ${sampleUser.generatedData.token}`) // sampleUser is bill owner
+                  .send({
+                    tax: 3.33,
+                    tip: 7.54,
+                  })
+                  .end((err, response) => {
+                    expect(err).to.not.exist;
+                    expect(response.status).to.equal(400);
+                    done();
+                  });
+              });
           });
       });
     });

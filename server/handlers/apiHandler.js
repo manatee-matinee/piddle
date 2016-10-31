@@ -14,7 +14,6 @@ const saveBill = (request, response) => {
     })
     .catch((error) => {
       response.status(400);
-      console.error(error);
       response.json({
         error: {
           message: error.message,
@@ -53,19 +52,64 @@ const getUserBills = (request, response) => {
       const billsJSON = bills.map(bill => bill.toJSON());
       response.status(200).json({ data: billsJSON });
     })
-    .catch((err) => response.status(500).json({
+    .catch(() => response.status(500).json({
       error: {
-        message: 'There was an error retrieving the user\'s bills' + err,
+        message: 'There was an error retrieving the user\'s bills',
       },
     }));
 };
 
-/*
-* @apiParam {String} [description] Description of the item.
-* @apiParam {number} [price] Price of the item in local currency.
-* @apiParam {number} [debtorId] Id of the person responsible for paying the item.
-* @apiParam {boolean} [paid] Whether the item has been paid for or not.
-*/
+/**
+ * @apiParam {string} [request.body.description] Description of the bill.
+ * @apiParam {number} [request.body.tax] Tax on the bill in local currency.
+ * @apiParam {number} [request.body.tip] Tip on the bill in local currency.
+ */
+const updateBill = (request, response) => {
+  const userId = request.user.get('id');
+  const shortId = request.params.shortId;
+  const updateParams = Object.assign({}, request.body);
+  delete updateParams.id; // don't allow id to update
+  delete updateParams.shortId; // don't allow shortId to update
+  delete updateParams.payerId; // don't allow payerId to update
+  delete updateParams.items; // don't allow changes to Items
+  billController.retrieveBillWithPaidItems(shortId)
+  .then((billRecord) => {
+    if (!billRecord) {
+      return response.status(404).json({
+        error: {
+          message: 'A bill with that short id does not exist',
+        },
+      });
+    }
+    if (billRecord.items.length > 0 && (updateParams.tax || updateParams.tip)) {
+      return response.status(400).json({
+        error: {
+          message: 'May not update tax or tip once an item has been marked paid',
+        },
+      });
+    }
+    if (billRecord.payerId !== userId) {
+      return response.status(403).json({
+        error: {
+          message: 'Only the payer of the bill may update the bill',
+        },
+      });
+    }
+    return billController.updateBill(shortId, updateParams)
+      .then(updatedBillRecord =>
+        response.status(200).json({
+          data: updatedBillRecord.toJSON(),
+        })
+      );
+  });
+};
+
+/**
+ * @apiParam {string} [request.body.description] Description of the item.
+ * @apiParam {number} [request.body.price] Price of the item in local currency.
+ * @apiParam {number} [request.body.debtorId] Id of the person responsible for paying the item.
+ * @apiParam {boolean} [request.body.paid] Whether the item has been paid for or not.
+ */
 const updateItem = (request, response) => {
   const userId = request.user.get('id');
   const itemId = request.params.id;
@@ -126,7 +170,7 @@ const updateItem = (request, response) => {
         }
       }
 
-      itemInstance.update(updateParams)
+      return itemInstance.update(updateParams)
         .then(() => {
           itemController.findItemByIdForUpdateReturn(itemInstance.get('id'))
             .then(returnItemInstance =>
@@ -142,5 +186,6 @@ module.exports = {
   saveBill,
   getBill,
   getUserBills,
+  updateBill,
   updateItem,
 };

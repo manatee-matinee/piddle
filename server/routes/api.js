@@ -227,12 +227,27 @@ router.post('/bill', authHandler.ensureAuthenticated, apiHandler.saveBill);
  * @apiParam {number} [tax] Tax on the bill in local currency.
  * @apiParam {number} [tip] Tip on the bill in local currency.
  *
+ * @apiError {Object} error Error information associated with the bill.
+ * @apiError {string} error.message Human-readable description of the error.
+ *
+ * @apiSuccess (200) {Object} data Data associated with the updated bill.
+ *
+ * @apiSuccessExample Success-Response
+ * HTTP/1.1 200 OK
+ * {
+ *   data: {
+ *      id: 15,
+ *      shortId: '3JRqJ',
+ *      description: 'A New Description',
+ *      tax: 3.33,
+ *      tip: 7.54,
+ *      createdAt: '2016-10-31T13:48:27.452Z',
+ *      updatedAt: '2016-10-31T18:48:27.509Z',
+ *      payerId: 16
+ *   }
+ * }
  */
-
-
-
-
-
+router.put('/bill/:shortId', authHandler.ensureAuthenticated, apiHandler.updateBill);
 
 /**
  * @api {put} /api/item/:id Update a bill item

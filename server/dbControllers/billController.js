@@ -82,6 +82,21 @@ const retrievePayerBills = function retrievePayerBills(payerId) {
   });
 };
 
+const retrieveBillWithPaidItems = function retrieveBillWithPaidItems(shortId) {
+  return Bill.findOne({
+    where: {
+      shortId,
+    },
+    include: {
+      model: Item,
+      where: {
+        paid: true,
+      },
+      required: false, // left outer join
+    },
+  });
+};
+
 /**
  * Update a bill.
  * @param {string} shortId - Short id of the item to be updated.
@@ -92,13 +107,8 @@ const retrievePayerBills = function retrievePayerBills(payerId) {
  * @return {Promise} Resolves to the instance of the Bill from the database.
  */
 const updateBill = function updateBill(shortId, params) {
-  const updateParams = Object.assign({}, params);
-  delete updateParams.id; // don't allow id to update
-  delete updateParams.shortId; // don't allow shortId to update
-  delete updateParams.payerId; // don't allow payerId to update
-  delete updateParams.items; // don't allow changes to Items
   return Bill.findOne({ where: { shortId } })
-    .then(billRecord => billRecord.update(updateParams));
+    .then(billRecord => billRecord.update(params));
 };
 
 const deleteBill = function deleteBill(shortId) {
@@ -110,6 +120,7 @@ module.exports = {
   createBill,
   retrieveBill,
   retrievePayerBills,
+  retrieveBillWithPaidItems,
   updateBill,
   deleteBill,
 };

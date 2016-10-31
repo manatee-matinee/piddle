@@ -127,7 +127,17 @@ describe('Bill controller', () => {
         expect(billRecord.get('description')).to.equal('New Dheli Specials');
         done();
       });
-    }); 
+    });
 
+    it('should not change the bill id', (done) => {
+      billController.updateBill(sampleBill.generatedData.shortId,
+        {
+          id: 98,
+        })
+      .then((billRecord) => {
+        expect(billRecord.get('id')).to.not.equal(98);
+        done();
+      });
+    });
   });
 });
