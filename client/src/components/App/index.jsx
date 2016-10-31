@@ -1,6 +1,7 @@
 import React from 'react';
-import logo from './../../logo.svg';
+import { Row, Col } from 'react-bootstrap';
 import './App.css';
+import NavBar from '../NavBar/NavBar';
 
 /**
  * @class App
@@ -8,12 +9,15 @@ import './App.css';
  * @param {object} props.children
  */
 const App = ({ children }) => (
-  <div className="App">
-    <div className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <h2>Welcome to Piddle.me</h2>
-    </div>
-    {children}
+  <div className="App container">
+    <NavBar />
+    <Row>
+      <Col xs={0} md={3} />
+      <Col xs={12} md={6}>
+        {children}
+      </Col>
+      <Col xs={0} md={3} />
+    </Row>
   </div>
 );
 

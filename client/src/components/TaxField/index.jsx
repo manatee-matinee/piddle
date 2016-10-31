@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormGroup, FormControl, InputGroup } from 'react-bootstrap';
 import './TaxField.css';
 
 /**
@@ -15,20 +16,22 @@ const TaxField = (props) => {
   );
 
   return (
-    <div>
+    <div className="taxField">
       {isEditable &&
-        <div>
-          <label htmlFor="tax">Tax</label>
-          <input
-            type="number"
-            name="tax"
-            placeholder="Tax"
-            value={props.taxValue}
-            onChange={event => (
-              props.changeTaxValue(Number.parseFloat(event.target.value))
-            )}
-          />
-        </div>
+        <FormGroup>
+          <InputGroup>
+            <InputGroup.Addon>Tax</InputGroup.Addon>
+            <FormControl
+              type="number"
+              name="tax"
+              placeholder="Tax"
+              value={props.taxValue}
+              onChange={event => (
+                props.changeTaxValue(Number.parseFloat(event.target.value))
+              )}
+            />
+          </InputGroup>
+        </FormGroup>
       }
       {!isEditable &&
         <p><span>Tax</span> {props.taxValue}</p>

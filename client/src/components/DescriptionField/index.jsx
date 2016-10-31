@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormGroup, InputGroup, FormControl } from 'react-bootstrap';
 import './DescriptionField.css';
 
 /**
@@ -15,20 +16,22 @@ const DescriptionField = (props) => {
   );
 
   return (
-    <div>
+    <div className="bill-description">
       {isEditable &&
-        <div>
-          <label htmlFor="description">Description</label>
-          <input
-            type="text"
-            name="description"
-            placeholder="Description"
-            value={props.descriptionValue}
-            onChange={event => (
-              props.changeDescriptionValue(event.target.value)
-            )}
-          />
-        </div>
+        <FormGroup>
+          <InputGroup>
+            <InputGroup.Addon>Bill Description</InputGroup.Addon>
+            <FormControl
+              type="text"
+              name="description"
+              placeholder="Description"
+              value={props.descriptionValue}
+              onChange={event => (
+                props.changeDescriptionValue(event.target.value)
+              )}
+            />
+          </InputGroup>
+        </FormGroup>
       }
       {!isEditable &&
         <p>{props.descriptionValue}</p>
