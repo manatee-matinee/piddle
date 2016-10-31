@@ -29,10 +29,20 @@
 
 ### Installing Dependencies
 
-From within the root directory:
+```sh
+# From within the project directory
+npm install
+
+cd client
+npm install
+```
+
+### Documentation
 
 ```sh
-npm install
+npm run doc
+cd docs
+live-server
 ```
 
 ### Roadmap
