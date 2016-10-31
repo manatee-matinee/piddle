@@ -1,10 +1,10 @@
 import React from 'react';
-import jumbotronInstance from '../Jumbotron/Jumbotron';
+import JumbotronInstance from '../Jumbotron/Jumbotron';
 import './Home.css';
 
 const Home = () => (
   <div>
-    {jumbotronInstance}
+    <JumbotronInstance />
   </div>
 );
 
