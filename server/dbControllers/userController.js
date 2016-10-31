@@ -1,7 +1,9 @@
-/**
- * @module User
- */
 const User = require('../db').models.User;
+
+/**
+ * Handles interactions with the database to manage Users.
+ * @module Server: User Controller
+ */
 
 /**
  * Find a user by email address.
