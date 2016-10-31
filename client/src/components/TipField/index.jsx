@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormGroup, FormControl, InputGroup, Button } from 'react-bootstrap';
 import './TipField.css';
 
 /**
@@ -25,44 +26,50 @@ const TipField = (props) => {
   };
 
   return (
-    <div>
+    <div className="tipField">
       {isEditable &&
-        <div>
-          <label htmlFor="tip">Tip</label>
-          <input
-            type="number"
-            name="tip"
-            placeholder="Tip"
-            value={props.tipValue}
-            onChange={changeTipValue}
-          />
-          <div className="tipSuggestions">
-            <button
-              onClick={changeTipPercent}
-              data-percent="0"
-            >
-              No Tip
-            </button>
-            <button
-              onClick={changeTipPercent}
-              data-percent="10"
-            >
-              10%
-            </button>
-            <button
-              onClick={changeTipPercent}
-              data-percent="15"
-            >
-              15%
-            </button>
-            <button
-              onClick={changeTipPercent}
-              data-percent="20"
-            >
-              20%
-            </button>
-          </div>
-        </div>
+        <FormGroup>
+          <InputGroup>
+            <InputGroup.Addon>Tip</InputGroup.Addon>
+            <FormControl
+              type="number"
+              name="tip"
+              placeholder="Tip"
+              value={props.tipValue}
+              onChange={changeTipValue}
+            />
+            <InputGroup.Button>
+              <Button
+                bsStyle="danger"
+                onClick={changeTipPercent}
+                data-percent="0"
+              >
+                No Tip
+              </Button>
+              <Button
+                bsStyle="warning"
+                onClick={changeTipPercent}
+                data-percent="10"
+              >
+                10%
+              </Button>
+              <Button
+                bsStyle="warning"
+                onClick={changeTipPercent}
+                data-percent="15"
+              >
+                15%
+              </Button>
+              <Button
+                bsStyle="success"
+                onClick={changeTipPercent}
+                data-percent="20"
+              >
+                20%
+              </Button>
+            </InputGroup.Button>
+          </InputGroup>
+        </FormGroup>
       }
       {!isEditable &&
         <p><span>Tip</span> {props.tipValue}</p>

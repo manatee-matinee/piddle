@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormGroup, FormControl, InputGroup, Button } from 'react-bootstrap';
 import './BillItem.css';
 
 
@@ -37,30 +38,37 @@ const BillItem = (props) => {
     <div className="BillItem">
       {isEditable &&
         <div>
-          <input
+          <FormControl
             className="description"
             name={`billItem-${props.index}-description`}
             onChange={fieldChange}
-            placeholder="Description"
+            placeholder="Item"
             type="text"
             value={props.description}
             disabled={!!props.debtorId}
           />
-          <input
-            className="price"
-            name={`billItem-${props.index}-price`}
-            onChange={fieldChange}
-            placeholder="Price"
-            type="number"
-            value={props.price}
-            disabled={!!props.debtorId}
-          />
-          <button
-            onClick={event => props.deleteBillItem(event, props.index)}
-            disabled={!!props.debtorId}
-          >
-            Delete
-          </button>
+          <FormGroup>
+            <InputGroup>
+              <InputGroup.Addon>$</InputGroup.Addon>
+              <FormControl
+                className="price"
+                name={`billItem-${props.index}-price`}
+                onChange={fieldChange}
+                placeholder="Price"
+                type="number"
+                value={props.price}
+                disabled={!!props.debtorId}
+              />
+              <InputGroup.Button>
+                <Button
+                  bsStyle="danger"
+                  onClick={event => props.deleteBillItem(event, props.index)}
+                  disabled={!!props.debtorId}>
+                  Delete
+                </Button>
+              </InputGroup.Button>
+            </InputGroup>
+          </FormGroup>
         </div>
       }
       {!isEditable &&
