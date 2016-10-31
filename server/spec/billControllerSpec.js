@@ -112,4 +112,22 @@ describe('Bill controller', () => {
         });
     });
   });
+
+  describe('Updating bills', () => {
+    beforeEach(done => specHelpers.emptyRecords(done));
+    beforeEach(done => specHelpers.createSampleUser(sampleUser, done));
+    beforeEach(done => specHelpers.createSampleBill(sampleBill, done));
+
+    it('should update bills', (done) => {
+      billController.updateBill(sampleBill.generatedData.shortId,
+        {
+          description: 'New Dheli Specials',
+        })
+      .then((billRecord) => {
+        expect(billRecord.get('description')).to.equal('New Dheli Specials');
+        done();
+      });
+    }); 
+
+  });
 });
