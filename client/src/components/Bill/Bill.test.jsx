@@ -81,5 +81,4 @@ describe('new', () => {
         .to.have.length(1);
     });
   });
-
 });

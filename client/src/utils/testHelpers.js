@@ -56,7 +56,7 @@ export const getUserToken = (() => {
 })();
 */
 
-export const RouterSpy = function () {
+export const RouterSpy = function RouterSpy() {
   this.push = sinon.spy();
   this.replace = sinon.spy();
   this.go = sinon.spy();

@@ -53,14 +53,10 @@ describe('Login Form', () => {
    * @todo Integrate tokens into this test so we can test
    */
   xdescribe('Authenticated', () => {
-    let component;
     let routerSpy;
 
     beforeEach(() => {
       routerSpy = new RouterSpy();
-      component = mount(
-        <Login router={routerSpy} />
-      );
     });
 
     it('renders without crashing', () => {
@@ -72,6 +68,7 @@ describe('Login Form', () => {
     });
 
     it('has a submit input for submitting Login form', () => {
+      // eslint-disable-next-line no-unused-expressions
       expect(routerSpy.push.calledOnce)
         .to.be.true;
     });

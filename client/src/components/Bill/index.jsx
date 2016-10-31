@@ -134,7 +134,6 @@ class Bill extends React.Component {
       .then(checkStatus)
       .then(response => response.json())
       .then(({ data }) => {
-        console.log('data', data);
         const interactionType =
           (data.payerId === this.state.token.decoded.id) ?
           this.interactionTypes.edit : this.interactionTypes.claim;
@@ -153,11 +152,7 @@ class Bill extends React.Component {
           },
         });
       })
-      .then(() => {
-        console.log('state', this.state);
-      })
       .catch((error) => {
-        console.log(error);
         /**
          * @todo handle this error appropriately
          */
@@ -165,7 +160,6 @@ class Bill extends React.Component {
         if (userNotAuthorizedToViewBill) {
           this.setState({ error });
         }
-        console.dir(error);
       });
     }
   }
@@ -217,8 +211,6 @@ class Bill extends React.Component {
       .then(checkStatus)
       .then(response => response.json())
       .then(({ data }) => {
-        console.log('successful PUT');
-        console.log(data);
         /**
          * @todo this changes the URL but doesn't re-render the Bill in edit interactionMode
          */
@@ -228,7 +220,6 @@ class Bill extends React.Component {
         /**
          * @todo handle this error appropriately
          */
-        console.log('unsuccessful PUT');
         console.error(error);
       });
   }
@@ -239,15 +230,13 @@ class Bill extends React.Component {
    * @name payForClaimedItems
    * @param {object} event
    */
-  payForClaimedItems(event) {
+  payForClaimedItems() {
     // event.preventDefault();
 
     const itemsToPayFor = this.state.items
       .filter(item => (
         (item.debtorId === this.state.token.decoded.id && !item.paid)
       ));
-
-    console.log(itemsToPayFor);
 
     const jsonHeaders = {
       Accept: 'application/json',
@@ -274,11 +263,11 @@ class Bill extends React.Component {
       // eslint-disable-next-line no-undef
       const itemIndex = Array.from(document.getElementById('createBillForm').elements)
         .filter(element => (element.tagName === 'INPUT' && element.type === 'checkbox'))
-        .reduce((soughtIndex, element, index) => {
+        .reduce((soughtIndex, element, elementIndex) => {
           if (soughtIndex !== null) {
             return soughtIndex;
           } else if (element.value === itemToPayFor.id) {
-            return index;
+            return elementIndex;
           }
 
           return null;
@@ -299,11 +288,13 @@ class Bill extends React.Component {
         updatedItems[itemIndex] = data;
         const allItemsUpdated = (index === itemsToPayFor.length - 1);
         if (allItemsUpdated) {
-          console.log('updated items!');
           this.setState({ items: updatedItems });
         }
       })
       .catch((err) => {
+        /**
+         * @todo handle this error appropriately
+         */
         console.error(err);
       });
     });
@@ -338,6 +329,7 @@ class Bill extends React.Component {
     /**
      * @todo change form name based on type of interaction
      */
+    // eslint-disable-next-line no-undef
     const itemIndex = Array.from(document.getElementById('createBillForm').elements)
       .filter(element => (element.tagName === 'INPUT' && element.type === 'checkbox'))
       .reduce((soughtIndex, element, index) => {
@@ -376,19 +368,15 @@ class Bill extends React.Component {
       const curDebtorDebtPercent = curDebtorItemDebt / totalBillPrice;
       const curDebtorDebt = curDebtorItemDebt + (curDebtorDebtPercent * sharedBillCosts);
 
-      console.log('shared bill costs', sharedBillCosts);
-      console.log('total price', totalBillPrice);
-      console.log('total price debt', curDebtorItemDebt);
-      console.log('curDebtorDebtPercent', curDebtorDebtPercent);
-      console.log('curDebtorDebt', curDebtorDebt);
-
-
       this.setState({
         curDebtorDebt,
         items: updatedItems,
       });
     })
     .catch((err) => {
+      /**
+       * @todo handle this error appropriately
+       */
       console.error(err);
     });
   }

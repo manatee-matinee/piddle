@@ -43,6 +43,7 @@ BillItemList.propTypes = {
   ).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   changeBillItem: React.PropTypes.func.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
   claimBillItem: React.PropTypes.func.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   deleteBillItem: React.PropTypes.func.isRequired,

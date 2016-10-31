@@ -42,7 +42,7 @@ class Profile extends Component {
     event.preventDefault();
     Request.putUpdate(this.state, (res) => {
       if (res.status === 201) {
-        browserHistory.push('/');
+        this.props.router.push('/login');
       } else {
         this.setState({ error: 'Error updating info.' });
       }
