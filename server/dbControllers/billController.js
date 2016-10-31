@@ -82,6 +82,24 @@ const retrievePayerBills = function retrievePayerBills(payerId) {
   });
 };
 
+/**
+ * Update a bill.
+ * @param {string} shortId - Short id of the item to be updated.
+ * @param {Object} params - Key-value pairs of the parameters to update.
+ * @param {String} [params.description] - Description of the bill.
+ * @param {number} [params.tax] - Tax on the bill in local currency.
+ * @param {number} [params.tip] - Tip on the bill in local currency.
+ * @return {Promise} Resolves to the instance of the Bill from the database.
+ */
+const updateBill = function updateBill(shortId, params) {
+  const updateParams = Object.assign({}, params);
+  delete updateParams.id; // don't allow id to update
+  delete updateParams.shortId; // don't allow shortId to update
+  delete updateParams.payerId; // don't allow payerId to update
+  delete updateParams.items; // don't allow changes to Items
+  return Bill.findOne({ where: { shortId } })
+    .then(billRecord => billRecord.update(updateParams));
+};
 
 const deleteBill = function deleteBill(shortId) {
   return Bill.findOne({ where: { shortId } })
@@ -92,5 +110,6 @@ module.exports = {
   createBill,
   retrieveBill,
   retrievePayerBills,
+  updateBill,
   deleteBill,
 };
