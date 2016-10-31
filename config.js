@@ -1,7 +1,3 @@
-/**
- * @module config
- */
-
 module.exports = {
   db: {
     name: 'database',
@@ -10,8 +6,7 @@ module.exports = {
     path: `./server/db/${process.env.NODE_ENV}-database.sqlite`,
   },
   bcryptHashRounds: 10,
-  sessionSecret: 'manatee_session_secret',
   jwt: {
-    secret: 'manatee_jwt_secret',
+    secret: process.env.JWT_SECRET || 'manatee_jwt_secret',
   },
 };
