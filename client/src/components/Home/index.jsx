@@ -17,14 +17,13 @@ const Home = () => (
     <br />
     <Link to="/profile">Profile</Link>
     <br />
-    <a
-      href="#"
+    <button
       onClick={() => {
         // eslint-disable-next-line no-undef
         localStorage.removeItem('piddleToken');
         browserHistory.push('/');
       }}
-    >Log out</a>
+    >Log out</button>
   </div>
 );
 

@@ -85,9 +85,12 @@ BillItem.propTypes = {
   changeBillItem: React.PropTypes.func.isRequired,
   claimBillItem: React.PropTypes.func.isRequired,
   deleteBillItem: React.PropTypes.func.isRequired,
+  debtorId: React.PropTypes.string.isRequired,
   description: React.PropTypes.string.isRequired,
+  id: React.PropTypes.string.isRequired,
   index: React.PropTypes.number.isRequired,
   interactionType: React.PropTypes.symbol.isRequired,
+  paid: React.PropTypes.bool.isRequired,
   price: React.PropTypes.number.isRequired,
 };
 

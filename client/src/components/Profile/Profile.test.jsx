@@ -16,15 +16,11 @@ const selectors = {
 
 describe('Profile Form', () => {
   describe('Not Authenticated', () => {
-    let component;
     let routerSpy;
     defineLocalStorage();
 
     beforeEach(() => {
       routerSpy = new RouterSpy();
-      component = mount(
-        <Profile router={routerSpy} />
-      );
     });
 
     it('renders without crashing', () => {
@@ -36,6 +32,7 @@ describe('Profile Form', () => {
     });
 
     it('redirect to login page', () => {
+      // eslint-disable-next-line no-unused-expressions
       expect(routerSpy.push.calledOnce)
         .to.be.true;
     });
@@ -45,8 +42,13 @@ describe('Profile Form', () => {
    * @todo Integrate tokens into this test so we can test
    */
   xdescribe('Authenticated', () => {
+    let component;
+    let routerSpy;
+    defineLocalStorage();
+
     beforeEach(() => {
       defineLocalStorage();
+      routerSpy = new RouterSpy();
       /*
       getUserToken('profile1@test.com', (token) => {
         if (token) {
@@ -58,6 +60,9 @@ describe('Profile Form', () => {
         done();
       });
       */
+      component = mount(
+        <Profile router={routerSpy} />
+      );
     });
 
     it('has a field for inputting the user\'s email', () => {
