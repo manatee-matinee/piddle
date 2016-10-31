@@ -1,6 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import React from 'react';
 import { withRouter } from 'react-router';
+import { round } from 'mathjs';
 import './Bill.css';
 import BillItemList from './../BillItemList';
 import DescriptionField from './../DescriptionField';
@@ -62,38 +63,42 @@ class Bill extends React.Component {
     // Send the user away if they're not already logged in
     // eslint-disable-next-line no-undef
     const token = localStorage.getItem('piddleToken');
-    const decodedToken = jwtDecode(token);
+    const stateObj = {
+      curDebtorDebt: 0,
+      description: '',
+      interactionType: this.interactionTypes.new,
+      items: [
+        { description: '', price: 0 },
+      ],
+      tax: 0,
+      tip: {
+        value: 0,
+        percent: null,
+        usePercent: false,
+      },
+    };
 
     if (!token) {
       /**
        * @todo where is the proper place to redirect the user away from Bill?
        * This approach is giving a console error in local dev
        */
-      this.props.router.push('/');
+      stateObj.error = {
+        message: 'Error: Not authenticated',
+      };
     } else {
       // Set the default state here. We'll load the actual Bill data later
       // in componentDidMount if the user has requested a specific bill to
       // avoid waiting for the API GET request to complete before rendering
       // the Bill.
 
-      this.state = {
-        items: [
-          { description: '', price: 0 },
-        ],
-        description: '',
-        interactionType: this.interactionTypes.new,
-        token: {
-          raw: token,
-          decoded: decodedToken,
-        },
-        tax: 0,
-        tip: {
-          value: 0,
-          percent: null,
-          usePercent: false,
-        },
+      stateObj.token = {
+        raw: token,
+        decoded: jwtDecode(token),
       };
     }
+
+    this.state = stateObj;
   }
 
   /**
@@ -104,7 +109,7 @@ class Bill extends React.Component {
   componentDidMount() {
     const billId = this.props.params.id;
 
-    if (typeof billId !== 'undefined') {
+    if (typeof billId !== 'undefined' && this.state.token) {
       /**
        * @todo Extract these variables and functions into a module (DRY).
        */
@@ -118,23 +123,6 @@ class Bill extends React.Component {
         error.response = response;
         throw error;
       };
-
-      /*
-        this.setState({
-          items: [
-            { description: 'Item 1', price: 10 },
-            { description: 'Item 2', price: 20 },
-          ],
-          description: 'Some Description',
-          interactionType: this.interactionTypes.claim,
-          tax: 0,
-          tip: {
-            value: 0,
-            percent: null,
-            usePercent: false,
-          },
-        });
-      */
 
       // eslint-disable-next-line no-undef
       fetch(`${this.serverUrl}/api/bill/${billId}`, {
@@ -169,6 +157,7 @@ class Bill extends React.Component {
         console.log('state', this.state);
       })
       .catch((error) => {
+        console.log(error);
         /**
          * @todo handle this error appropriately
          */
@@ -251,7 +240,7 @@ class Bill extends React.Component {
    * @param {object} event
    */
   payForClaimedItems(event) {
-    event.preventDefault();
+    // event.preventDefault();
 
     const itemsToPayFor = this.state.items
       .filter(item => (
@@ -375,7 +364,29 @@ class Bill extends React.Component {
     .then(({ data }) => {
       const updatedItems = this.state.items;
       updatedItems[itemIndex] = data;
-      this.setState({ items: updatedItems });
+
+      const sharedBillCosts = (this.state.tax + this.state.tip.value);
+      const totalBillPrice = updatedItems
+        .reduce((billItemSum, item) => (billItemSum + item.price), 0);
+      const curDebtorItemDebt = updatedItems
+        .reduce((billItemSum, item) => (
+          (item.debtorId === this.state.token.decoded.id) ?
+            (billItemSum + item.price) : billItemSum
+        ), 0);
+      const curDebtorDebtPercent = curDebtorItemDebt / totalBillPrice;
+      const curDebtorDebt = curDebtorItemDebt + (curDebtorDebtPercent * sharedBillCosts);
+
+      console.log('shared bill costs', sharedBillCosts);
+      console.log('total price', totalBillPrice);
+      console.log('total price debt', curDebtorItemDebt);
+      console.log('curDebtorDebtPercent', curDebtorDebtPercent);
+      console.log('curDebtorDebt', curDebtorDebt);
+
+
+      this.setState({
+        curDebtorDebt,
+        items: updatedItems,
+      });
     })
     .catch((err) => {
       console.error(err);
@@ -647,11 +658,21 @@ class Bill extends React.Component {
                 />
               }
               {(this.state.interactionType === Symbol.for('claim')) &&
-                <input
-                  type="submit"
-                  value="Pay for Claimed Items"
-                  onClick={this.payForClaimedItems}
-                />
+                <div>
+                  <a
+                    href={`https://cash.me/${this.state.payer.squareId}/${round(this.state.curDebtorDebt, 2)}`}
+                    onClick={this.payForClaimedItems}
+                  >
+                    Pay via Square Cash
+                  </a>
+                  <br />
+                  <a
+                    href={`https://paypal.me/${this.state.payer.paypalId}/${round(this.state.curDebtorDebt, 2)}`}
+                    onClick={this.payForClaimedItems}
+                  >
+                    Pay via Paypal
+                  </a>
+                </div>
               }
             </form>
           </div>

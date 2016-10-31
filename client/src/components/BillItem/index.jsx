@@ -44,6 +44,7 @@ const BillItem = (props) => {
             placeholder="Description"
             type="text"
             value={props.description}
+            disabled={!!props.debtorId}
           />
           <input
             className="price"
@@ -52,9 +53,11 @@ const BillItem = (props) => {
             placeholder="Price"
             type="number"
             value={props.price}
+            disabled={!!props.debtorId}
           />
           <button
             onClick={event => props.deleteBillItem(event, props.index)}
+            disabled={!!props.debtorId}
           >
             Delete
           </button>
