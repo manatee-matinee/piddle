@@ -1,28 +1,88 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { expect } from 'chai';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
+import { defineLocalStorage, RouterSpy } from '../../utils/testHelpers';
 import Profile from './index';
 
-const shallowProfile = shallow(
-  <Profile />
-);
+const selectors = {
+  emailAddress: 'input[name="emailAddress"]',
+  password: 'input[name="password"]',
+  name: 'input[name="name"]',
+  squareId: 'input[name="squareId"]',
+  paypalId: 'input[name="paypalId"]',
+  submit: 'input[type="submit"]',
+};
 
-const mountedProfile = mount(
-  <Profile />
-);
+describe('Profile Form', () => {
+  describe('Not Authenticated', () => {
+    let component;
+    let routerSpy;
+    defineLocalStorage();
 
-it('renders without crashing', () => {
-  // eslint-disable-next-line no-undef
-  const div = document.createElement('div');
-  ReactDOM.render(<Profile />, div);
-});
+    beforeEach(() => {
+      routerSpy = new RouterSpy();
+      component = mount(
+        <Profile router={routerSpy} />
+      );
+    });
 
-it('has a field for inputting the user\'s email', () => {
-  expect(shallowProfile.find('#emailAddress')).to.have.length(1);
-});
+    it('renders without crashing', () => {
+      ReactDOM.render(
+        <Profile router={routerSpy} />,
+        // eslint-disable-next-line no-undef
+        document.createElement('div'),
+      );
+    });
 
-it('has a submit input for submitting Profile form', () => {
-  expect(shallowProfile.find('#submitUpdate'))
-    .to.have.length(1);
+    it('redirect to login page', () => {
+      expect(routerSpy.push.calledOnce)
+        .to.be.true;
+    });
+  });
+
+  /**
+   * @todo Integrate tokens into this test so we can test
+   */
+  xdescribe('Authenticated', () => {
+    beforeEach(() => {
+      defineLocalStorage();
+      /*
+      getUserToken('profile1@test.com', (token) => {
+        if (token) {
+          console.log(token);
+          localStorage.setItem('piddleToken', token);
+        } else {
+          console.log('oh no!');
+        }
+        done();
+      });
+      */
+    });
+
+    it('has a field for inputting the user\'s email', () => {
+      expect(component.find(selectors.emailAddress))
+        .to.have.length(1);
+    });
+
+    it('has a field for inputting the user\'s name', () => {
+      expect(component.find(selectors.name))
+        .to.have.length(1);
+    });
+
+    it('has a field for inputting the user\'s Square ID', () => {
+      expect(component.find(selectors.squareId))
+        .to.have.length(1);
+    });
+
+    it('has a field for inputting the user\'s Paypal ID', () => {
+      expect(component.find(selectors.paypalId))
+        .to.have.length(1);
+    });
+
+    it('has a submit input for submitting form', () => {
+      expect(component.find(selectors.submit))
+        .to.have.length(1);
+    });
+  });
 });

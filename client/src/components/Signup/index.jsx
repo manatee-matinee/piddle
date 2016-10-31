@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Link, browserHistory } from 'react-router';
+import { Link, withRouter } from 'react-router';
 import Request from '../../utils/requestHandler';
 
 class Signup extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       inputs: {
         emailAddress: null,
@@ -15,6 +16,7 @@ class Signup extends Component {
       },
       error: '',
     };
+
     this.submitSignupForm = this.submitSignupForm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -23,7 +25,7 @@ class Signup extends Component {
     // Send the user away if they're already logged in
     // eslint-disable-next-line no-undef
     if (localStorage.getItem('piddleToken')) {
-      browserHistory.push('/');
+      this.props.router.push('/');
     }
   }
 
@@ -39,7 +41,7 @@ class Signup extends Component {
       if (res.status === 201) {
         // eslint-disable-next-line no-undef
         localStorage.setItem('piddleToken', res.body.data.token);
-        browserHistory.push('/');
+        this.props.router.push('/');
       } else {
         this.setState({ error: res.body.error.message });
       }
@@ -109,4 +111,10 @@ class Signup extends Component {
   }
 }
 
-export default Signup;
+Signup.propTypes = {
+  router: React.PropTypes.shape({
+    push: React.PropTypes.func.isRequired,
+  }),
+};
+
+export default withRouter(Signup);

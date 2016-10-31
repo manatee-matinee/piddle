@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, browserHistory } from 'react-router';
+import { Link, withRouter } from 'react-router';
 import Request from '../../utils/requestHandler';
 
 class Login extends Component {
@@ -20,7 +20,7 @@ class Login extends Component {
     // Send the user away if they're already logged in
     // eslint-disable-next-line no-undef
     if (localStorage.getItem('piddleToken')) {
-      browserHistory.push('/');
+      this.props.router.push('/');
     }
   }
 
@@ -36,7 +36,7 @@ class Login extends Component {
       if (res.status === 201) {
         // eslint-disable-next-line no-undef
         localStorage.setItem('piddleToken', res.body.data.token);
-        browserHistory.push('/');
+        this.props.router.push('/');
       } else {
         this.setState({ error: res.body.error.message });
       }
@@ -81,4 +81,11 @@ class Login extends Component {
     );
   }
 }
-export default Login;
+
+Login.propTypes = {
+  router: React.PropTypes.shape({
+    push: React.PropTypes.func.isRequired,
+  }),
+};
+
+export default withRouter(Login);

@@ -2,19 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
+import sinon from 'sinon';
 import BillItemList from './index';
 import BillItem from './../BillItem';
 
-const changeBillItem = () => {};
-const deleteBillItem = () => {};
-const newBillItem = () => {};
+const changeBillItem = sinon.spy();
+const claimBillItem = sinon.spy();
+const deleteBillItem = sinon.spy();
+const newBillItem = sinon.spy();
 
 const props = {
   shallow: {
     changeBillItem,
+    claimBillItem,
     deleteBillItem,
     newBillItem,
-    billItems: [
+    items: [
       { description: 'a', price: 1 },
       { description: 'b', price: 2 },
       { description: 'c', price: 3 },
@@ -66,7 +69,7 @@ describe('new', () => {
 
   it('has a bill item for each provided bill item', () => {
     expect(component.find(BillItem))
-      .to.have.length(props.shallow.billItems.length);
+      .to.have.length(props.shallow.items.length);
   });
 });
 
@@ -91,7 +94,7 @@ describe('edit', () => {
 
   it('has a bill item for each provided bill item', () => {
     expect(component.find(BillItem))
-      .to.have.length(props.shallow.billItems.length);
+      .to.have.length(props.shallow.items.length);
   });
 });
 
