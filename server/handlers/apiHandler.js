@@ -1,6 +1,16 @@
 const billController = require('../dbControllers/billController');
 const itemController = require('../dbControllers/itemController');
 
+/**
+ * The logic functions to handle requests to API endpoints.
+ * @module Server: API Handler
+ */
+
+/**
+ * Save a bill. The logic for POST /api/bill.
+ * @param {request} Request stream. See API documentation for parameters.
+ * @param {response} Response stream. See API documentation for parameters.
+ */
 const saveBill = (request, response) => {
   const bill = request.body;
   billController.createBill(bill)
@@ -22,6 +32,11 @@ const saveBill = (request, response) => {
     });
 };
 
+/**
+ * Retrieve a bill. The logic for GET /api/bill/:shortId.
+ * @param {request} Request stream. See API documentation for parameters.
+ * @param {response} Response stream. See API documentation for parameters.
+ */
 const getBill = (request, response) => {
   const shortId = request.params.shortId;
   billController.retrieveBill(shortId)
@@ -45,6 +60,11 @@ const getBill = (request, response) => {
   );
 };
 
+/**
+ * Get all the bills for a given user. The logic for GET /api/bills.
+ * @param {request} Request stream. See API documentation for parameters.
+ * @param {response} Response stream. See API documentation for parameters.
+ */
 const getUserBills = (request, response) => {
   const payerId = request.user.id;
   billController.retrievePayerBills(payerId)
@@ -105,10 +125,9 @@ const updateBill = (request, response) => {
 };
 
 /**
- * @apiParam {string} [request.body.description] Description of the item.
- * @apiParam {number} [request.body.price] Price of the item in local currency.
- * @apiParam {number} [request.body.debtorId] Id of the person responsible for paying the item.
- * @apiParam {boolean} [request.body.paid] Whether the item has been paid for or not.
+ * Update an item. The logic for PUT /api/item/:id.
+ * @param {request} Request stream. See API documentation for parameters.
+ * @param {response} Response stream. See API documentation for parameters.
  */
 const updateItem = (request, response) => {
   const userId = request.user.get('id');
