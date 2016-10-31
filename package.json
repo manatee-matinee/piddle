@@ -45,9 +45,9 @@
   },
   "dependencies": {
     "bcrypt-as-promised": "^1.1.0",
+    "body-parser": "^1.15.2",
     "chai": "^3.5.0",
     "cors": "^2.8.1",
-    "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "express-session": "^1.14.1",
     "hashids": "^1.1.1",
