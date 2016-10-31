@@ -19,6 +19,13 @@ class Signup extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
+  componentDidMount() {
+    // Send the user away if they're already logged in
+    // eslint-disable-next-line no-undef
+    if (localStorage.getItem('piddleToken')) {
+      browserHistory.push('/');
+    }
+  }
 
   handleInputChange(event) {
     const stateObj = this.state.inputs;
@@ -30,9 +37,11 @@ class Signup extends Component {
     event.preventDefault();
     Request.postSignup(this.state.inputs, (res) => {
       if (res.status === 201) {
+        // eslint-disable-next-line no-undef
+        localStorage.setItem('piddleToken', res.body.data.token);
         browserHistory.push('/');
       } else {
-        this.setState({ error: 'Username already registered. Try again.' });
+        this.setState({ error: res.body.error.message });
       }
     });
   }
