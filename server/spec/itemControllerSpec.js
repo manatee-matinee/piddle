@@ -77,7 +77,7 @@ describe('Item controller', () => {
       });
   });
 
-  describe('updating items', () => {
+  describe('Updating items', () => {
     it('should update an item', (done) => {
       itemController.updateItem(itemId, {
         description: 'Gut Bomb',
@@ -101,7 +101,7 @@ describe('Item controller', () => {
     });
   });
 
-  describe('deleting items', () => {
+  describe('Deleting items', () => {
     it('should delete an item', (done) => {
       itemController.deleteItem(itemId)
         .then(() => {
