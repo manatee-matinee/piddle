@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import { withRouter } from 'react-router';
 import Request from '../../utils/requestHandler';
 
 class Profile extends Component {
@@ -11,17 +11,23 @@ class Profile extends Component {
     // eslint-disable-next-line no-undef
     const token = localStorage.getItem('piddleToken');
     if (!token) {
-      browserHistory.push('/login');
+      this.props.router.push('/login');
+      this.state = {
+        emailAddress: '',
+        name: '',
+        squareId: '',
+        paypalId: '',
+      };
+    } else {
+      const userData = jwtDecode(token);
+      this.state = {
+        emailAddress: userData.emailAddress,
+        name: userData.name,
+        squareId: userData.squareId,
+        paypalId: userData.paypalId,
+      };
     }
 
-    const userData = jwtDecode(token);
-    this.state = {
-      emailAddress: userData.emailAddress,
-      // password: null,
-      name: userData.name,
-      squareId: userData.squareId,
-      paypalId: userData.paypalId,
-    };
     this.submitUpdateForm = this.submitUpdateForm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -91,4 +97,11 @@ class Profile extends Component {
     );
   }
 }
-export default Profile;
+
+Profile.propTypes = {
+  router: React.PropTypes.shape({
+    push: React.PropTypes.func.isRequired,
+  }),
+};
+
+export default withRouter(Profile);

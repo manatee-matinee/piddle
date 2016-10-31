@@ -1,32 +1,79 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { expect } from 'chai';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import Login from './index';
+import { defineLocalStorage, RouterSpy } from '../../utils/testHelpers';
 
-const shallowLogin = shallow(
-  <Login />
-);
+const selectors = {
+  emailAddress: 'input[name="emailAddress"]',
+  password: 'input[name="password"]',
+  submit: 'input[type="submit"]',
+};
 
-const mountedLogin = mount(
-  <Login />
-);
+describe('Login Form', () => {
+  defineLocalStorage();
 
-it('renders without crashing', () => {
-  // eslint-disable-next-line no-undef
-  const div = document.createElement('div');
-  ReactDOM.render(<Login />, div);
-});
+  describe('Not Authenticated', () => {
+    let component;
+    let routerSpy;
 
-it('has a field for inputting the user\'s email', () => {
-  expect(shallowLogin.find('#emailAddress')).to.have.length(1);
-});
+    beforeEach(() => {
+      routerSpy = new RouterSpy();
+      component = mount(
+        <Login router={routerSpy} />
+      );
+    });
 
-it('has a field for inputting the user\'s password', () => {
-  expect(shallowLogin.find('#password')).to.have.length(1);
-});
+    it('renders without crashing', () => {
+      ReactDOM.render(
+        <Login router={new RouterSpy()} />,
+        // eslint-disable-next-line no-undef
+        document.createElement('div'),
+      );
+    });
 
-it('has a submit input for submitting Login form', () => {
-  expect(shallowLogin.find('#submitLogin'))
-    .to.have.length(1);
+    it('has a field for inputting the user\'s email', () => {
+      expect(component.find(selectors.emailAddress))
+        .to.have.length(1);
+    });
+
+    it('has a field for inputting the user\'s password', () => {
+      expect(component.find(selectors.password))
+        .to.have.length(1);
+    });
+
+    it('has a submit input for submitting Login form', () => {
+      expect(component.find(selectors.submit))
+        .to.have.length(1);
+    });
+  });
+
+  /**
+   * @todo Integrate tokens into this test so we can test
+   */
+  xdescribe('Authenticated', () => {
+    let component;
+    let routerSpy;
+
+    beforeEach(() => {
+      routerSpy = new RouterSpy();
+      component = mount(
+        <Login router={routerSpy} />
+      );
+    });
+
+    it('renders without crashing', () => {
+      ReactDOM.render(
+        <Login />,
+        // eslint-disable-next-line no-undef
+        document.createElement('div'),
+      );
+    });
+
+    it('has a submit input for submitting Login form', () => {
+      expect(routerSpy.push.calledOnce)
+        .to.be.true;
+    });
+  });
 });
