@@ -25,6 +25,8 @@ class Bill extends React.Component {
     // Bill
     this.createBill = this.createBill.bind(this);
     this.updateBill = this.updateBill.bind(this);
+    this.claimBillItem = this.claimBillItem.bind(this);
+    this.payForClaimedItems = this.payForClaimedItems.bind(this);
 
     // Bill Item
     this.changeBillItem = this.changeBillItem.bind(this);
@@ -180,7 +182,7 @@ class Bill extends React.Component {
   }
 
   /**
-   * Create a JSON representation of the current state of the bill
+   * Update the bill.
    * @method
    * @name updateBill
    * @param {object} event
@@ -242,6 +244,143 @@ class Bill extends React.Component {
       });
   }
 
+  /**
+   * Pay for claimed items using a specified payment API.
+   * @method
+   * @name payForClaimedItems
+   * @param {object} event
+   */
+  payForClaimedItems(event) {
+    event.preventDefault();
+
+    const itemsToPayFor = this.state.items
+      .filter(item => (
+        (item.debtorId === this.state.token.decoded.id && !item.paid)
+      ));
+
+    console.log(itemsToPayFor);
+
+    const jsonHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${this.state.token.raw}`,
+    };
+
+    // ref: https://github.com/github/fetch
+    const checkStatus = (response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response;
+      }
+
+      const error = new Error(response.statusText);
+      error.response = response;
+      throw error;
+    };
+
+    const updatedItems = this.state.items;
+    itemsToPayFor.forEach((itemToPayFor, index) => {
+      /**
+       * @todo change form name based on type of interaction
+       */
+      // eslint-disable-next-line no-undef
+      const itemIndex = Array.from(document.getElementById('createBillForm').elements)
+        .filter(element => (element.tagName === 'INPUT' && element.type === 'checkbox'))
+        .reduce((soughtIndex, element, index) => {
+          if (soughtIndex !== null) {
+            return soughtIndex;
+          } else if (element.value === itemToPayFor.id) {
+            return index;
+          }
+
+          return null;
+        }, null);
+
+      // eslint-disable-next-line no-undef
+      fetch(`${this.serverUrl}/api/item/${itemToPayFor.id}`, {
+        method: 'PUT',
+        headers: jsonHeaders,
+        body: JSON.stringify({
+          paid: true,
+          debtorId: itemToPayFor.debtorId,
+        }),
+      })
+      .then(checkStatus)
+      .then(response => response.json())
+      .then(({ data }) => {
+        updatedItems[itemIndex] = data;
+        const allItemsUpdated = (index === itemsToPayFor.length - 1);
+        if (allItemsUpdated) {
+          console.log('updated items!');
+          this.setState({ items: updatedItems });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    });
+  }
+
+  /**
+   * Claim items belonging to this bill.
+   * @method
+   * @name claimBillItem
+   * @param {object} event
+   */
+  claimBillItem(event) {
+    event.preventDefault();
+
+    const jsonHeaders = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${this.state.token.raw}`,
+    };
+
+    // ref: https://github.com/github/fetch
+    const checkStatus = (response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response;
+      }
+
+      const error = new Error(response.statusText);
+      error.response = response;
+      throw error;
+    };
+
+    /**
+     * @todo change form name based on type of interaction
+     */
+    const itemIndex = Array.from(document.getElementById('createBillForm').elements)
+      .filter(element => (element.tagName === 'INPUT' && element.type === 'checkbox'))
+      .reduce((soughtIndex, element, index) => {
+        if (soughtIndex !== null) {
+          return soughtIndex;
+        } else if (element.value === event.target.value) {
+          return index;
+        }
+
+        return null;
+      }, null);
+
+    // eslint-disable-next-line no-undef
+    fetch(`${this.serverUrl}/api/item/${event.target.value}`, {
+      method: 'PUT',
+      headers: jsonHeaders,
+      body: JSON.stringify({
+        paid: false,
+        debtorId: (this.state.items[itemIndex].debtorId) ? null : this.state.token.decoded.id,
+      }),
+    })
+    .then(checkStatus)
+    .then(response => response.json())
+    .then(({ data }) => {
+      const updatedItems = this.state.items;
+      updatedItems[itemIndex] = data;
+      this.setState({ items: updatedItems });
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  }
 
   /**
    * Create a JSON representation of the current state of the bill
@@ -471,6 +610,7 @@ class Bill extends React.Component {
               <BillItemList
                 items={this.state.items}
                 deleteBillItem={this.deleteBillItem}
+                claimBillItem={this.claimBillItem}
                 changeBillItem={this.changeBillItem}
                 interactionType={this.state.interactionType}
                 newBillItem={this.newBillItem}
@@ -509,9 +649,8 @@ class Bill extends React.Component {
               {(this.state.interactionType === Symbol.for('claim')) &&
                 <input
                   type="submit"
-                  value="Claim Bill Items"
-                  onClick={this.createBill}
-                  disabled="true"
+                  value="Pay for Claimed Items"
+                  onClick={this.payForClaimedItems}
                 />
               }
             </form>
