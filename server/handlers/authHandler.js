@@ -1,14 +1,29 @@
-/**
- * @module authHandler
- */
-
 const userController = require('../dbControllers/userController');
 const jwt = require('jwt-simple');
 const passport = require('../passportConfig');
 const config = require('../../config');
 
+/**
+ * The logic functions and helpers for handling requests
+ * to the authentication endpoints.
+ * @module Server: Authentication Handler
+ */
+
+/**
+ * Use the passport `authenticate` method to extract the JSON Web Token
+ * from the request. If there is not a valid token present, the response
+ * status is set as 401 UNAUTHORIZED. If a valid token is present, the user
+ * info is set on `request.user`.
+ */
 const ensureAuthenticated = passport.authenticate('jwt', { session: false });
 
+/**
+ * Generate a JSON Web Token for a user given a `User` instance from the database.
+ * Encodes the user's `id`, `emailAddress`, `name`, `squareId`, and `paypalId`.
+ * @param {Object} userInstance - User instance retrieved from the database.
+ *
+ * @returns {Object} JSON Web Token, signed with the secret from `config.js`.
+ */
 const generateJWT = (userInstance) => {
   const payload = {
     id: userInstance.id,
@@ -20,6 +35,13 @@ const generateJWT = (userInstance) => {
   return jwt.encode(payload, config.jwt.secret, 'HS512');
 };
 
+/**
+ * Log in a user by generating a JSON Web Token that
+ * the client will store and send with future requests.
+ * The logic for POST /auth/login.
+ * @param {readableStream} request Request stream. See API documentation for parameters.
+ * @param {writeableStream} response Response stream. See API documentation for parameters.
+ */
 const loginHandler = (request, response) => {
   const emailAddress = request.body.emailAddress;
   const password = request.body.password;
@@ -56,6 +78,12 @@ const loginHandler = (request, response) => {
     }));
 };
 
+/**
+ * Create a user in the database and genertate a JSON Web Token for the user.
+ * The logic for POST /auth/signup.
+ * @param {readableStream} request Request stream. See API documentation for parameters.
+ * @param {writeableStream} response Response stream. See API documentation for parameters.
+ */
 const signupHandler = (request, response) => {
   userController.findUserByEmailAddress(request.body.emailAddress)
     .then((userInstance) => {
@@ -86,6 +114,12 @@ const signupHandler = (request, response) => {
     });
 };
 
+/**
+ * Update a user record.
+ * The logic for PUT /auth/user/:id.
+ * @param {readableStream} request Request stream. See API documentation for parameters.
+ * @param {writeableStream} response Response stream. See API documentation for parameters.
+ */
 const updateUserHandler = (request, response) => {
   const userId = request.params.id;
   const loggedInUserId = request.user.id;

@@ -8,8 +8,8 @@ const itemController = require('../dbControllers/itemController');
 
 /**
  * Save a bill. The logic for POST /api/bill.
- * @param {request} Request stream. See API documentation for parameters.
- * @param {response} Response stream. See API documentation for parameters.
+ * @param {readableStream} request Request stream. See API documentation for parameters.
+ * @param {writeableStream} response Response stream. See API documentation for parameters.
  */
 const saveBill = (request, response) => {
   const bill = request.body;
@@ -34,8 +34,8 @@ const saveBill = (request, response) => {
 
 /**
  * Retrieve a bill. The logic for GET /api/bill/:shortId.
- * @param {request} Request stream. See API documentation for parameters.
- * @param {response} Response stream. See API documentation for parameters.
+ * @param {readableStream} request Request stream. See API documentation for parameters.
+ * @param {writeableStream} response Response stream. See API documentation for parameters.
  */
 const getBill = (request, response) => {
   const shortId = request.params.shortId;
@@ -62,8 +62,8 @@ const getBill = (request, response) => {
 
 /**
  * Get all the bills for a given user. The logic for GET /api/bills.
- * @param {request} Request stream. See API documentation for parameters.
- * @param {response} Response stream. See API documentation for parameters.
+ * @param {readableStream} request Request stream. See API documentation for parameters.
+ * @param {writeableStream} response Response stream. See API documentation for parameters.
  */
 const getUserBills = (request, response) => {
   const payerId = request.user.id;
@@ -80,9 +80,9 @@ const getUserBills = (request, response) => {
 };
 
 /**
- * @apiParam {string} [request.body.description] Description of the bill.
- * @apiParam {number} [request.body.tax] Tax on the bill in local currency.
- * @apiParam {number} [request.body.tip] Tip on the bill in local currency.
+ * Update a bill. The logic for PUT /api/bill/:id.
+ * @param {readableStream} request Request stream. See API documentation for parameters.
+ * @param {writeableStream} response Response stream. See API documentation for parameters.
  */
 const updateBill = (request, response) => {
   const userId = request.user.get('id');
@@ -126,8 +126,8 @@ const updateBill = (request, response) => {
 
 /**
  * Update an item. The logic for PUT /api/item/:id.
- * @param {request} Request stream. See API documentation for parameters.
- * @param {response} Response stream. See API documentation for parameters.
+ * @param {readableStream} request Request stream. See API documentation for parameters.
+ * @param {writeableStream} response Response stream. See API documentation for parameters.
  */
 const updateItem = (request, response) => {
   const userId = request.user.get('id');

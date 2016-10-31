@@ -4,6 +4,10 @@ const request = require('supertest');
 const app = require('../server');
 const db = require('../db');
 
+/**
+ * Helper functions used with the server tests.
+ * @module Server: Spec Helpers
+ */
 
 /* eslint-disable no-param-reassign */
 /**
