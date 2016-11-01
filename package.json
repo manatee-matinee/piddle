@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/manatee-matinee/piddle.git"
+    "url": "git+https://github.com/newtonian-platypus/piddle.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/manatee-matinee/piddle/issues"
+    "url": "https://github.com/newtonian-platypus/piddle/issues"
   },
-  "homepage": "https://github.com/manatee-matinee/piddle#readme",
+  "homepage": "https://github.com/newtonian-platypus/piddle#readme",
   "devDependencies": {
     "apidoc": "^0.16.1",
     "eslint": "^3.8.1",

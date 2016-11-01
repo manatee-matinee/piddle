@@ -32,7 +32,7 @@
 Use GitHub’s interface to make a fork of the repo, then add that repo as an upstream remote:
 
 ```
-git remote add upstream https://github.com/manatee-matinee/piddle.git
+git remote add upstream https://github.com/newtonian-platypus/piddle.git
 ```
 
 ### Cut a namespaced feature branch from develop
