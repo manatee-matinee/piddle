@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/newtonian-platypus/piddle.svg?branch=develop)](https://travis-ci.org/newtonian-platypus/piddle)
+
 # Piddle
 
 > Easy bill splitting.
