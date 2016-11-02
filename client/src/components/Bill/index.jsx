@@ -20,7 +20,7 @@ class Bill extends React.Component {
   constructor(props) {
     super(props);
 
-    this.serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://localhost:3000' : '';
+    this.serverUrl = /^(development|test)$/.test(process.env.NODE_ENV) ? 'http://138.197.202.63:3000' : '';
 
     this.stateSetter = this.stateSetter.bind(this);
 
