@@ -118,7 +118,7 @@ User.belongsToMany(Bill, {
 Bill.belongsToMany(User, { through: BillDebtors });
 */
 
-const BillDebtors = sequelize.define('BillDebtors', {
+const BillDebtors = sequelize.define('bill_debtors', {
 });
 
 User.belongsToMany(Bill, {
