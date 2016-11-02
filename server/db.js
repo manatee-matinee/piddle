@@ -118,6 +118,21 @@ User.belongsToMany(Bill, {
 Bill.belongsToMany(User, { through: BillDebtors });
 */
 
+const BillDebtors = sequelize.define('BillDebtors', {
+});
+
+User.belongsToMany(Bill, {
+  through: BillDebtors,
+  as: 'debtor',
+  foreignKey: 'debtorId',
+});
+
+Bill.belongsToMany(User, { 
+  through: BillDebtors,
+  as: 'bill',
+  foreignKey: 'billid'
+});
+
 Bill.belongsTo(User, {
   as: 'payer',
   foreignKey: 'payerId',
@@ -138,12 +153,14 @@ Item.belongsTo(User, {
 User.sync();
 Bill.sync();
 Item.sync();
+BillDebtors.sync();
 
 module.exports = {
   models: {
     Bill,
     Item,
     User,
+    BillDebtors
   },
   sequelize,
 };
