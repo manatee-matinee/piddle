@@ -17,6 +17,8 @@ class Profile extends Component {
         name: '',
         squareId: '',
         paypalId: '',
+        createdBills: [[]],
+        claimedBillItems: [[]]
       };
     } else {
       const userData = jwtDecode(token);
@@ -25,6 +27,8 @@ class Profile extends Component {
         name: userData.name,
         squareId: userData.squareId,
         paypalId: userData.paypalId,
+        createdBills: [[]],
+        claimedBillItems: [[]]
       };
     }
 
@@ -99,6 +103,55 @@ class Profile extends Component {
             onClick={event => this.submitUpdateForm(event)}
           />
         </form>
+
+        <h3>Created Bills</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Bill Short ID (Link)</th>
+              <th>Description</th>
+              <th>Subtotal</th>
+              <th>Tax</th>
+              <th>Tip</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.createdBills.map(function(row, rowIndex) {
+              return (
+                <tr>
+                  {row.map(function(col, colIndex) {
+                    return <td>{col}</td>
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+
+        <h3>Claimed Bill Items</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Bill Short ID (Link)</th>
+              <th>Bill Description</th>
+              <th>Item Description</th>
+              <th>Item Total</th>
+              <th>Item Tax</th>
+              <th>Item Tip</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.claimedBillItems.map(function(row, rowIndex) {
+              return (
+                <tr>
+                  {row.map(function(col, colIndex) {
+                    return <td>{col}</td>
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     );
   }
