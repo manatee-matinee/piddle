@@ -32,6 +32,9 @@ class Profile extends Component {
       };
     }
 
+    // Retreive the user's bill/item data
+    
+
     this.submitUpdateForm = this.submitUpdateForm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
   }
