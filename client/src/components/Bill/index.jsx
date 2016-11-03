@@ -35,6 +35,8 @@ class Bill extends React.Component {
     this.newBillItem = this.newBillItem.bind(this);
     this.deleteBillItem = this.deleteBillItem.bind(this);
 
+    // Bill Debtor
+
     // Tax
     this.changeTaxValue = this.stateSetter('tax');
 

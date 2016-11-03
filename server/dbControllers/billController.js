@@ -44,7 +44,7 @@ const createBill = function createBill(bill) {
           itemController.createItemsForBill(billRecord.dataValues.id, bill.items)
           .then(() => {
             // have bill, now create tagged users
-            billdebtorController.createDebtorsForBill(billRecord.dataValues.id, bill.tagged);
+            // billdebtorController.createDebtorsForBill(billRecord.dataValues.id, bill.tagged);
             resolve(billRecord);
           })
           .catch((err) => {

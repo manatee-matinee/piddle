@@ -11,6 +11,7 @@ import BillDebtor from './../BillDebtor';
  */
 
 const BillDebtorList = (props) => {
+
   return(
     <div className="BillDebtorList">
       {props.debtors.map((debtor, i) => (
@@ -18,6 +19,7 @@ const BillDebtorList = (props) => {
         key={i}
         index={i}
         {...debtor}
+        changeBillDebtor={props.changeBillDebtor}
         deleteBillDebtor={props.deleteBillDebtor}
         />
       ))}
