@@ -18,7 +18,7 @@ class Profile extends Component {
         squareId: '',
         paypalId: '',
         createdBills: [[]],
-        claimedBillItems: [[]]
+        claimedBillItems: [[]],
       };
     } else {
       const userData = jwtDecode(token);
@@ -28,15 +28,14 @@ class Profile extends Component {
         squareId: userData.squareId,
         paypalId: userData.paypalId,
         createdBills: [[]],
-        claimedBillItems: [[]]
+        claimedBillItems: [[]],
       };
     }
 
     // Retreive the user's bill data
-    Request.
+    Request.getUserBills();
 
     // Retreive the user's item data
-    
 
     this.submitUpdateForm = this.submitUpdateForm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
