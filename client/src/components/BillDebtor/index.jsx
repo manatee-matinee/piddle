@@ -2,13 +2,16 @@ import React from 'react';
 import { FormGroup, FormControl, InputGroup, Button } from 'react-bootstrap';
 
 const BillDebtor = (props) => {
-  // const fieldChange = (event) => {
-  //   const field = {
-  //     name: event.target.getAttribute('name').match(/([a-z]+)$/)[1],
-  //     tagName: event.target.tagName,
-  //     type: event.target.getAttribute('type'),
-  //   };
-  // }
+  const fieldChange = (event) => {
+    const field = {
+      name: event.target.getAttribute('name').match(/([a-z]+)$/)[1],
+      tagName: event.target.tagName,
+      type: event.target.getAttribute('type'),
+    };
+    props.changeBillDebtor(props.index, {
+      [field.name]: field.value
+    });
+  };
 
   return (
     <div className="BillDebtor">
@@ -19,6 +22,7 @@ const BillDebtor = (props) => {
               className="debtor"
               name={`billDebtor-${props.index}-debtor`}
               placeholder="Debtor"
+              onChange={fieldChange}
               type="text"
               value={props.debtor}
               // disabled={!!props.payerId}
@@ -27,7 +31,8 @@ const BillDebtor = (props) => {
               <Button
                 bsStyle="danger"
                 onClick={event => props.deleteBillDebtor(event, props.index)}
-                disabled={!!props.payerId}>
+                // disabled={!!props.payerId}
+                >
                 Delete
               </Button>
             </InputGroup.Button>
@@ -41,7 +46,8 @@ const BillDebtor = (props) => {
 BillDebtor.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
   deleteBillDebtor: React.PropTypes.func.isRequired,
-  payerId: React.PropTypes.string.isRequired,
+  changeBillDebtor: React.PropTypes.func.isRequired,
+  // payerId: React.PropTypes.string.isRequired,
   debtor: React.PropTypes.string.isRequired,
   index: React.PropTypes.number.isRequired
 }

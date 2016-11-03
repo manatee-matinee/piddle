@@ -39,6 +39,7 @@ class Bill extends React.Component {
     // Bill Debtor
     this.newBillDebtor = this.newBillDebtor.bind(this);
     this.deleteBillDebtor = this.newBillDebtor.bind(this);
+    this.changeBillDebtor = this.changeBillDebtor.bind(this);
 
     // Tax
     this.changeTaxValue = this.stateSetter('tax');
@@ -513,6 +514,20 @@ class Bill extends React.Component {
   }
 
   /**
+   * Update state with new bill debtor field values.
+   * @method
+   * @name changeBillDebtor
+   * @param {object} fields
+   */
+  changeBillDebtor(index, fields) {
+    // Update the bill state
+    const billDebtor = { ...this.state.debtors[index], ...fields };
+    const previousDebtors = this.state.debtors;
+    previousDebtors[index] = billDebtor;
+    this.setState({ debtors: previousDebtors });
+  }
+
+  /**
    * Build a setter for a given state key.
    * @method
    * @name stateSetter
@@ -647,11 +662,6 @@ class Bill extends React.Component {
                   descriptionValue={this.state.description}
                   interactionType={this.state.interactionType}
                 />
-                <BillDebtorList
-                  debtors={this.state.debtors}
-                  deleteBillDebtor={this.deleteBillDebtor}
-                  newBillDebtor={this.newBillDebtor}
-                />
                 <BillItemList
                   items={this.state.items}
                   deleteBillItem={this.deleteBillItem}
@@ -659,6 +669,12 @@ class Bill extends React.Component {
                   changeBillItem={this.changeBillItem}
                   interactionType={this.state.interactionType}
                   newBillItem={this.newBillItem}
+                />
+                <BillDebtorList
+                  debtors={this.state.debtors}
+                  deleteBillDebtor={this.deleteBillDebtor}
+                  newBillDebtor={this.newBillDebtor}
+                  changeBillDebtor={this.changeBillDebtor}
                 />
               </Well>
               <TaxField

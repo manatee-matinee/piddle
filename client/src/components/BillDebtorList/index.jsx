@@ -19,6 +19,7 @@ const BillDebtorList = (props) => {
         index={i}
         {...debtor}
         deleteBillDebtor={props.deleteBillDebtor}
+        changeBillDebtor={props.changeBillDebtor}
         />
       ))}
         <div className="row">
@@ -40,6 +41,7 @@ BillDebtorList.propTypes = {
   ).isRequired,
   newBillDebtor: React.PropTypes.func.isRequired,
   deleteBillDebtor: React.PropTypes.func.isRequired,
+  changeBillDebtor: React.PropTypes.func.isRequired
 };
 
 export default BillDebtorList;
