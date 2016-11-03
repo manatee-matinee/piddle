@@ -5,7 +5,7 @@ import { round } from 'mathjs';
 import { Form, Well, Button } from 'react-bootstrap';
 import './Bill.css';
 import BillItemList from './../BillItemList';
-import BillDebtorList from './../BillDebtorList';
+// import BillDebtorList from './../BillDebtorList';
 import DescriptionField from './../DescriptionField';
 import TaxField from './../TaxField';
 import TipField from './../TipField';
