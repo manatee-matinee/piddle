@@ -40,7 +40,9 @@ const BillDebtor = (props) => {
 };
 
 BillDebtor.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
   deleteBillDebtor: React.PropTypes.func.isRequired,
   payerId: React.PropTypes.string.isRequired,
-  debtor: React.PropTypes.string.isRequired
+  debtor: React.PropTypes.string.isRequired,
+  index: React.PropTypes.number.isRequired
 }
