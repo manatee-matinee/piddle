@@ -2,13 +2,13 @@ import React from 'react';
 import { FormGroup, FormControl, InputGroup, Button } from 'react-bootstrap';
 
 const BillDebtor = (props) => {
-  const fieldChange = (event) => {
-    const field = {
-      name: event.target.getAttribute('name').match(/([a-z]+)$/)[1],
-      tagName: event.target.tagName,
-      type: event.target.getAttribute('type'),
-    };
-  }
+  // const fieldChange = (event) => {
+  //   const field = {
+  //     name: event.target.getAttribute('name').match(/([a-z]+)$/)[1],
+  //     tagName: event.target.tagName,
+  //     type: event.target.getAttribute('type'),
+  //   };
+  // }
 
   return (
     <div className="BillDebtor">
@@ -16,7 +16,6 @@ const BillDebtor = (props) => {
         <FormControl
           className="debtor"
           name={`billDebtor-${props.index}-description`}
-          onChange={fieldChange}
           placeholder="Debtor"
           type="text"
           value={props.debtor}

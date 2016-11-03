@@ -5,7 +5,7 @@ import { round } from 'mathjs';
 import { Form, Well, Button } from 'react-bootstrap';
 import './Bill.css';
 import BillItemList from './../BillItemList';
-// import BillDebtorList from './../BillDebtorList';
+import BillDebtorList from './../BillDebtorList';
 import DescriptionField from './../DescriptionField';
 import TaxField from './../TaxField';
 import TipField from './../TipField';
@@ -78,6 +78,7 @@ class Bill extends React.Component {
         percent: null,
         usePercent: false,
       },
+      debtors: []
     };
 
     if (!token) {
@@ -461,6 +462,35 @@ class Bill extends React.Component {
   }
 
   /**
+   * Delete a specific bill debtor from the Bill state.
+   * @method
+   * @name deleteBilldebtor
+   * @param {object} event
+   * @param {number} id - The bill debtor's id.
+   */
+  deleteBillDebtor(event, id) {
+    event.preventDefault();
+    const previousDebtors = this.state.debtors;
+    previousDebtors.splice(id, 1);
+    this.setState({ debtors: previousDebtors });
+  }
+
+  /**
+   * Adds a new bill debtor to the Bill state.
+   * @method
+   * @name newBillDebtor
+   * @param {object} event
+   */
+  newBillDebtor(event) {
+    event.preventDefault();
+    const newDebtor = {
+      debtor: ''
+    };
+
+    this.setState({ debtors: [...this.state.debtors, newDebtor] });
+  }
+
+  /**
    * Adds a new, empty, bill item to the Bill state.
    * @method
    * @name newBillItem
@@ -606,6 +636,11 @@ class Bill extends React.Component {
               ref={(c) => { this.createBillForm = c; }}
             >
               <Well bsSize="lg">
+                <BillDebtorList
+                  debtors={this.state.debtors}
+                  deleteBillDebtor={this.deleteBillDebtor}
+                  newBillDebtor={this.newBillDebtor}
+                />
                 <DescriptionField
                   changeDescriptionValue={this.changeDescriptionValue}
                   descriptionValue={this.state.description}
