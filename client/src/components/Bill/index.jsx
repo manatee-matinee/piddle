@@ -5,6 +5,7 @@ import { round } from 'mathjs';
 import { Form, Well, Button } from 'react-bootstrap';
 import './Bill.css';
 import BillItemList from './../BillItemList';
+import BillDebtorList from './../BillDebtorList';
 import DescriptionField from './../DescriptionField';
 import TaxField from './../TaxField';
 import TipField from './../TipField';
@@ -617,6 +618,9 @@ class Bill extends React.Component {
                   changeBillItem={this.changeBillItem}
                   interactionType={this.state.interactionType}
                   newBillItem={this.newBillItem}
+                />
+                <BillDebtorList
+                  debtors={this.state.debtors}
                 />
               </Well>
               <TaxField
