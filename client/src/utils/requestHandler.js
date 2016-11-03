@@ -83,4 +83,18 @@ export default {
     })
     .then(res => callback(res));
   },
+  /**
+   * Bill GET request to /bill/:billId
+   * @param {requestCallback} cb - The callback that handles the response.
+   */
+  getBill: (data, callback) => {
+    // eslint-disable-next-line no-undef
+    fetch(`${url}/api/bill/${data.billId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `JWT ${data.token.raw}`,
+      },
+    })
+    .then(res => callback(res));
+  }
 };

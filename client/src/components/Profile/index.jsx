@@ -32,7 +32,10 @@ class Profile extends Component {
       };
     }
 
-    // Retreive the user's bill/item data
+    // Retreive the user's bill data
+    Request.
+
+    // Retreive the user's item data
     
 
     this.submitUpdateForm = this.submitUpdateForm.bind(this);
