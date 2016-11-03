@@ -397,6 +397,7 @@ class Bill extends React.Component {
       payerEmailAddress: this.state.token.decoded.emailAddress,
       tax: this.state.tax,
       tip: this.state.tip.value,
+      debtors: this.state.debtors,
     };
 
     /**

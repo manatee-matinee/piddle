@@ -23,7 +23,7 @@ const Bill = sequelize.define('bill', {
   },
   subtotal: {
     type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
-  }
+  },
   tax: {
     type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
   },
