@@ -619,9 +619,6 @@ class Bill extends React.Component {
                   interactionType={this.state.interactionType}
                   newBillItem={this.newBillItem}
                 />
-                <BillDebtorList
-                  debtors={this.state.debtors}
-                />
               </Well>
               <TaxField
                 changeTaxValue={this.changeTaxValue}
