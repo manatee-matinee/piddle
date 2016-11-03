@@ -21,6 +21,9 @@ const Bill = sequelize.define('bill', {
   description: {
     type: Sequelize.STRING,
   },
+  subtotal: {
+    type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
+  }
   tax: {
     type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
   },
@@ -46,6 +49,12 @@ const Item = sequelize.define('item', {
   paid: {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
+  },
+  tax: {
+    type: Sequelize.DECIMAL(10, 2) // eslint-disable-line
+  },
+  tip: {
+    type: Sequelize.DECIMAL(10, 2)
   },
   // claimed: {
   //   type: Sequelize.BOOLEAN,
