@@ -7,6 +7,7 @@ import BillDebtor from './../BillDebtor';
  * @param {object} props
  * @param {object[]} props.debtors
  * @param {function} props.newBillDebtor
+ * @param {function} props.deleteBillDebtor
  */
 
 const BillDebtorList = (props) => {
@@ -17,6 +18,8 @@ const BillDebtorList = (props) => {
         key={i}
         index={i}
         {...debtor}
+        deleteBillDebtor={props.deleteBillDebtor}
+        changeBillDebtor={props.changeBillDebtor}
         />
       ))}
         <div className="row">
@@ -37,6 +40,8 @@ BillDebtorList.propTypes = {
     React.PropTypes.object
   ).isRequired,
   newBillDebtor: React.PropTypes.func.isRequired,
+  deleteBillDebtor: React.PropTypes.func.isRequired,
+  changeBillDebtor: React.PropTypes.func.isRequired
 };
 
 export default BillDebtorList;
