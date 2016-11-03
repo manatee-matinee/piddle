@@ -8,6 +8,7 @@ import BillItemList from './../BillItemList';
 import DescriptionField from './../DescriptionField';
 import TaxField from './../TaxField';
 import TipField from './../TipField';
+import BillDebtorList from './../BillDebtorList';
 
 /**
  * @class Bill
@@ -36,6 +37,9 @@ class Bill extends React.Component {
     this.deleteBillItem = this.deleteBillItem.bind(this);
 
     // Bill Debtor
+    this.changeBillDebtor = this.changeBillDebtor.bind(this);
+    this.deleteBillDebtor = this.deleteBillDebtor.bind(this);
+    this.newBillDebtor = this.newBillDebtor.bind(this);
 
     // Tax
     this.changeTaxValue = this.stateSetter('tax');
@@ -79,6 +83,9 @@ class Bill extends React.Component {
         percent: null,
         usePercent: false,
       },
+      debtors: [
+        { debtor: '' }
+      ]
     };
 
     if (!token) {
@@ -566,6 +573,29 @@ class Bill extends React.Component {
     this.updateTip();
   }
 
+  changeBillDebtor(index, fields) {
+    const billDebtor = {...this.state.debtors[index], ...fields };
+    const previousDebtors = this.state.debtors;
+    previousDebtors[index] = billDebtor;
+    this.setState({ debtors: previousDebtors });
+  }
+
+  deleteBillDebtor(event, id) {
+    event.preventDefault();
+    const previousDebtors = this.state.debtors;
+    previousDebtors.splice(id, 1);
+    this.setState({ debtors: previousDebtors });
+  }
+
+  newBillDebtor(event) {
+    event.preventDefault();
+    const newDebtor = {
+      debtor: ''
+    };
+
+    this.setState({ debtors: [...this.state.debtors, newDebtor] });
+  }
+
   /**
    * Render the component
    * @method
@@ -610,6 +640,12 @@ class Bill extends React.Component {
                   changeDescriptionValue={this.changeDescriptionValue}
                   descriptionValue={this.state.description}
                   interactionType={this.state.interactionType}
+                />
+                <BillDebtorList
+                  debtors={this.state.debtors}
+                  changeBillDebtor={this.changeBillDebtor}
+                  deleteBillDebtor={this.deleteBillDebtor}
+                  newBillDebtor={this.newBillDebtor}
                 />
                 <BillItemList
                   items={this.state.items}

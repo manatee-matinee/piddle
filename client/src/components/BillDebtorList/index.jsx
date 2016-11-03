@@ -23,15 +23,15 @@ const BillDebtorList = (props) => {
         deleteBillDebtor={props.deleteBillDebtor}
         />
       ))}
-        <div className="row">
-          <Button
-            className="pull-right"
-            id="new-bill-item-btn"
-            bsStyle="success"
-            onClick={props.newBillDebtor}
-          >Tag Friend
-          </Button>
-        </div>
+      <div className="row">
+        <Button
+          className="pull-right"
+          id="new-bill-item-btn"
+          bsStyle="success"
+          onClick={props.newBillDebtor}
+        >Tag Friend
+        </Button>
+      </div>
     </div>
   );
 };
