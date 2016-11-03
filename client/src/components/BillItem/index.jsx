@@ -63,7 +63,8 @@ const BillItem = (props) => {
                 <Button
                   bsStyle="danger"
                   onClick={event => props.deleteBillItem(event, props.index)}
-                  disabled={!!props.debtorId}>
+                  disabled={!!props.debtorId}
+                  >
                   Delete
                 </Button>
               </InputGroup.Button>

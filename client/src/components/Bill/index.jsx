@@ -5,7 +5,6 @@ import { round } from 'mathjs';
 import { Form, Well, Button } from 'react-bootstrap';
 import './Bill.css';
 import BillItemList from './../BillItemList';
-import BillDebtorList from './../BillDebtorList';
 import DescriptionField from './../DescriptionField';
 import TaxField from './../TaxField';
 import TipField from './../TipField';
@@ -35,11 +34,6 @@ class Bill extends React.Component {
     this.changeBillItem = this.changeBillItem.bind(this);
     this.newBillItem = this.newBillItem.bind(this);
     this.deleteBillItem = this.deleteBillItem.bind(this);
-
-    // Bill Debtor
-    this.newBillDebtor = this.newBillDebtor.bind(this);
-    this.deleteBillDebtor = this.newBillDebtor.bind(this);
-    this.changeBillDebtor = this.changeBillDebtor.bind(this);
 
     // Tax
     this.changeTaxValue = this.stateSetter('tax');
@@ -83,9 +77,6 @@ class Bill extends React.Component {
         percent: null,
         usePercent: false,
       },
-      debtors: [
-        { debtor: '' }
-      ]
     };
 
     if (!token) {
@@ -406,7 +397,6 @@ class Bill extends React.Component {
       payerEmailAddress: this.state.token.decoded.emailAddress,
       tax: this.state.tax,
       tip: this.state.tip.value,
-      debtors: this.state.debtors,
     };
 
     /**
@@ -469,35 +459,6 @@ class Bill extends React.Component {
   }
 
   /**
-   * Delete a specific bill debtor from the Bill state.
-   * @method
-   * @name deleteBilldebtor
-   * @param {object} event
-   * @param {number} id - The bill debtor's id.
-   */
-  deleteBillDebtor(event, id) {
-    event.preventDefault();
-    const previousDebtors = this.state.debtors;
-    previousDebtors.splice(id, 1);
-    this.setState({ debtors: previousDebtors });
-  }
-
-  /**
-   * Adds a new bill debtor to the Bill state.
-   * @method
-   * @name newBillDebtor
-   * @param {object} event
-   */
-  newBillDebtor(event) {
-    event.preventDefault();
-    const newDebtor = {
-      debtor: ''
-    };
-
-    this.setState({ debtors: [...this.state.debtors, newDebtor] });
-  }
-
-  /**
    * Adds a new, empty, bill item to the Bill state.
    * @method
    * @name newBillItem
@@ -511,20 +472,6 @@ class Bill extends React.Component {
     };
 
     this.setState({ items: [...this.state.items, newItem] });
-  }
-
-  /**
-   * Update state with new bill debtor field values.
-   * @method
-   * @name changeBillDebtor
-   * @param {object} fields
-   */
-  changeBillDebtor(index, fields) {
-    // Update the bill state
-    const billDebtor = { ...this.state.debtors[index], ...fields };
-    const previousDebtors = this.state.debtors;
-    previousDebtors[index] = billDebtor;
-    this.setState({ debtors: previousDebtors });
   }
 
   /**
@@ -669,12 +616,6 @@ class Bill extends React.Component {
                   changeBillItem={this.changeBillItem}
                   interactionType={this.state.interactionType}
                   newBillItem={this.newBillItem}
-                />
-                <BillDebtorList
-                  debtors={this.state.debtors}
-                  deleteBillDebtor={this.deleteBillDebtor}
-                  newBillDebtor={this.newBillDebtor}
-                  changeBillDebtor={this.changeBillDebtor}
                 />
               </Well>
               <TaxField
