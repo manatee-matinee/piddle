@@ -13,16 +13,16 @@ const BillDebtor = (props) => {
   return (
     <div className="BillDebtor">
       <div>
-        <FormControl
-          className="debtor"
-          name={`billDebtor-${props.index}-description`}
-          placeholder="Debtor"
-          type="text"
-          value={props.debtor}
-          disabled={!!props.payerId}
-        />
         <FormGroup>
           <InputGroup>
+            <FormControl
+              className="debtor"
+              name={`billDebtor-${props.index}-debtor`}
+              placeholder="Debtor"
+              type="text"
+              value={props.debtor}
+              // disabled={!!props.payerId}
+            />
             <InputGroup.Button>
               <Button
                 bsStyle="danger"
@@ -45,3 +45,5 @@ BillDebtor.propTypes = {
   debtor: React.PropTypes.string.isRequired,
   index: React.PropTypes.number.isRequired
 }
+
+export default BillDebtor;

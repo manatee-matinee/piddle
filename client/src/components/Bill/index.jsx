@@ -36,6 +36,10 @@ class Bill extends React.Component {
     this.newBillItem = this.newBillItem.bind(this);
     this.deleteBillItem = this.deleteBillItem.bind(this);
 
+    // Bill Debtor
+    this.newBillDebtor = this.newBillDebtor.bind(this);
+    this.deleteBillDebtor = this.newBillDebtor.bind(this);
+
     // Tax
     this.changeTaxValue = this.stateSetter('tax');
 
@@ -78,7 +82,9 @@ class Bill extends React.Component {
         percent: null,
         usePercent: false,
       },
-      debtors: []
+      debtors: [
+        { debtor: '' }
+      ]
     };
 
     if (!token) {
@@ -636,15 +642,15 @@ class Bill extends React.Component {
               ref={(c) => { this.createBillForm = c; }}
             >
               <Well bsSize="lg">
-                <BillDebtorList
-                  debtors={this.state.debtors}
-                  deleteBillDebtor={this.deleteBillDebtor}
-                  newBillDebtor={this.newBillDebtor}
-                />
                 <DescriptionField
                   changeDescriptionValue={this.changeDescriptionValue}
                   descriptionValue={this.state.description}
                   interactionType={this.state.interactionType}
+                />
+                <BillDebtorList
+                  debtors={this.state.debtors}
+                  deleteBillDebtor={this.deleteBillDebtor}
+                  newBillDebtor={this.newBillDebtor}
                 />
                 <BillItemList
                   items={this.state.items}
