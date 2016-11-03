@@ -54,7 +54,7 @@ const Item = sequelize.define('item', {
     type: Sequelize.DECIMAL(10, 2) // eslint-disable-line
   },
   tip: {
-    type: Sequelize.DECIMAL(10, 2)
+    type: Sequelize.DECIMAL(10, 2) // eslint-disable-line
   },
   // claimed: {
   //   type: Sequelize.BOOLEAN,
