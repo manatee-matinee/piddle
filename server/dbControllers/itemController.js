@@ -54,6 +54,7 @@ const createItemsForBill = (billId, items) => {
   const itemsPromises = [];
 
   items.forEach((item) => {
+    console.log('item', item);
     itemsPromises.push(Item.create(Object.assign(item, { billId })));
   });
   return Promise.all(itemsPromises);

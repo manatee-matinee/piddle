@@ -62,6 +62,14 @@ const Item = sequelize.define('item', {
   // },
 });
 
+
+const BillDebtors = sequelize.define('bill_debtors', {
+  debtor: { 
+    type: Sequelize.STRING 
+  },
+  billId: Sequelize.INTEGER
+});
+
 const User = sequelize.define('user', {
   emailAddress: {
     type: Sequelize.STRING,
@@ -127,20 +135,19 @@ User.belongsToMany(Bill, {
 Bill.belongsToMany(User, { through: BillDebtors });
 */
 
-const BillDebtors = sequelize.define('bill_debtors', {
-});
 
-User.belongsToMany(Bill, {
-  through: BillDebtors,
-  as: 'debtor',
-  foreignKey: 'debtorId',
-});
 
-Bill.belongsToMany(User, { 
-  through: BillDebtors,
-  as: 'bill',
-  foreignKey: 'billid'
-});
+// User.belongsToMany(Bill, {
+//   through: BillDebtors,
+//   as: 'debtor',
+//   foreignKey: 'debtorId',
+// });
+
+// Bill.belongsToMany(User, { 
+//   through: BillDebtors,
+//   as: 'bill',
+//   foreignKey: 'billid'
+// });
 
 Bill.belongsTo(User, {
   as: 'payer',
@@ -157,6 +164,9 @@ Item.belongsTo(User, {
   foreignKey: 'debtorId',
 });
 
+// Bill.hasMany(BillDebtors);
+
+// BillDebtors.belongsTo(Bill);
 
 // Create the tables specified above
 User.sync();

@@ -1,4 +1,5 @@
 const BillDebtors = require('../db').models.BillDebtors;
+const User = require('../db').models.User;
 const userController = require('./userController');
 
 /**
@@ -9,26 +10,29 @@ const userController = require('./userController');
  * @return {Promise} Resolves to an instance of the debtor from the database.
  */
 const createDebtorsForBill = (billId, debtors) => {
+  // if (!Array.isArray(debtors)) {
+  //   return new Error('Debtors must be an array');
+  // }
+
+  // console.log('debtors', debtors);
+
+  // for (var i = 0; i < debtors.length; i++) {
+  //   console.log('i', debtors[i]);
+  //   BillDebtors.create({ debtor: debtors[i].debtor, billId: billId });
+  // }
+  // return;
+
   if (!Array.isArray(debtors)) {
     return new Error('Debtors must be an array');
   }
 
   const debtorsPromises = [];
 
-  const p = debtors.forEach((debtor) => 
-    new Promise((resolve, reject) => {
-      userController.findUserByEmailAddress(debtor.debtor)
-      .then((user) => {
-        debtorsPromises.push(BillDebtors.create(Object.assign(user.dataValues.id, { billId })));
-        resolve();
-      })
-      .catch((err) => {
-        reject(err);
-      });
-      })
-    );
-
-  Promise.all(p).then(() => { debtorsPromises });
+  debtors.forEach((debtor) => {
+    console.log('debtor', debtor);
+    debtorsPromises.push(BillDebtors.create( { debtor: debtor.debtor, billId: billId } ));
+  });
+  return Promise.all(debtorsPromises);
 };
 
 module.exports = {
