@@ -9,7 +9,7 @@ if (/test/.test(config.db.path) === false) {
 
 describe('User controller', () => {
   describe('Creating users', () => {
-    let userData = {};
+    const userData = {};
 
     beforeEach(done => specHelpers.emptyRecords(done));
 
