@@ -28,6 +28,7 @@ const billdebtorController = require('./billdebtorController');
  * @return {Promise} Resolves to the instance of the Bill from the database.
  */
 const createBill = function createBill(bill) {
+  console.log(bill);
   return new Promise((resolve, reject) => {
     if (!bill.payerEmailAddress) {
       return reject(new Error('Bill payer email address required'));
@@ -42,14 +43,7 @@ const createBill = function createBill(bill) {
         .then((billRecord) => {
           // have bill, now create the items
           itemController.createItemsForBill(billRecord.dataValues.id, bill.items)
-          .then(() => {
-            resolve(billRecord);
-          })
-          .catch((err) => {
-            reject(err);
-          });
-          // have bill, now create tagged users
-          billdebtorController.createDebtorsForBill(billRecord.dataValues.id, bill.tagged)
+          billdebtorController.createDebtorsForBill(billRecord.dataValues.id, bill.debtors)
           .then(() => {
             resolve(billRecord);
           })

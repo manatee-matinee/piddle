@@ -11,6 +11,7 @@ import BillDebtor from './../BillDebtor';
  */
 
 const BillDebtorList = (props) => {
+
   return(
     <div className="BillDebtorList">
       {props.debtors.map((debtor, i) => (
@@ -18,19 +19,19 @@ const BillDebtorList = (props) => {
         key={i}
         index={i}
         {...debtor}
-        deleteBillDebtor={props.deleteBillDebtor}
         changeBillDebtor={props.changeBillDebtor}
+        deleteBillDebtor={props.deleteBillDebtor}
         />
       ))}
-        <div className="row">
-          <Button
-            className="pull-right"
-            id="new-bill-item-btn"
-            bsStyle="success"
-            onClick={props.newBillDebtor}
-          >Tag Friend
-          </Button>
-        </div>
+      <div className="row">
+        <Button
+          className="pull-right"
+          id="new-bill-item-btn"
+          bsStyle="success"
+          onClick={props.newBillDebtor}
+        >Tag Friend
+        </Button>
+      </div>
     </div>
   );
 };
@@ -40,8 +41,7 @@ BillDebtorList.propTypes = {
     React.PropTypes.object
   ).isRequired,
   newBillDebtor: React.PropTypes.func.isRequired,
-  deleteBillDebtor: React.PropTypes.func.isRequired,
-  changeBillDebtor: React.PropTypes.func.isRequired
+  deleteBillDebtor: React.PropTypes.func.isRequired
 };
 
 export default BillDebtorList;

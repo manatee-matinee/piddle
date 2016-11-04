@@ -8,22 +8,25 @@ const BillDebtor = (props) => {
       tagName: event.target.tagName,
       type: event.target.getAttribute('type'),
     };
+    field.value = (field.type === 'email') ?
+      event.target.value : '';
+
     props.changeBillDebtor(props.index, {
-      [field.name]: field.value
+      [field.name]: field.value,
     });
-  };
+  }
 
   return (
-    <div className="BillDebtor">
+    <div className="BillDebtor" style={{marginBottom: ".5em"}}>
       <div>
         <FormGroup>
           <InputGroup>
             <FormControl
               className="debtor"
               name={`billDebtor-${props.index}-debtor`}
-              placeholder="Debtor"
               onChange={fieldChange}
-              type="text"
+              placeholder="Debtor"
+              type="email"
               value={props.debtor}
               // disabled={!!props.payerId}
             />
@@ -45,9 +48,9 @@ const BillDebtor = (props) => {
 
 BillDebtor.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
-  deleteBillDebtor: React.PropTypes.func.isRequired,
   changeBillDebtor: React.PropTypes.func.isRequired,
-  // payerId: React.PropTypes.string.isRequired,
+  deleteBillDebtor: React.PropTypes.func.isRequired,
+  payerId: React.PropTypes.string.isRequired,
   debtor: React.PropTypes.string.isRequired,
   index: React.PropTypes.number.isRequired
 }

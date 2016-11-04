@@ -20,6 +20,7 @@ const BillItemList = (props) => {
 
   return (
     <div className="BillItemList">
+      <br />
       {props.items.map((item, i) => (
         <BillItem
           key={i}
