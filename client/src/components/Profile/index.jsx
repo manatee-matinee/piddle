@@ -48,6 +48,19 @@ class Profile extends Component {
       });
 
       // Retreive the user's item data
+      Request.getUserItems(token, (data) => {
+        const formattedData = data.map(itemObj => {
+          return {
+            shortId: itemObj.shortId,
+            billDescription: itemObj.billDescription,
+            itemDescription: itemObj.itemDescription,
+            itemTotal: itemObj.price,
+            itemTax: itemObj.tax,
+            itemTip: itemObj.tip,
+          };
+        });
+        this.setState({ claimedBillItems: formattedData });
+      });
     }
 
 
@@ -167,8 +180,12 @@ class Profile extends Component {
             {this.state.claimedBillItems.map(function(row, rowIndex) {
               return (
                 <tr key={rowIndex}>
-                  {row.map(function(col, colIndex) {
-                    return <td key={colIndex}>{col}</td>;
+                  {Object.keys(row).map(function(col, colIndex) {
+                    if (colIndex === 0) {
+                      return <td key={colIndex}><Link to={'bill/' + row[col]}>{row[col]}</Link></td>;
+                    } else {
+                      return <td key={colIndex}>{col}</td>;
+                    }
                   })}
                 </tr>
               );
