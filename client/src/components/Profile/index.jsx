@@ -51,9 +51,9 @@ class Profile extends Component {
       Request.getUserItems(token, (data) => {
         const formattedData = data.map(itemObj => {
           return {
-            shortId: itemObj.shortId,
-            billDescription: itemObj.billDescription,
-            itemDescription: itemObj.itemDescription,
+            shortId: itemObj.bill.shortId,
+            billDescription: itemObj.bill.description,
+            itemDescription: itemObj.description,
             itemTotal: itemObj.price,
             itemTax: itemObj.tax,
             itemTip: itemObj.tip,
