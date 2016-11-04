@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter, Link } from 'react-router';
 import Request from '../../utils/requestHandler';
 
 class Profile extends Component {
@@ -139,7 +139,11 @@ class Profile extends Component {
               return (
                 <tr key={rowIndex}>
                   {Object.keys(row).map(function(col, colIndex) {
-                    return <td key={colIndex}>{row[col]}</td>;
+                    if (colIndex === 0) {
+                      return <td key={colIndex}><Link to={'bill/' + row[col]}>{row[col]}</Link></td>;
+                    } else {
+                      return <td key={colIndex}>{row[col]}</td>;
+                    }
                   })}
                 </tr>
               );
