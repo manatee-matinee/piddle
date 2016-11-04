@@ -207,7 +207,7 @@ const updateItem = (request, response) => {
  */
 const getUserItems = (request, response) => {
   const debtorId = request.user.id;
-  itemController.retrieveDebtorItems(debtorId)
+  itemController.findDebtorItems(debtorId)
     .then((items) => {
       const itemsJSON = items.map(item => item.toJSON());
       response.status(200).json({ data: itemsJSON });
