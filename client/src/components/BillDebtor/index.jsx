@@ -8,13 +8,16 @@ const BillDebtor = (props) => {
       tagName: event.target.tagName,
       type: event.target.getAttribute('type'),
     };
+    field.value = (field.type === 'email') ?
+      event.target.value : '';
+
     props.changeBillDebtor(props.index, {
       [field.name]: field.value,
     });
   }
 
   return (
-    <div className="BillDebtor">
+    <div className="BillDebtor" style={{marginBottom: ".5em"}}>
       <div>
         <FormGroup>
           <InputGroup>
@@ -23,7 +26,7 @@ const BillDebtor = (props) => {
               name={`billDebtor-${props.index}-debtor`}
               onChange={fieldChange}
               placeholder="Debtor"
-              type="text"
+              type="email"
               value={props.debtor}
               // disabled={!!props.payerId}
             />
