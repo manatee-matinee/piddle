@@ -184,7 +184,7 @@ class Profile extends Component {
                     if (colIndex === 0) {
                       return <td key={colIndex}><Link to={'bill/' + row[col]}>{row[col]}</Link></td>;
                     } else {
-                      return <td key={colIndex}>{col}</td>;
+                      return <td key={colIndex}>{row[col]}</td>;
                     }
                   })}
                 </tr>
