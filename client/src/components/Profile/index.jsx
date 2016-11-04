@@ -30,12 +30,26 @@ class Profile extends Component {
         createdBills: [[]],
         claimedBillItems: [[]],
       };
+
+      // Retreive the user's bill data
+      Request.getUserBills(token, (data) => {
+        const formattedData = data.map(billObj => {
+          return {
+            shortId: billObj.shortId,
+            description: billObj.description,
+            subtotal: billObj.items.reduce((total, item) => {
+              return total + item.price;
+            }, 0),
+            tax: billObj.tax,
+            tip: billObj.tip,
+          };
+        });
+        this.setState({ createdBills: formattedData });
+      });
+
+      // Retreive the user's item data
     }
 
-    // Retreive the user's bill data
-    Request.getUserBills();
-
-    // Retreive the user's item data
 
     this.submitUpdateForm = this.submitUpdateForm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -123,9 +137,9 @@ class Profile extends Component {
           <tbody>
             {this.state.createdBills.map(function(row, rowIndex) {
               return (
-                <tr>
-                  {row.map(function(col, colIndex) {
-                    return <td>{col}</td>
+                <tr key={rowIndex}>
+                  {Object.keys(row).map(function(col, colIndex) {
+                    return <td key={colIndex}>{row[col]}</td>;
                   })}
                 </tr>
               );
@@ -148,9 +162,9 @@ class Profile extends Component {
           <tbody>
             {this.state.claimedBillItems.map(function(row, rowIndex) {
               return (
-                <tr>
+                <tr key={rowIndex}>
                   {row.map(function(col, colIndex) {
-                    return <td>{col}</td>
+                    return <td key={colIndex}>{col}</td>;
                   })}
                 </tr>
               );
