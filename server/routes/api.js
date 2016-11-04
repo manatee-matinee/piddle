@@ -343,20 +343,12 @@ router.put('/item/:id', authHandler.ensureAuthenticated, apiHandler.updateItem);
            [ { id: 25,
                shortId: '5jQt8',
  *             description: 'Tu Lan',
- *             price: 12.05,
- *             paid: false,
+ *             subtotal: 52.76,
+ *             tax: 5.01,
+ *             tip: 10,
  *             createdAt: '2016-10-29T08:20:54.261Z',
  *             updatedAt: '2016-10-29T08:20:54.318Z',
- *             billId: 1,
- *             debtorId: 2,
- *             debtor: {
- *               id: 2,
- *               emailAddress: 'debtor@gmail.com',
- *               name: 'Hambone',
- *               squareId: '$hammy',
- *               paypalId: 'hbone',
- *               createdAt: '2016-10-29T08:22:32.054Z',
- *               updatedAt: '2016-10-29T08:22:32.146Z' } ]
+ *             payerId: 1, } ]
  *      },
  *      { id: 12,
  *        description: 'Chipogo Forshogo',
@@ -367,30 +359,23 @@ router.put('/item/:id', authHandler.ensureAuthenticated, apiHandler.updateItem);
  *        createdAt: '2016-10-29T23:02:37.010Z',
  *        updatedAt: '2016-10-29T23:02:37.012Z',
  *        billId: 1,
+ *        debtorId: 5,
  *        bill:
            [ { id: 19,
                shortId: 'L14yt',
  *             description: 'Dragon Roll',
- *             price: 12.05,
- *             paid: false,
+ *             subtotal: 15.90,
+ *             tax: 1.51,
+ *             tip: 0,
  *             createdAt: '2016-10-29T08:20:54.261Z',
  *             updatedAt: '2016-10-29T08:20:54.318Z',
- *             billId: 1,
- *             debtorId: 2,
- *             debtor: {
- *               id: 2,
- *               emailAddress: 'debtor@gmail.com',
- *               name: 'Hambone',
- *               squareId: '$hammy',
- *               paypalId: 'hbone',
- *               createdAt: '2016-10-29T08:22:32.054Z',
- *               updatedAt: '2016-10-29T08:22:32.146Z' } ]
+ *             payerId: 74, } ]
  *      }
  *    ]
  *}
  *
  */
-router.get('/bills', authHandler.ensureAuthenticated, apiHandler.getUserBills);
+router.get('/items', authHandler.ensureAuthenticated, apiHandler.getUserItems);
 
 
 module.exports = router;
