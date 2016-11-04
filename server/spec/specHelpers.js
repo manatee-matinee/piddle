@@ -85,7 +85,11 @@ const emptyRecords = (done) => {
     db.models.User.sync({ force: true }),
   ])
   .then(() => {
+    console.log('emptyRecords finished');
     done();
+  })
+  .catch((err) => {
+    console.error(err);
   });
 };
 

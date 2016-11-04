@@ -42,7 +42,7 @@ describe('Item controller', () => {
   before(done => specHelpers.createSampleBill(sampleBill, done));
   before(done => specHelpers.createSampleUser(sampleDebtor, done));
 
-  let itemId;
+  var itemId;
   before((done) => {
     billController.retrieveBill(sampleBill.generatedData.shortId)
       .then((billRecord) => {
