@@ -41,7 +41,8 @@ BillDebtorList.propTypes = {
     React.PropTypes.object
   ).isRequired,
   newBillDebtor: React.PropTypes.func.isRequired,
-  deleteBillDebtor: React.PropTypes.func.isRequired
+  deleteBillDebtor: React.PropTypes.func.isRequired,
+  changeBillDebtor: React.PropTypes.func.isRequired
 };
 
 export default BillDebtorList;
