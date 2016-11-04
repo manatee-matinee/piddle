@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter, Link } from 'react-router';
 import Request from '../../utils/requestHandler';
 
 class Profile extends Component {
@@ -18,7 +18,7 @@ class Profile extends Component {
         squareId: '',
         paypalId: '',
         createdBills: [[]],
-        claimedBillItems: [[]]
+        claimedBillItems: [[]],
       };
     } else {
       const userData = jwtDecode(token);
@@ -28,12 +28,41 @@ class Profile extends Component {
         squareId: userData.squareId,
         paypalId: userData.paypalId,
         createdBills: [[]],
-        claimedBillItems: [[]]
+        claimedBillItems: [[]],
       };
+
+      // Retreive the user's bill data
+      Request.getUserBills(token, (data) => {
+        const formattedData = data.map(billObj => {
+          return {
+            shortId: billObj.shortId,
+            description: billObj.description,
+            subtotal: billObj.items.reduce((total, item) => {
+              return total + item.price;
+            }, 0),
+            tax: billObj.tax,
+            tip: billObj.tip,
+          };
+        });
+        this.setState({ createdBills: formattedData });
+      });
+
+      // Retreive the user's item data
+      Request.getUserItems(token, (data) => {
+        const formattedData = data.map(itemObj => {
+          return {
+            shortId: itemObj.bill.shortId,
+            billDescription: itemObj.bill.description,
+            itemDescription: itemObj.description,
+            itemTotal: itemObj.price,
+            itemTax: itemObj.tax,
+            itemTip: itemObj.tip,
+          };
+        });
+        this.setState({ claimedBillItems: formattedData });
+      });
     }
 
-    // Retreive the user's bill/item data
-    
 
     this.submitUpdateForm = this.submitUpdateForm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -121,9 +150,13 @@ class Profile extends Component {
           <tbody>
             {this.state.createdBills.map(function(row, rowIndex) {
               return (
-                <tr>
-                  {row.map(function(col, colIndex) {
-                    return <td>{col}</td>
+                <tr key={rowIndex}>
+                  {Object.keys(row).map(function(col, colIndex) {
+                    if (colIndex === 0) {
+                      return <td key={colIndex}><Link to={'bill/' + row[col]}>{row[col]}</Link></td>;
+                    } else {
+                      return <td key={colIndex}>{row[col]}</td>;
+                    }
                   })}
                 </tr>
               );
@@ -146,9 +179,13 @@ class Profile extends Component {
           <tbody>
             {this.state.claimedBillItems.map(function(row, rowIndex) {
               return (
-                <tr>
-                  {row.map(function(col, colIndex) {
-                    return <td>{col}</td>
+                <tr key={rowIndex}>
+                  {Object.keys(row).map(function(col, colIndex) {
+                    if (colIndex === 0) {
+                      return <td key={colIndex}><Link to={'bill/' + row[col]}>{row[col]}</Link></td>;
+                    } else {
+                      return <td key={colIndex}>{row[col]}</td>;
+                    }
                   })}
                 </tr>
               );
