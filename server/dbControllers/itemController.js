@@ -88,10 +88,27 @@ const deleteItem = id =>
   findItemById(id)
     .then(itemInstance => itemInstance.destroy());
 
+/**
+ * Find all items by the debtor's id, but also include additional information
+ * about the bill for easy use on the front end.
+ * @param {number} debtorId - Id of the debtor.
+ *
+ * @return {Promise} Resolves to an instance of the Item from the database.
+ */
+const findDebtorItems = debtorId => Item.findAll({
+  where: {
+    debtorId,
+  },
+  include: {
+    model: Bill,
+  },
+});
+
 module.exports = {
   findItemById,
   findItemByIdForUpdateReturn,
   createItemsForBill,
   updateItem,
   deleteItem,
+  findDebtorItems,
 };
