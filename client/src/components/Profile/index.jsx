@@ -50,13 +50,14 @@ class Profile extends Component {
       // Retreive the user's item data
       Request.getUserItems(token, (data) => {
         const formattedData = data.map(itemObj => {
+          console.log(itemObj);
           return {
             shortId: itemObj.bill.shortId,
             billDescription: itemObj.bill.description,
             itemDescription: itemObj.description,
             itemTotal: itemObj.price,
-            itemTax: Math.ceil(itemObj.tax * itemObj.price / itemObj.bill[0].subtotal),
-            itemTip: Math.ceil(itemObj.tip * itemObj.price / itemObj.bill[0].subtotal),
+            itemTax: Math.round(itemObj.bill.tax * itemObj.price / itemObj.bill.subtotal * 100) / 100,
+            itemTip: Math.round(itemObj.bill.tip * itemObj.price / itemObj.bill.subtotal * 100) / 100,
           };
         });
         this.setState({ claimedBillItems: formattedData });

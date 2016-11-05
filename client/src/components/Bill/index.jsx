@@ -77,6 +77,7 @@ class Bill extends React.Component {
       items: [
         { description: '', price: 0 },
       ],
+      subtotal: 0,
       tax: 0,
       tip: {
         value: 0,
@@ -84,8 +85,8 @@ class Bill extends React.Component {
         usePercent: false,
       },
       debtors: [
-        { debtor: '' }
-      ]
+        { debtor: '' },
+      ],
     };
 
     if (!token) {
@@ -187,9 +188,10 @@ class Bill extends React.Component {
       description: this.state.description,
       items: this.state.items,
       payerEmailAddress: this.state.token.decoded.emailAddress,
+      subtotal: this.state.subtotal,
       tax: this.state.tax,
       tip: this.state.tip.value,
-      debtors: this.state.debtors
+      debtors: this.state.debtors,
     };
 
     /**
@@ -405,9 +407,10 @@ class Bill extends React.Component {
       description: this.state.description,
       items: this.state.items,
       payerEmailAddress: this.state.token.decoded.emailAddress,
+      subtotal: this.state.subtotal,
       tax: this.state.tax,
       tip: this.state.tip.value,
-      debtors: this.state.debtors
+      debtors: this.state.debtors,
     };
 
     /**
@@ -570,7 +573,15 @@ class Bill extends React.Component {
     const billItem = { ...this.state.items[index], ...fields };
     const previousItems = this.state.items;
     previousItems[index] = billItem;
-    this.setState({ items: previousItems });
+
+    const subtotal = previousItems.reduce((itemPriceSum, item) => {
+      return itemPriceSum + item.price;
+    }, 0);
+
+    this.setState({
+      items: previousItems,
+      subtotal: subtotal,
+    });
 
     this.updateTip();
   }
