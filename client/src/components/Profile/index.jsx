@@ -55,8 +55,8 @@ class Profile extends Component {
             billDescription: itemObj.bill.description,
             itemDescription: itemObj.description,
             itemTotal: itemObj.price,
-            itemTax: itemObj.tax,
-            itemTip: itemObj.tip,
+            itemTax: Math.round(itemObj.bill.tax * itemObj.price / itemObj.bill.subtotal * 100) / 100,
+            itemTip: Math.round(itemObj.bill.tip * itemObj.price / itemObj.bill.subtotal * 100) / 100,
           };
         });
         this.setState({ claimedBillItems: formattedData });
