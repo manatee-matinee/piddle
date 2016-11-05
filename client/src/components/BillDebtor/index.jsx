@@ -1,6 +1,14 @@
 import React from 'react';
 import { FormGroup, FormControl, InputGroup, Button } from 'react-bootstrap';
 
+/**
+ * @class BillDebtor
+ * @param {object} props
+ * @param {function} props.changeBillDebtor
+ * @param {function} props.deleteBillDebtor
+ * @param {string} props.debtor
+ */
+
 const BillDebtor = (props) => {
   const fieldChange = (event) => {
     const field = {
@@ -28,13 +36,11 @@ const BillDebtor = (props) => {
               placeholder="Debtor"
               type="email"
               value={props.debtor}
-              // disabled={!!props.payerId}
             />
             <InputGroup.Button>
               <Button
-                bsStyle="danger"
+                style={{background: "#FF5F57", color: "white"}}
                 onClick={event => props.deleteBillDebtor(event, props.index)}
-                // disabled={!!props.payerId}
                 >
                 Delete
               </Button>

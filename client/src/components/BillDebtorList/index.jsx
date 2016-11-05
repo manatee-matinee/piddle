@@ -27,9 +27,9 @@ const BillDebtorList = (props) => {
         <Button
           className="pull-right"
           id="new-bill-item-btn"
-          bsStyle="success"
+          style={{background: "#48D359", color: "white"}}
           onClick={props.newBillDebtor}
-        >Tag Friend
+        >Add Friend
         </Button>
       </div>
     </div>
@@ -37,11 +37,13 @@ const BillDebtorList = (props) => {
 };
 
 BillDebtorList.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
   debtors: React.PropTypes.arrayOf(
     React.PropTypes.object
   ).isRequired,
   newBillDebtor: React.PropTypes.func.isRequired,
-  deleteBillDebtor: React.PropTypes.func.isRequired
+  deleteBillDebtor: React.PropTypes.func.isRequired,
+  changeBillDebtor: React.PropTypes.func.isRequired
 };
 
 export default BillDebtorList;

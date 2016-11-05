@@ -630,7 +630,7 @@ class Bill extends React.Component {
             }
             {(this.state.interactionType === Symbol.for('new')) &&
               <p className="Bill-intro lead">
-                Create a new Bill!
+                Create a Bill
               </p>
             }
             {(this.state.interactionType === Symbol.for('edit')) &&
@@ -692,6 +692,7 @@ class Bill extends React.Component {
                     id="create-new-bill-btn"
                     bsSize="lg"
                     type="submit"
+                    style={{background: "#3EA9B3", border: "none"}}
                     value="Create New Bill"
                     onClick={this.createBill}
                   >Create New Bill
@@ -702,6 +703,7 @@ class Bill extends React.Component {
                 <Button
                   type="submit"
                   value="Save Changes"
+                  style={{background: "#3EA9B3", border: "none"}}
                   onClick={this.updateBill}
                   disabled="true"
                 />

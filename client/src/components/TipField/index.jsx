@@ -40,28 +40,28 @@ const TipField = (props) => {
             />
             <InputGroup.Button>
               <Button
-                bsStyle="danger"
+                style={{background: "#FF5F57", color: "white"}}
                 onClick={changeTipPercent}
                 data-percent="0"
               >
                 No Tip
               </Button>
               <Button
-                bsStyle="warning"
+                style={{background: "#48D359", color: "white"}}
                 onClick={changeTipPercent}
                 data-percent="10"
               >
                 10%
               </Button>
               <Button
-                bsStyle="warning"
+                style={{background: "#48D359", color: "white"}}
                 onClick={changeTipPercent}
                 data-percent="15"
               >
                 15%
               </Button>
               <Button
-                bsStyle="success"
+                style={{background: "#48D359", color: "white"}}
                 onClick={changeTipPercent}
                 data-percent="20"
               >

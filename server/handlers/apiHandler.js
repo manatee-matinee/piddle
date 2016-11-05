@@ -38,6 +38,7 @@ const saveBill = (request, response) => {
  * @param {writeableStream} response Response stream. See API documentation for parameters.
  */
 const getBill = (request, response) => {
+  console.log(request);
   const shortId = request.params.shortId;
   billController.retrieveBill(shortId)
   .then((billInstance) => {
@@ -52,11 +53,12 @@ const getBill = (request, response) => {
       data: billInstance.dataValues,
     });
   })
-  .catch(() => response.status(500).json({
+  .catch((error) => { console.log(error); response.status(500).json({
     error: {
       message: 'There was an error retrieving the bill.',
     },
   })
+  }
   );
 };
 
