@@ -50,7 +50,6 @@ class Profile extends Component {
       // Retreive the user's item data
       Request.getUserItems(token, (data) => {
         const formattedData = data.map(itemObj => {
-          console.log(itemObj);
           return {
             shortId: itemObj.bill.shortId,
             billDescription: itemObj.bill.description,
