@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router';
 import Request from '../../utils/requestHandler';
+import { Form, FormControl } from 'react-bootstrap';
 
 class Login extends Component {
   constructor(props) {
@@ -46,34 +47,39 @@ class Login extends Component {
   render() {
     return (
       <div className="loginPage">
-        <p className="Login-intro">
-          Welcome to the login page
-        </p>
-        <form id="loginForm">
-          <label htmlFor="emailAddress">email</label>
-          <input
+        <h1 className="Login-intro">
+          Login
+        </h1>
+        <Form id="loginForm">
+          <label htmlFor="emailAddress">Email</label>
+          <br />
+          <FormControl
             type="text"
             className="loginForm"
             id="emailAddress"
             name="emailAddress"
             onChange={event => this.handleInputChange(event)}
           />
-          <label htmlFor="password">password</label>
-          <input
+          <br />
+          <label htmlFor="password">Password</label>
+          <br />
+          <FormControl
             type="password"
             className="loginForm"
             id="password"
             name="password"
             onChange={event => this.handleInputChange(event)}
           />
-          <input
+          <br />
+          <FormControl
             type="submit"
             className="submitLogin"
             id="submitLogin"
             value="Login"
+            style={{background: "#3EA9B3", color: "white"}}            
             onClick={event => this.submitLoginForm(event)}
           />
-        </form>
+        </Form>
         <div className="loginError">{this.state.error}</div>
         <span>Need an account? </span>
         <Link to="/signup">Sign up</Link>

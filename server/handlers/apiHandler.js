@@ -38,6 +38,7 @@ const saveBill = (request, response) => {
  * @param {writeableStream} response Response stream. See API documentation for parameters.
  */
 const getBill = (request, response) => {
+  console.log(request);
   const shortId = request.params.shortId;
   billController.retrieveBill(shortId)
   .then((billInstance) => {
@@ -52,11 +53,12 @@ const getBill = (request, response) => {
       data: billInstance.dataValues,
     });
   })
-  .catch(() => response.status(500).json({
+  .catch((error) => { console.log(error); response.status(500).json({
     error: {
       message: 'There was an error retrieving the bill.',
     },
   })
+  }
   );
 };
 
@@ -200,6 +202,24 @@ const updateItem = (request, response) => {
         });
     });
 };
+/**
+ * Get all the claimed items for a given user. The logic for GET /api/items.
+ * @param {readableStream} request Request stream. See API documentation for parameters.
+ * @param {writeableStream} response Response stream. See API documentation for parameters.
+ */
+const getUserItems = (request, response) => {
+  const debtorId = request.user.id;
+  itemController.findDebtorItems(debtorId)
+    .then((items) => {
+      const itemsJSON = items.map(item => item.toJSON());
+      response.status(200).json({ data: itemsJSON });
+    })
+    .catch(() => response.status(500).json({
+      error: {
+        message: 'There was an error retrieving the user\'s claimed items',
+      },
+    }));
+};
 
 module.exports = {
   saveBill,
@@ -207,4 +227,5 @@ module.exports = {
   getUserBills,
   updateBill,
   updateItem,
+  getUserItems,
 };

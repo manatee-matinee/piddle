@@ -20,7 +20,7 @@ class JumbotronInstance extends Component {
         <p className="lead">Split the bill like a pro.</p>
         <Row>
           <Col xs="12" sm={6}>
-            <p><Button bsStyle="primary" bsSize="large" onClick={this.handleCallToAction}>
+            <p><Button style={{background: "#3EA9B3", color: "white"}} bsSize="large" onClick={this.handleCallToAction}>
               Split a Bill
             </Button></p>
           </Col>

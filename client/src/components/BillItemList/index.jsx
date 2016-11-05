@@ -20,6 +20,7 @@ const BillItemList = (props) => {
 
   return (
     <div className="BillItemList">
+      <br />
       {props.items.map((item, i) => (
         <BillItem
           key={i}
@@ -36,9 +37,9 @@ const BillItemList = (props) => {
           <Button
             className="pull-right"
             id="new-bill-item-btn"
-            bsStyle="success"
+            style={{background: "#48D359", color: "white"}}
             onClick={props.newBillItem}
-          >New Bill Item
+          >Add Item
           </Button>
         </div>
       }

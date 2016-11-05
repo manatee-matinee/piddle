@@ -1,8 +1,11 @@
 const Bill = require('../db').models.Bill;
 const Item = require('../db').models.Item;
 const User = require('../db').models.User;
+const BillDebtors = require('../db').models.BillDebtors;
+
 const userController = require('./userController');
 const itemController = require('./itemController');
+const billdebtorController = require('./billdebtorController');
 
 /**
  * Handles interactions with the database to manage Bills.
@@ -20,10 +23,12 @@ const itemController = require('./itemController');
  * @param {Object[]} bill.items - Array of items on the bill.
  * @param {string} bill.items[].description - Description of the item.
  * @param {string} bill.items[].price - Price of the item in local currency.
+ * @param {Object[]} bill.tagged - Array of users that are tagged on the bill.
  *
  * @return {Promise} Resolves to the instance of the Bill from the database.
  */
 const createBill = function createBill(bill) {
+  console.log(bill);
   return new Promise((resolve, reject) => {
     if (!bill.payerEmailAddress) {
       return reject(new Error('Bill payer email address required'));
@@ -38,6 +43,7 @@ const createBill = function createBill(bill) {
         .then((billRecord) => {
           // have bill, now create the items
           itemController.createItemsForBill(billRecord.dataValues.id, bill.items)
+          billdebtorController.createDebtorsForBill(billRecord.dataValues.id, bill.debtors)
           .then(() => {
             resolve(billRecord);
           })

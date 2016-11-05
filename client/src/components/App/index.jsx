@@ -12,11 +12,11 @@ const App = ({ children }) => (
   <div className="App container">
     <NavBar />
     <Row>
-      <Col xs={0} md={3} />
-      <Col xs={12} md={6}>
+      <Col />
+      <Col>
         {children}
       </Col>
-      <Col xs={0} md={3} />
+      <Col />
     </Row>
   </div>
 );

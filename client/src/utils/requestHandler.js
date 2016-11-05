@@ -83,4 +83,46 @@ export default {
     })
     .then(res => callback(res));
   },
+  /**
+   * Bills GET request to /bills
+   * @param {token} token - The user's raw token that is used for authentication.
+   * @param {requestCallback} cb - The callback that handles the response.
+   */
+  getUserBills: (token, callback) => {
+    // eslint-disable-next-line no-undef
+    fetch(`${url}/api/bills`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${token}`,
+      },
+    })
+    .then(res => res.json())
+    .then(({ data }) => {
+      callback(data);
+    })
+    .catch(err => callback(err));
+  },
+  /**
+   * Items GET request to /items
+   * @param {token} token - The user's raw token that is used for authentication.
+   * @param {requestCallback} cb - The callback that handles the response.
+   */
+  getUserItems: (token, callback) => {
+    // eslint-disable-next-line no-undef
+    fetch(`${url}/api/items`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${token}`,
+      },
+    })
+    .then(res => res.json())
+    .then(({ data }) => {
+      callback(data);
+    })
+    .catch(err => callback(err));
+  },
 };

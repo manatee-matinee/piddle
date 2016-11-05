@@ -21,6 +21,9 @@ const Bill = sequelize.define('bill', {
   description: {
     type: Sequelize.STRING,
   },
+  subtotal: {
+    type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
+  },
   tax: {
     type: Sequelize.DECIMAL(10, 2), // eslint-disable-line
   },
@@ -47,10 +50,24 @@ const Item = sequelize.define('item', {
     type: Sequelize.BOOLEAN,
     defaultValue: false,
   },
+  tax: {
+    type: Sequelize.DECIMAL(10, 2) // eslint-disable-line
+  },
+  tip: {
+    type: Sequelize.DECIMAL(10, 2) // eslint-disable-line
+  },
   // claimed: {
   //   type: Sequelize.BOOLEAN,
   //   defaultValue: false,
   // },
+});
+
+
+const BillDebtors = sequelize.define('bill_debtors', {
+  debtor: { 
+    type: Sequelize.STRING 
+  },
+  billId: Sequelize.INTEGER
 });
 
 const User = sequelize.define('user', {
@@ -118,6 +135,20 @@ User.belongsToMany(Bill, {
 Bill.belongsToMany(User, { through: BillDebtors });
 */
 
+
+
+// User.belongsToMany(Bill, {
+//   through: BillDebtors,
+//   as: 'debtor',
+//   foreignKey: 'debtorId',
+// });
+
+// Bill.belongsToMany(User, { 
+//   through: BillDebtors,
+//   as: 'bill',
+//   foreignKey: 'billid'
+// });
+
 Bill.belongsTo(User, {
   as: 'payer',
   foreignKey: 'payerId',
@@ -133,17 +164,22 @@ Item.belongsTo(User, {
   foreignKey: 'debtorId',
 });
 
+// Bill.hasMany(BillDebtors);
+
+// BillDebtors.belongsTo(Bill);
 
 // Create the tables specified above
 User.sync();
 Bill.sync();
 Item.sync();
+BillDebtors.sync();
 
 module.exports = {
   models: {
     Bill,
     Item,
     User,
+    BillDebtors
   },
   sequelize,
 };
