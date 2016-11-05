@@ -37,6 +37,7 @@ const BillDebtorList = (props) => {
 };
 
 BillDebtorList.propTypes = {
+  // eslint-disable-next-line react/no-unused-prop-types
   debtors: React.PropTypes.arrayOf(
     React.PropTypes.object
   ).isRequired,
