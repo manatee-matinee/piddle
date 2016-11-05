@@ -98,7 +98,7 @@ class Draw extends React.Component {
   
   render() {
     return (
-      <canvas ref="canvas"/>
+      <canvas ref="canvas" style={{float: "left"}}/>
     );
   }
 }

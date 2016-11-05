@@ -636,7 +636,7 @@ class Bill extends React.Component {
             }
             {(this.state.interactionType === Symbol.for('edit')) &&
               <p className="Bill-intro lead">
-                Edit the bill!
+                Edit the bill
               </p>
             }
             {(this.state.interactionType === Symbol.for('claim')) &&
@@ -644,90 +644,94 @@ class Bill extends React.Component {
                 Claim the items that belong to you!
               </p>
             }
-            <Form
-              inline
-              id="createBillForm"
-              ref={(c) => { this.createBillForm = c; }}
-            >
-              <Well bsSize="lg">
-                <DescriptionField
-                  changeDescriptionValue={this.changeDescriptionValue}
-                  descriptionValue={this.state.description}
+            <div className="upload" style={{width: "50%", height: "50%", float: "left", display: "inline"}}>
+              <OCR />
+            </div>
+            <div className="bill-form" style={{width: "40%", height: "50%", textAlign: "left", float: "right", display:"inline"}}>
+              <Form
+                inline
+                id="createBillForm"
+                ref={(c) => { this.createBillForm = c; }}
+              >
+                <Well bsSize="lg">
+                  <DescriptionField
+                    changeDescriptionValue={this.changeDescriptionValue}
+                    descriptionValue={this.state.description}
+                    interactionType={this.state.interactionType}
+                  />
+                  <BillDebtorList
+                    debtors={this.state.debtors}
+                    changeBillDebtor={this.changeBillDebtor}
+                    deleteBillDebtor={this.deleteBillDebtor}
+                    newBillDebtor={this.newBillDebtor}
+                  />
+                  <BillItemList
+                    items={this.state.items}
+                    deleteBillItem={this.deleteBillItem}
+                    claimBillItem={this.claimBillItem}
+                    changeBillItem={this.changeBillItem}
+                    interactionType={this.state.interactionType}
+                    newBillItem={this.newBillItem}
+                  />
+                </Well>
+                <TaxField
+                  changeTaxValue={this.changeTaxValue}
                   interactionType={this.state.interactionType}
+                  taxValue={this.state.tax}
                 />
-                <BillDebtorList
-                  debtors={this.state.debtors}
-                  changeBillDebtor={this.changeBillDebtor}
-                  deleteBillDebtor={this.deleteBillDebtor}
-                  newBillDebtor={this.newBillDebtor}
-                />
-                <BillItemList
-                  items={this.state.items}
-                  deleteBillItem={this.deleteBillItem}
-                  claimBillItem={this.claimBillItem}
-                  changeBillItem={this.changeBillItem}
+                <TipField
+                  changeTipValue={this.changeTipValue}
+                  changeTipPercent={this.changeTipPercent}
                   interactionType={this.state.interactionType}
-                  newBillItem={this.newBillItem}
+                  tipValue={this.state.tip.value}
                 />
-              </Well>
-              <TaxField
-                changeTaxValue={this.changeTaxValue}
-                interactionType={this.state.interactionType}
-                taxValue={this.state.tax}
-              />
-              <TipField
-                changeTipValue={this.changeTipValue}
-                changeTipPercent={this.changeTipPercent}
-                interactionType={this.state.interactionType}
-                tipValue={this.state.tip.value}
-              />
-              {
-                /**
-                 * @todo Make into a component
-                 */
-              }
-              {(this.state.interactionType === Symbol.for('new')) &&
-                <div className="text-center">
+                {
+                  // *
+                  //  * @todo Make into a component
+                   
+                }
+                {(this.state.interactionType === Symbol.for('new')) &&
+                  <div className="text-center">
+                    <Button
+                      className="btn-primary"
+                      id="create-new-bill-btn"
+                      bsSize="lg"
+                      type="submit"
+                      style={{background: "#3EA9B3", border: "none"}}
+                      value="Create New Bill"
+                      onClick={this.createBill}
+                    >Create New Bill
+                    </Button>
+                  </div>
+                }
+                {(this.state.interactionType === Symbol.for('edit')) &&
                   <Button
-                    className="btn-primary"
-                    id="create-new-bill-btn"
-                    bsSize="lg"
                     type="submit"
+                    value="Save Changes"
                     style={{background: "#3EA9B3", border: "none"}}
-                    value="Create New Bill"
-                    onClick={this.createBill}
-                  >Create New Bill
-                  </Button>
-                </div>
-              }
-              {(this.state.interactionType === Symbol.for('edit')) &&
-                <Button
-                  type="submit"
-                  value="Save Changes"
-                  style={{background: "#3EA9B3", border: "none"}}
-                  onClick={this.updateBill}
-                  disabled="true"
-                />
-              }
-              {(this.state.interactionType === Symbol.for('claim')) &&
-                <div>
-                  <a
-                    href={`https://cash.me/${this.state.payer.squareId}/${round(this.state.curDebtorDebt, 2)}`}
-                    onClick={this.payForClaimedItems}
-                  >
-                    Pay via Square Cash
-                  </a>
-                  <br />
-                  <a
-                    href={`https://paypal.me/${this.state.payer.paypalId}/${round(this.state.curDebtorDebt, 2)}`}
-                    onClick={this.payForClaimedItems}
-                  >
-                    Pay via Paypal
-                  </a>
-                </div>
-              }
-            </Form>
-            <OCR />
+                    onClick={this.updateBill}
+                    disabled="true"
+                  />
+                }
+                {(this.state.interactionType === Symbol.for('claim')) &&
+                  <div>
+                    <a
+                      href={`https://cash.me/${this.state.payer.squareId}/${round(this.state.curDebtorDebt, 2)}`}
+                      onClick={this.payForClaimedItems}
+                    >
+                      Pay via Square Cash
+                    </a>
+                    <br />
+                    <a
+                      href={`https://paypal.me/${this.state.payer.paypalId}/${round(this.state.curDebtorDebt, 2)}`}
+                      onClick={this.payForClaimedItems}
+                    >
+                      Pay via Paypal
+                    </a>
+                  </div>
+                }
+              </Form>
+            </div>
           </div>
         }
       </div>
