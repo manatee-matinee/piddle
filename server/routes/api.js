@@ -340,8 +340,8 @@ router.put('/item/:id', authHandler.ensureAuthenticated, apiHandler.updateItem);
  *        billId: 2,
  *        debtorId: 5
  *        bill:
-           [ { id: 25,
-               shortId: '5jQt8',
+ *         [ { id: 25,
+ *             shortId: '5jQt8',
  *             description: 'Tu Lan',
  *             subtotal: 52.76,
  *             tax: 5.01,
@@ -361,8 +361,8 @@ router.put('/item/:id', authHandler.ensureAuthenticated, apiHandler.updateItem);
  *        billId: 1,
  *        debtorId: 5,
  *        bill:
-           [ { id: 19,
-               shortId: 'L14yt',
+ *         [ { id: 19,
+ *             shortId: 'L14yt',
  *             description: 'Dragon Roll',
  *             subtotal: 15.90,
  *             tax: 1.51,
