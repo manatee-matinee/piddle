@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router';
 import Request from '../../utils/requestHandler';
-import { Form, FormControl, Table } from 'react-bootstrap';
+import { Form, FormControl } from 'react-bootstrap';
 
 class Signup extends Component {
   constructor(props) {
