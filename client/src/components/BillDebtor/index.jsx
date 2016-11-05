@@ -39,7 +39,7 @@ const BillDebtor = (props) => {
             />
             <InputGroup.Button>
               <Button
-                bsStyle="danger"
+                style={{background: "#FF5F57", color: "white"}}
                 onClick={event => props.deleteBillDebtor(event, props.index)}
                 >
                 Delete

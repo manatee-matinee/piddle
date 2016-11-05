@@ -1,6 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router';
+import { Form, Button, FormControl, Table } from 'react-bootstrap';
 import Request from '../../utils/requestHandler';
 
 class Profile extends Component {
@@ -88,56 +89,70 @@ class Profile extends Component {
   render() {
     return (
       <div className="profilePage">
-        <h1>Welcome to your profile</h1>
-        <h3>Update any info below</h3>
-        <form id="signupForm">
+        <h1 style={{textAlign: "center"}}>Welcome to your profile</h1>
+        <h3 style={{textAlign: "center"}}>Update any info below</h3>
+        <br />
+        <Form id="signupForm">
           <label htmlFor="emailAddress">Email</label>
-          <input
+          <br />
+          <FormControl
             type="text"
             className="updateInput"
             id="emailAddress"
             name="emailAddress"
             onChange={event => this.handleInputChange(event)}
             value={this.state.emailAddress}
+            style={{margin: "5px 5px"}}
           />
+          <br />
           <label htmlFor="name">Name</label>
-          <input
+          <br />
+          <FormControl
             type="text"
             className="updateInput"
             id="name"
             name="name"
             onChange={event => this.handleInputChange(event)}
             value={this.state.name}
+            style={{margin: "5px 5px"}}
           />
+          <br />
           <label htmlFor="password">square Id</label>
-          <input
+          <br />
+          <FormControl
             type="text"
             className="updateInput"
             id="squareId"
             name="squareId"
             onChange={event => this.handleInputChange(event)}
             value={this.state.squareId}
+            style={{margin: "5px 5px"}}            
           />
+          <br />
           <label htmlFor="password">paypal Id</label>
-          <input
+          <br />
+          <FormControl
             type="text"
             className="updateInput"
             id="paypalId"
             name="paypalId"
             onChange={event => this.handleInputChange(event)}
             value={this.state.paypalId}
+            style={{margin: "5px 5px"}}            
           />
-          <input
+          <br />
+          <FormControl
             type="submit"
             className="submitUpdate"
             id="submitUpdate"
             value="Update"
             onClick={event => this.submitUpdateForm(event)}
+            style={{margin: "5px 5px", background: "#97DDE4"}}            
           />
-        </form>
+        </Form>
 
         <h3>Created Bills</h3>
-        <table>
+        <Table striped bordered condensed hover>
           <thead>
             <tr>
               <th>Bill Short ID (Link)</th>
@@ -162,10 +177,10 @@ class Profile extends Component {
               );
             })}
           </tbody>
-        </table>
+        </Table>
 
         <h3>Claimed Bill Items</h3>
-        <table>
+        <Table striped bordered condensed hover>
           <thead>
             <tr>
               <th>Bill Short ID (Link)</th>
@@ -191,7 +206,7 @@ class Profile extends Component {
               );
             })}
           </tbody>
-        </table>
+        </Table>
       </div>
     );
   }

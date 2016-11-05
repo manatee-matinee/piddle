@@ -61,7 +61,7 @@ const BillItem = (props) => {
               />
               <InputGroup.Button>
                 <Button
-                  bsStyle="danger"
+                  style={{background: "#FF5F57", color: "white"}}
                   onClick={event => props.deleteBillItem(event, props.index)}
                   disabled={!!props.debtorId}
                   >

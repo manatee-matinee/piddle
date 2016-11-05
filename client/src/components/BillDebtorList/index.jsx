@@ -27,9 +27,9 @@ const BillDebtorList = (props) => {
         <Button
           className="pull-right"
           id="new-bill-item-btn"
-          bsStyle="success"
+          style={{background: "#48D359", color: "white"}}
           onClick={props.newBillDebtor}
-        >Tag Friend
+        >Add Friend
         </Button>
       </div>
     </div>
