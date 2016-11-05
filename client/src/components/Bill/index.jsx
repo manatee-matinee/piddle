@@ -691,6 +691,7 @@ class Bill extends React.Component {
                     className="btn-primary"
                     id="create-new-bill-btn"
                     bsSize="lg"
+                    bsStyle="info"
                     type="submit"
                     value="Create New Bill"
                     onClick={this.createBill}
@@ -701,6 +702,7 @@ class Bill extends React.Component {
               {(this.state.interactionType === Symbol.for('edit')) &&
                 <Button
                   type="submit"
+                  bsStyle="info"
                   value="Save Changes"
                   onClick={this.updateBill}
                   disabled="true"
