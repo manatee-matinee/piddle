@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router';
 import Request from '../../utils/requestHandler';
+import { Form, FormControl, Table } from 'react-bootstrap';
 
 class Signup extends Component {
   constructor(props) {
@@ -51,58 +52,69 @@ class Signup extends Component {
   render() {
     return (
       <div className="signupPage">
-        <p className="Signup-intro">
-          Welcome to the signup page
-        </p>
-        <form id="signupForm">
+        <h1 className="Signup-intro">
+          Sign Up
+        </h1>
+        <Form id="signupForm">
           <label htmlFor="emailAddress">Email</label>
-          <input
+          <br />
+          <FormControl
             type="text"
             className="loginInput"
             id="emailAddress"
             name="emailAddress"
             onChange={event => this.handleInputChange(event)}
           />
+          <br />
           <label htmlFor="password">Password</label>
-          <input
+          <br />
+          <FormControl
             type="password"
             className="loginInput"
             id="password"
             name="password"
             onChange={event => this.handleInputChange(event)}
           />
+          <br />
           <label htmlFor="name">Name</label>
-          <input
+          <br />
+          <FormControl
             type="text"
             className="loginInput"
             id="name"
             name="name"
             onChange={event => this.handleInputChange(event)}
           />
+          <br />
           <label htmlFor="password">square Id</label>
-          <input
+          <br />
+          <FormControl
             type="text"
             className="loginInput"
             id="squareId"
             name="squareId"
             onChange={event => this.handleInputChange(event)}
           />
+          <br />
           <label htmlFor="password">paypal Id</label>
-          <input
+          <br />
+          <FormControl
             type="text"
             className="loginInput"
             id="paypalId"
             name="paypalId"
             onChange={event => this.handleInputChange(event)}
           />
-          <input
+          <br />
+          <FormControl
+            style={{background: "#3EA9B3", color: "white"}}
             type="submit"
             className="submitSignup"
             id="submitSignup"
             value="Signup"
             onClick={event => this.submitSignupForm(event)}
           />
-        </form>
+        </Form>
         <div className="signupError">{this.state.error}</div>
         <span>Have an account? </span>
         <Link to="/login">Log in</Link>

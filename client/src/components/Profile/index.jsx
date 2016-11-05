@@ -1,7 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router';
-import { Form, Button, FormControl, Table } from 'react-bootstrap';
+import { Form, FormControl, Table } from 'react-bootstrap';
 import Request from '../../utils/requestHandler';
 
 class Profile extends Component {
@@ -147,7 +147,7 @@ class Profile extends Component {
             id="submitUpdate"
             value="Update"
             onClick={event => this.submitUpdateForm(event)}
-            style={{margin: "5px 5px", background: "#97DDE4"}}            
+            style={{background: "#3EA9B3", color: "white"}}
           />
         </Form>
 
