@@ -7,6 +7,8 @@ const path = require('path');
 const config = require('../config');
 const passport = require('./passportConfig');
 const bodyParser = require('body-parser');
+const gcloud = require('google-cloud');
+const multer = require('multer'); 
 
 const app = express();
 
@@ -18,6 +20,33 @@ if (process.env.NODE_ENV !== 'test') {
   // Don't log requests during testing
   app.use(morgan('dev'));
 }
+
+//multer routing, uploads files to uploads folder
+app.use(multer({dest: './uploads/'}).single('photo'));
+
+//configuring google vision
+var vconfig = {
+  projectId: 'testapp-148322',
+  keyFilename: path.join(__dirname, '/testapp-cd0ba168840f.json')
+};
+var vision = gcloud.vision(vconfig);
+
+//post route for uploading receipt images
+app.post('/upload', function(req, res) {
+  //FIXME pathing if needed
+  let dir = '/../' + req.file.path;
+  let currPath = path.join(__dirname, dir);
+  let options = {
+    verbose: true
+  }
+  
+  vision
+    .detectText(currPath, options)
+    .then(function(data) {
+      res.send(JSON.stringify(data));
+    });
+})
+
 app.use(bodyParser.json());
 app.use(passport.initialize());
 

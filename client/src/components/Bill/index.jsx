@@ -9,6 +9,7 @@ import DescriptionField from './../DescriptionField';
 import TaxField from './../TaxField';
 import TipField from './../TipField';
 import BillDebtorList from './../BillDebtorList';
+import OCR from './../OCR';
 
 /**
  * @class Bill
@@ -643,6 +644,7 @@ class Bill extends React.Component {
                 Claim the items that belong to you!
               </p>
             }
+            <OCR />
             <Form
               inline
               id="createBillForm"
