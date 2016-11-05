@@ -1,3 +1,7 @@
 .navbar-header:hover {
   cursor: hand;
 }
+
+.navbar-inverse .navbar-nav>li>a {
+  color: white;
+}

@@ -36,7 +36,7 @@ class NavBar extends Component {
 
   render() {
     return (
-      <Navbar inverse collapseOnSelect fixedTop bsStyle="inverse">
+      <Navbar inverse collapseOnSelect fixedTop>
         <Navbar.Header>
           <Navbar.Brand>
             <a onClick={this.handleBrandClick}>Piddle</a>
