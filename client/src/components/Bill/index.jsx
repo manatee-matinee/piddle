@@ -644,7 +644,6 @@ class Bill extends React.Component {
                 Claim the items that belong to you!
               </p>
             }
-            <OCR />
             <Form
               inline
               id="createBillForm"
@@ -728,6 +727,7 @@ class Bill extends React.Component {
                 </div>
               }
             </Form>
+            <OCR />
           </div>
         }
       </div>
