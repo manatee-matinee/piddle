@@ -5,23 +5,11 @@ const userController = require('./userController');
 /**
  * Add tagged users to the database.
  * @param {number} billId - Id of the bill that the users belong to.
- * @param {Object[]} users - An array of user objects.
+ * @param {Object[]} debtors - An array of debtor objects.
  *
  * @return {Promise} Resolves to an instance of the debtor from the database.
  */
 const createDebtorsForBill = (billId, debtors) => {
-  // if (!Array.isArray(debtors)) {
-  //   return new Error('Debtors must be an array');
-  // }
-
-  // console.log('debtors', debtors);
-
-  // for (var i = 0; i < debtors.length; i++) {
-  //   console.log('i', debtors[i]);
-  //   BillDebtors.create({ debtor: debtors[i].debtor, billId: billId });
-  // }
-  // return;
-
   if (!Array.isArray(debtors)) {
     return new Error('Debtors must be an array');
   }
